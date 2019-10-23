@@ -53,12 +53,11 @@ MonoBehaviour:
     verticalRaycastMargin: 0.05
     gravityScale: 3
   mMovement:
+    groundCheckDistance: 0.01
     acceleration: 25
     maxSpeed: 5
     jumpForce: 10
-  mGroundCheckDistance: 0.01
-  mNumberOfGruondCheckRaycasts: 4
-  mGroundCheckRaycastsMargin: 0.025
+    jumpTime: 0.15
 --- !u!212 &8377611175049075331
 SpriteRenderer:
   m_ObjectHideFlags: 0

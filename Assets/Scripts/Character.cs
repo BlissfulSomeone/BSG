@@ -17,9 +17,11 @@ public class Character : MonoBehaviour
 	[System.Serializable]
 	private struct Movement
 	{
+		public float groundCheckDistance;
 		public float acceleration;
 		public float maxSpeed;
 		public float jumpForce;
+		public float jumpTime;
 	}
 
 	private Rigidbody mRigidbody;
@@ -27,15 +29,11 @@ public class Character : MonoBehaviour
 
 	[SerializeField] private Physics mPhysics;
 	[SerializeField] private Movement mMovement;
-
-	[Header("Physics")]
-	[SerializeField] private float mGroundCheckDistance = 0.01f;
-	[SerializeField] private int mNumberOfGruondCheckRaycasts = 4;
-	[SerializeField] private float mGroundCheckRaycastsMargin = 0.025f;
 	
 	private bool mIsGrounded = false;
 	private Vector3 mMovementInput = Vector3.zero;
 	private bool mWantToJump = false;
+	private float mJumpTime = 0.0f;
 	private Vector3 mVelocity = Vector3.zero;
 
 	private void Awake()
@@ -50,6 +48,14 @@ public class Character : MonoBehaviour
 		mMovementInput.x += (Input.GetKey(KeyCode.RightArrow) == true) ? 1.0f : 0.0f;
 		mMovementInput.x += (Input.GetKey(KeyCode.LeftArrow) == true) ? -1.0f : 0.0f;
 		mWantToJump = Input.GetKey(KeyCode.UpArrow) == true || Input.GetKey(KeyCode.Z) == true;
+		if (mIsGrounded == true && mWantToJump == true)
+		{
+			mJumpTime = mMovement.jumpTime;
+		}
+		else if (Input.GetKeyUp(KeyCode.UpArrow) == true || Input.GetKeyUp(KeyCode.Z) == true)
+		{
+			mJumpTime = -1.0f;
+		}
 	}
 
 	private float Damp(float aSource, float aSmoothing, float aDeltaTime)
@@ -65,12 +71,11 @@ public class Character : MonoBehaviour
 		{
 			mVelocity.y -= 9.82f * mPhysics.gravityScale * Time.fixedDeltaTime;
 		}
-		else
+
+		if (mWantToJump == true && mJumpTime >= 0.0f)
 		{
-			if (mWantToJump == true)
-			{
-				mVelocity.y = mMovement.jumpForce;
-			}
+			mVelocity.y = mMovement.jumpForce;
+			mJumpTime -= Time.fixedDeltaTime;
 		}
 		
 		if (mMovementInput.x != 1.0f && mVelocity.x > 0.0f)
@@ -86,12 +91,12 @@ public class Character : MonoBehaviour
 
 	private bool IsGrounded()
 	{
-		Vector3 start = transform.position + new Vector3(-mBoxCollider.size.x * 0.5f + mGroundCheckRaycastsMargin, 0.0f, 0.0f);
-		Vector3 end = transform.position + new Vector3(mBoxCollider.size.x * 0.5f - mGroundCheckRaycastsMargin, 0.0f, 0.0f);
-		float rayLength = mBoxCollider.size.y * 0.5f + mGroundCheckDistance;
-		for (int i = 0; i < mNumberOfGruondCheckRaycasts; ++i)
+		Vector3 start = transform.position + new Vector3(-mBoxCollider.size.x * 0.5f + mPhysics.verticalRaycastMargin, 0.0f, 0.0f);
+		Vector3 end = transform.position + new Vector3(mBoxCollider.size.x * 0.5f - mPhysics.verticalRaycastMargin, 0.0f, 0.0f);
+		float rayLength = mBoxCollider.size.y * 0.5f + mMovement.groundCheckDistance;
+		for (int i = 0; i < mPhysics.numberOfVerticalRaycasts; ++i)
 		{
-			Vector3 rayOrigin = Vector3.Lerp(start, end, i / (mNumberOfGruondCheckRaycasts - 1.0f));
+			Vector3 rayOrigin = Vector3.Lerp(start, end, i / (mPhysics.numberOfVerticalRaycasts - 1.0f));
 			Vector3 rayDirection = Vector3.down;
 			Ray ray = new Ray(rayOrigin, rayDirection);
 			RaycastHit hitInfo;
