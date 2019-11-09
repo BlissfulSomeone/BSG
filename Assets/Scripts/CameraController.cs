@@ -4,17 +4,45 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-	[SerializeField] private int mHorizontalBlocksToFit = 20;
+	[System.Serializable]
+	private struct ViewInfo
+	{
+		public Vector3 position;
+		public float blocksToFit;
 
+		public static ViewInfo Lerp(ViewInfo from, ViewInfo to, float t)
+		{
+			ViewInfo result;
+			result.position = Vector3.Lerp(from.position, to.position, t);
+			result.blocksToFit = Mathf.Lerp(from.blocksToFit, to.blocksToFit, t);
+			return result;
+		}
+	}
+
+	[SerializeField] private ViewInfo mInitialViewInfo;
+	private ViewInfo mCurrentViewInfo;
+	private ViewInfo mTargetViewInfo;
+	
 	private Camera mCamera;
 
 	private void Awake()
 	{
 		mCamera = GetComponent<Camera>();
+
+		mCurrentViewInfo = mInitialViewInfo;
+		mTargetViewInfo = mInitialViewInfo;
 	}
 
 	private void Update()
 	{
-		mCamera.orthographicSize = (mHorizontalBlocksToFit * 0.5f) / mCamera.aspect;
+		mCurrentViewInfo = ViewInfo.Lerp(mCurrentViewInfo, mTargetViewInfo, 0.999f * Time.deltaTime);
+
+		transform.position = new Vector3(mCurrentViewInfo.position.x, mCurrentViewInfo.position.y, -10.0f);
+		mCamera.orthographicSize = (mCurrentViewInfo.blocksToFit * 0.5f) / mCamera.aspect;
+	}
+
+	public void SetTargetPosition(Vector3 position)
+	{
+		mTargetViewInfo.position = position;
 	}
 }

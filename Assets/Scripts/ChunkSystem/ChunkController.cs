@@ -77,4 +77,9 @@ public class ChunkController : MonoBehaviour
 		mChunkGenerator.Render(renderQueue);
 		mChunkRenderer.Render(renderQueue);
 	}
+
+	public void CreateChunk(Chunk aChunk)
+	{
+		mChunkGenerator.AddChunk(aChunk);
+	}
 }
