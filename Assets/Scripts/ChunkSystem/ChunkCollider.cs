@@ -133,7 +133,7 @@ public class ChunkCollider : MonoBehaviour
 		mMeshCollider.convex = false;
 	}
 
-	private void OnTileDestroyed(Chunk.TileInstance aTileInstance, Vector3 aTilePosition)
+	private void OnTileDestroyed(Chunk.TileInstance aTileInstance, Vector3 aTilePosition, Chunk.TileDestroyData aTileDestroyData)
 	{
 		GenerateMesh();
 	}

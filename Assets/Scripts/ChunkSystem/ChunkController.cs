@@ -45,34 +45,21 @@ public class ChunkController : MonoBehaviour
 		aChunk.OnTileDestroyed += OnTileDestroyed;
 	}
 
-	private void OnTileDestroyed(Chunk.TileInstance aTileInstance, Vector3 aTilePosition)
+	private void OnTileDestroyed(Chunk.TileInstance aTileInstance, Vector3 aTilePosition, Chunk.TileDestroyData aTileDestroyData)
 	{
 		Transform debrisTransform = Instantiate(mDebrisPrefab, aTilePosition, Quaternion.identity);
 
 		SpriteRenderer debrisSpriteRenderer = debrisTransform.GetComponent<SpriteRenderer>();
 		debrisSpriteRenderer.sprite = aTileInstance.CurrentSprite;
-
-		Vector2 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+		
 		Rigidbody debrisRigidbody = debrisTransform.GetComponent<Rigidbody>();
-		debrisRigidbody.AddExplosionForce(10.0f, mouseWorldPosition, 3.0f, 1.0f, ForceMode.VelocityChange);
+		debrisRigidbody.AddExplosionForce(10.0f, aTileDestroyData.destroySource, aTileDestroyData.destoryStrength, 5.0f, ForceMode.VelocityChange);
 
 		Destroy(debrisTransform.gameObject, 3.0f);
 	}
 
 	private void Update()
 	{
-		if (Input.GetMouseButtonDown(0) == true)
-		{
-			Vector2 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			mChunkGenerator.Explode(mouseWorldPosition, 3.0f);
-		}
-		if (Input.GetMouseButtonDown(1) == true)
-		{
-			Vector2 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			Rigidbody testObject = Instantiate(mTestObject, mouseWorldPosition, Quaternion.identity);
-			testObject.AddForce(Random.Range(-8.0f, 8.0f), Random.Range(-8.0f, 8.0f), 0.0f, ForceMode.VelocityChange);
-		}
-
 		RenderQueue renderQueue = new RenderQueue();
 		mChunkGenerator.Render(renderQueue);
 		mChunkRenderer.Render(renderQueue);
@@ -81,5 +68,10 @@ public class ChunkController : MonoBehaviour
 	public void CreateChunk(Chunk aChunk)
 	{
 		mChunkGenerator.AddChunk(aChunk);
+	}
+
+	public void Explode(Vector2 aExplosionSource, float aExplosionRadius)
+	{
+		mChunkGenerator.Explode(aExplosionSource, aExplosionRadius);
 	}
 }

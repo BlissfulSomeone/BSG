@@ -44,15 +44,13 @@ public class Character : MonoBehaviour
 
 	private void Update()
 	{
-		mMovementInput.x = 0.0f;
-		mMovementInput.x += (Input.GetKey(KeyCode.RightArrow) == true) ? 1.0f : 0.0f;
-		mMovementInput.x += (Input.GetKey(KeyCode.LeftArrow) == true) ? -1.0f : 0.0f;
-		mWantToJump = Input.GetKey(KeyCode.UpArrow) == true || Input.GetKey(KeyCode.Z) == true;
+		mMovementInput.x = Input.GetAxisRaw("Horizontal");
+		mWantToJump = Input.GetButton("Jump") == true;
 		if (mIsGrounded == true && mWantToJump == true)
 		{
 			mJumpTime = mMovement.jumpTime;
 		}
-		else if (Input.GetKeyUp(KeyCode.UpArrow) == true || Input.GetKeyUp(KeyCode.Z) == true)
+		else if (Input.GetButtonUp("Jump") == true)
 		{
 			mJumpTime = -1.0f;
 		}

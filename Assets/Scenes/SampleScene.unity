@@ -155,6 +155,8 @@ MonoBehaviour:
     type: 3}
   mPlayerPrefab: {fileID: 8377611175049075330, guid: 1cce0683c959cef4b923747277ac1320,
     type: 3}
+  mBombPrefab: {fileID: 1470371614573847795, guid: 09588d0ede3612c40b9f9cca721f3f34,
+    type: 3}
 --- !u!4 &2134779021
 Transform:
   m_ObjectHideFlags: 0

@@ -36,7 +36,13 @@ public class Chunk
 		}
 	}
 
-	public delegate void OnTileDestroyedHandler(TileInstance aTileInstance, Vector3 aTilePosition);
+	public struct TileDestroyData
+	{
+		public Vector2 destroySource;
+		public float destoryStrength;
+	}
+
+	public delegate void OnTileDestroyedHandler(TileInstance aTileInstance, Vector3 aTilePosition, TileDestroyData aTileDestroyData);
 	public OnTileDestroyedHandler OnTileDestroyed;
 
 	private TileInstance[] mTiles;
@@ -107,8 +113,8 @@ public class Chunk
 			for (int x = 0; x < mGridSize.x; ++x)
 			{
 				Vector2 tilePosition = new Vector2(
-					mPosition.x + x * mTileSize.x + mTileSize.x * 0.5f,
-					mPosition.y + y * mTileSize.y + mTileSize.y * 0.5f);
+					mPosition.x + x * mTileSize.x /*+ mTileSize.x * 0.5f*/,
+					mPosition.y + y * mTileSize.y /*+ mTileSize.y * 0.5f*/);
 
 				if (Vector2.Distance(tilePosition, aExplosionPoint) < aExplosionRadius)
 				{
@@ -116,7 +122,10 @@ public class Chunk
 					{
 						TileInstance destroyedTile = GetTile(x, y);
 						SetTile(x, y, mEmptyTileData);
-						OnTileDestroyed?.Invoke(destroyedTile, tilePosition);
+						TileDestroyData tileDestroyData;
+						tileDestroyData.destroySource = aExplosionPoint;
+						tileDestroyData.destoryStrength = aExplosionRadius;
+						OnTileDestroyed?.Invoke(destroyedTile, tilePosition, tileDestroyData);
 					}
 				}
 			}

@@ -12,11 +12,6 @@ public class ChunkGenerator
 	public void Generate()
 	{
 		mChunks = new List<Chunk>();
-
-		//AddChunk(new ChunkEmpty(new Vector2(-9.5f, 0.0f), new Vector2(1.0f, 1.0f), new Vector2Int(20, 10)));
-		//AddChunk(new ChunkDirt(new Vector2(-9.5f, -10.0f), new Vector2(1.0f, 1.0f), new Vector2Int(20, 10)));
-		//AddChunk(new ChunkDirt(new Vector2(-9.5f, -20.0f), new Vector2(1.0f, 1.0f), new Vector2Int(20, 10)));
-		//AddChunk(new ChunkDirt(new Vector2(-9.5f, -30.0f), new Vector2(1.0f, 1.0f), new Vector2Int(20, 10)));
 	}
 
 	public void AddChunk(Chunk aChunk)
@@ -25,11 +20,11 @@ public class ChunkGenerator
 		OnChunkCreated?.Invoke(aChunk);
 	}
 	
-	public void Explode(Vector2 aExplosionPoint, float aExplosionRadius)
+	public void Explode(Vector2 aExplosionSource, float aExplosionRadius)
 	{
 		foreach (Chunk chunk in mChunks)
 		{
-			chunk.Explode(aExplosionPoint, aExplosionRadius);
+			chunk.Explode(aExplosionSource, aExplosionRadius);
 		}
 	}
 

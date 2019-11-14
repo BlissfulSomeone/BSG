@@ -24,6 +24,7 @@ public class CameraController : MonoBehaviour
 	private ViewInfo mTargetViewInfo;
 	
 	private Camera mCamera;
+	public Camera CameraComponent { get { return mCamera; } }
 
 	private void Awake()
 	{
@@ -33,9 +34,9 @@ public class CameraController : MonoBehaviour
 		mTargetViewInfo = mInitialViewInfo;
 	}
 
-	private void Update()
+	private void FixedUpdate()
 	{
-		mCurrentViewInfo = ViewInfo.Lerp(mCurrentViewInfo, mTargetViewInfo, 0.999f * Time.deltaTime);
+		mCurrentViewInfo = ViewInfo.Lerp(mCurrentViewInfo, mTargetViewInfo, 0.05f);
 
 		transform.position = new Vector3(mCurrentViewInfo.position.x, mCurrentViewInfo.position.y, -10.0f);
 		mCamera.orthographicSize = (mCurrentViewInfo.blocksToFit * 0.5f) / mCamera.aspect;

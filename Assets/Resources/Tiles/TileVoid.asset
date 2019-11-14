@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: TileVoid
   m_EditorClassIdentifier: 
   sprites:
-  - {fileID: 21300000, guid: 5d80f66efbcfa824698d56b38f95097a, type: 3}
+  - {fileID: 21300000, guid: 1024594c3dac0684993497020f5e7f36, type: 3}
   indestructible: 1
+  hasCollision: 0
