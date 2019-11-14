@@ -10,6 +10,8 @@ public class Bomb : MonoBehaviour
 	[SerializeField] private float mExplosionRadius;
 	[SerializeField] private bool mCanBeTriggeredByExplosion;
 
+	[SerializeField] private Explosion mExplosionPrefab;
+
 	private Rigidbody mRigidbody;
 	public Rigidbody Rigidbody { get { return mRigidbody; } }
 
@@ -71,6 +73,9 @@ public class Bomb : MonoBehaviour
 	private void Explode()
 	{
 		GameController.Instance.Explode(transform.position, 3.0f);
+		Explosion explosionInstance = Instantiate(mExplosionPrefab);
+		explosionInstance.transform.position = transform.position;
+		explosionInstance.transform.localScale = Vector3.one * mExplosionRadius * 2.0f;
 		Destroy(gameObject);
 	}
 

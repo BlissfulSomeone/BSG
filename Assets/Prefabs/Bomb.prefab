@@ -126,3 +126,5 @@ MonoBehaviour:
   mTimer: 4
   mExplosionRadius: 3
   mCanBeTriggeredByExplosion: 0
+  mExplosionPrefab: {fileID: 3506304063819049500, guid: 7e1541da5e9985d41a8846daebcb3b5b,
+    type: 3}
