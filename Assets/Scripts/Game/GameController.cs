@@ -13,15 +13,19 @@ public class GameController : MonoBehaviour
 
 	protected ChunkController mChunkControllerInstance;
 	protected CameraController mCameraControllerInstance;
+	protected UIController mUIControllerInstance;
 	protected Character mPlayerInstance;
 
 	public Bomb[] mBombPrefabs;
+	public UIMenu mDepthMeterPrefab;
 
 	public CameraController CameraControllerInstance { get { return mCameraControllerInstance; } }
 
 	private const int CHUNK_HEIGHT = 10;
 	private float mFurthestDepth = 0.0f;
 	private int mChunksSpawned = 0;
+
+	public float FurthestDepth { get { return mFurthestDepth; } }
 	
 	private void Awake()
 	{
@@ -35,8 +39,19 @@ public class GameController : MonoBehaviour
 		mChunkControllerInstance = Instantiate(mChunkControllerPrefab, Vector3.zero, Quaternion.identity);
 		mCameraControllerInstance = Instantiate(mCameraControllerPrefab, new Vector3(0.0f, 0.0f, 10.0f), Quaternion.identity);
 		mPlayerInstance = Instantiate(mPlayerPrefab, Vector3.zero, Quaternion.identity);
+
+		GameObject uiObject = new GameObject("UI System");
+		uiObject.transform.SetParent(transform);
+		uiObject.transform.Reset();
+
+		mUIControllerInstance = uiObject.AddComponent<UIController>();
 	}
-	
+
+	private void Start()
+	{
+		mUIControllerInstance.PushMenu(UIController.ELayer.HUD, mDepthMeterPrefab);
+	}
+
 	private void Update()
 	{
 		if (mPlayerInstance != null)
@@ -58,6 +73,7 @@ public class GameController : MonoBehaviour
 		}
 		if (Input.GetKeyDown(KeyCode.R) == true && mPlayerInstance == null)
 		{
+			// Super naive way to reset game
 			if (mChunkControllerInstance != null) Destroy(mChunkControllerInstance.gameObject);
 			if (mCameraControllerInstance != null) Destroy(mCameraControllerInstance.gameObject);
 			if (mPlayerInstance != null) Destroy(mPlayerInstance.gameObject);
