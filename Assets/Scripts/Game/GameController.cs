@@ -13,13 +13,11 @@ public class GameController : MonoBehaviour
 
 	protected ChunkController mChunkControllerInstance;
 	protected CameraController mCameraControllerInstance;
-	protected BombController mBombControllerInstance;
 	protected Character mPlayerInstance;
 
 	public Bomb[] mBombPrefabs;
 
 	public CameraController CameraControllerInstance { get { return mCameraControllerInstance; } }
-	public BombController BombControllerInstance { get { return mBombControllerInstance; } }
 
 	private const int CHUNK_HEIGHT = 10;
 	private float mFurthestDepth = 0.0f;
@@ -37,10 +35,6 @@ public class GameController : MonoBehaviour
 		mChunkControllerInstance = Instantiate(mChunkControllerPrefab, Vector3.zero, Quaternion.identity);
 		mCameraControllerInstance = Instantiate(mCameraControllerPrefab, new Vector3(0.0f, 0.0f, 10.0f), Quaternion.identity);
 		mPlayerInstance = Instantiate(mPlayerPrefab, Vector3.zero, Quaternion.identity);
-
-		GameObject bombControllerObject = new GameObject("Bomb Controller");
-		bombControllerObject.transform.SetParent(transform);
-		mBombControllerInstance = bombControllerObject.AddComponent<BombController>();
 	}
 	
 	private void Update()
@@ -56,7 +50,6 @@ public class GameController : MonoBehaviour
 		if (Input.GetMouseButtonDown(1) == true)
 		{
 			Bomb bomb = Instantiate(mBombPrefabs[Random.Range(0, mBombPrefabs.Length)]);
-			BombControllerInstance.RegisterBomb(bomb);
 			bomb.transform.position = new Vector2(Random.Range(-8.0f, 8.0f), CHUNK_HEIGHT);
 		}
 	}
@@ -86,6 +79,23 @@ public class GameController : MonoBehaviour
 	public void Explode(Vector2 aExplosionSource, float aExplosionRadius)
 	{
 		mChunkControllerInstance.Explode(aExplosionSource, aExplosionRadius);
-		mBombControllerInstance.Explode(aExplosionSource, aExplosionRadius);
+		Collider[] colliders = Physics.OverlapSphere(aExplosionSource, aExplosionRadius);
+		foreach (Collider collider in colliders)
+		{
+			Triggerable triggerable = collider.gameObject.GetComponent<Triggerable>();
+			if (triggerable != null)
+			{
+				triggerable.Trigger(aExplosionSource, aExplosionRadius);
+				if (triggerable.HasPhysics == true)
+				{
+					Vector2 delta = collider.transform.position.ToVec2() - aExplosionSource;
+					float distance = delta.magnitude;
+					if (distance <= aExplosionRadius)
+					{
+						triggerable.Rigidbody.AddExplosionForce(10.0f, aExplosionSource, aExplosionRadius, 2.5f, ForceMode.VelocityChange);
+					}
+				}
+			}
+		}
 	}
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Rigidbody), typeof(Triggerable))]
 public class Bomb : MonoBehaviour
 {
 	[System.Serializable]
@@ -24,20 +24,24 @@ public class Bomb : MonoBehaviour
 	private Rigidbody mRigidbody;
 	public Rigidbody Rigidbody { get { return mRigidbody; } }
 
+	private Triggerable mTriggerable;
+
 	private float mCurrentTimer = 0.0f;
 	private bool mIsTriggered = false;
 	
 	private void Awake()
 	{
 		mRigidbody = GetComponent<Rigidbody>();
+		mTriggerable = GetComponent<Triggerable>();
+		mTriggerable.OnTriggered += Trigger;
 	}
-	
+
 	private void OnDestroy()
 	{
-		GameController.Instance.BombControllerInstance.UnregisterBomb(this);
+		mTriggerable.OnTriggered -= Trigger;
 	}
-	
-	public void Trigger()
+
+	private void Trigger(Vector2 aExplosionSource, float aExplosionRadius)
 	{
 		if (mCanBeTriggeredByExplosion == true && mIsTriggered == false)
 		{
@@ -77,15 +81,9 @@ public class Bomb : MonoBehaviour
 	{
 		foreach (SpawnOnDestroy i in mToSpawnOnDestroy)
 		{
-			GameObject spawnedObject = Instantiate(i.objectToSpawn, transform.position + i.spawnOffset.ToVec3(), Quaternion.identity);
-			Bomb bomb = spawnedObject.GetComponent<Bomb>();
-			if (bomb != null)
-			{
-				GameController.Instance.BombControllerInstance.RegisterBomb(bomb);
-			}
+			Instantiate(i.objectToSpawn, transform.position + i.spawnOffset.ToVec3(), Quaternion.identity);
 		}
-
-		GameController.Instance.Explode(transform.position, 3.0f);
+		
 		Explosion explosionInstance = Instantiate(mExplosionPrefab);
 		explosionInstance.transform.position = transform.position;
 		explosionInstance.transform.localScale = Vector3.one * mExplosionRadius * 2.0f;

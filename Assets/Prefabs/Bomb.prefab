@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4316514456330581998}
   - component: {fileID: 537079578448679728}
   - component: {fileID: 1470371614573847795}
+  - component: {fileID: -5315311812896183097}
   m_Layer: 9
   m_Name: Bomb
   m_TagString: Untagged
@@ -131,3 +132,16 @@ MonoBehaviour:
   mExplosionPrefab: {fileID: 3506304063819049500, guid: 7e1541da5e9985d41a8846daebcb3b5b,
     type: 3}
   mToSpawnOnDestroy: []
+--- !u!114 &-5315311812896183097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4076826606511422155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bba19f9028d401c468aa7c1d93fb01dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mHasPhysics: 1

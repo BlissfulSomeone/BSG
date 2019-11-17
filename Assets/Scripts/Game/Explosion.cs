@@ -13,6 +13,11 @@ public class Explosion : MonoBehaviour
 		mSpriteRenderer = GetComponent<SpriteRenderer>();
 	}
 
+	private void Start()
+	{
+		GameController.Instance.Explode(transform.position.ToVec2(), transform.localScale.x);
+	}
+
 	private void Update()
 	{
 		const float ANIMATION_SPEED = 0.05f;

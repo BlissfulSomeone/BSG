@@ -24,6 +24,9 @@ public class Character : MonoBehaviour
 		public float jumpTime;
 	}
 
+	public delegate void OnKilledHandler();
+	public OnKilledHandler OnKilled;
+
 	private Rigidbody mRigidbody;
 	private BoxCollider mBoxCollider;
 
