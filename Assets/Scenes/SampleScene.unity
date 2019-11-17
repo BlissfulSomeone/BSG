@@ -155,8 +155,11 @@ MonoBehaviour:
     type: 3}
   mPlayerPrefab: {fileID: 8377611175049075330, guid: 1cce0683c959cef4b923747277ac1320,
     type: 3}
-  mBombPrefab: {fileID: 1470371614573847795, guid: 09588d0ede3612c40b9f9cca721f3f34,
-    type: 3}
+  mBombPrefabs:
+  - {fileID: 7880601355816889469, guid: a3527ebca6e5bbd408a6cc7e8009b16b, type: 3}
+  - {fileID: 4521838813421243912, guid: 1efcee2da2b40f14ab6ee0f3c8867385, type: 3}
+  - {fileID: 1253800694974450686, guid: fca91b45f7e79554ca92b5faeaacdb55, type: 3}
+  - {fileID: 551826394380437524, guid: a51fea408f270594c86db97c6aca166d, type: 3}
 --- !u!4 &2134779021
 Transform:
   m_ObjectHideFlags: 0

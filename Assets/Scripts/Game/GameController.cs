@@ -16,7 +16,7 @@ public class GameController : MonoBehaviour
 	protected BombController mBombControllerInstance;
 	protected Character mPlayerInstance;
 
-	public Bomb mBombPrefab;
+	public Bomb[] mBombPrefabs;
 
 	public CameraController CameraControllerInstance { get { return mCameraControllerInstance; } }
 	public BombController BombControllerInstance { get { return mBombControllerInstance; } }
@@ -55,10 +55,9 @@ public class GameController : MonoBehaviour
 		}
 		if (Input.GetMouseButtonDown(1) == true)
 		{
-			Bomb bomb = Instantiate(mBombPrefab);
+			Bomb bomb = Instantiate(mBombPrefabs[Random.Range(0, mBombPrefabs.Length)]);
+			BombControllerInstance.RegisterBomb(bomb);
 			bomb.transform.position = new Vector2(Random.Range(-8.0f, 8.0f), CHUNK_HEIGHT);
-			bomb.Init(Random.Range(0, 2) == 0);
-			mBombControllerInstance.SpawnBomb(bomb);
 		}
 	}
 

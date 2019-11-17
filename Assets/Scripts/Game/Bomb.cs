@@ -5,6 +5,13 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Bomb : MonoBehaviour
 {
+	[System.Serializable]
+	private struct SpawnOnDestroy
+	{
+		public GameObject objectToSpawn;
+		public Vector2 spawnOffset;
+	}
+
 	[SerializeField] private bool mHasTimer;
 	[SerializeField] private float mTimer;
 	[SerializeField] private float mExplosionRadius;
@@ -12,31 +19,27 @@ public class Bomb : MonoBehaviour
 
 	[SerializeField] private Explosion mExplosionPrefab;
 
+	[SerializeField] private SpawnOnDestroy[] mToSpawnOnDestroy;
+
 	private Rigidbody mRigidbody;
 	public Rigidbody Rigidbody { get { return mRigidbody; } }
 
 	private float mCurrentTimer = 0.0f;
 	private bool mIsTriggered = false;
-
+	
 	private void Awake()
 	{
 		mRigidbody = GetComponent<Rigidbody>();
 	}
-
+	
 	private void OnDestroy()
 	{
-		GameController.Instance.BombControllerInstance.RemoveBomb(this);
+		GameController.Instance.BombControllerInstance.UnregisterBomb(this);
 	}
-
-	public void Init(bool timed)
-	{
-		mHasTimer = timed;
-		mCanBeTriggeredByExplosion = !timed;
-	}
-
+	
 	public void Trigger()
 	{
-		if (mCanBeTriggeredByExplosion == true)
+		if (mCanBeTriggeredByExplosion == true && mIsTriggered == false)
 		{
 			mIsTriggered = true;
 			mCurrentTimer = Random.Range(0.3f, 0.6f);
@@ -72,6 +75,16 @@ public class Bomb : MonoBehaviour
 
 	private void Explode()
 	{
+		foreach (SpawnOnDestroy i in mToSpawnOnDestroy)
+		{
+			GameObject spawnedObject = Instantiate(i.objectToSpawn, transform.position + i.spawnOffset.ToVec3(), Quaternion.identity);
+			Bomb bomb = spawnedObject.GetComponent<Bomb>();
+			if (bomb != null)
+			{
+				GameController.Instance.BombControllerInstance.RegisterBomb(bomb);
+			}
+		}
+
 		GameController.Instance.Explode(transform.position, 3.0f);
 		Explosion explosionInstance = Instantiate(mExplosionPrefab);
 		explosionInstance.transform.position = transform.position;

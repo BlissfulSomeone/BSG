@@ -11,12 +11,12 @@ public class BombController : MonoBehaviour
 		mSpawnedBombs = new List<Bomb>();
 	}
 
-	public void SpawnBomb(Bomb aBomb)
+	public void RegisterBomb(Bomb aBomb)
 	{
 		mSpawnedBombs.Add(aBomb);
 	}
 
-	public void RemoveBomb(Bomb aBomb)
+	public void UnregisterBomb(Bomb aBomb)
 	{
 		mSpawnedBombs.Remove(aBomb);
 	}
@@ -30,7 +30,7 @@ public class BombController : MonoBehaviour
 			float distance = delta.magnitude;
 			if (distance <= aExplosionRadius)
 			{
-				bomb.Rigidbody.AddExplosionForce(10.0f, aExplosionSource, aExplosionRadius, 5.0f, ForceMode.VelocityChange);
+				bomb.Rigidbody.AddExplosionForce(10.0f, aExplosionSource, aExplosionRadius, 2.5f, ForceMode.VelocityChange);
 				bomb.Trigger();
 			}
 		}
