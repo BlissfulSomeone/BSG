@@ -29,6 +29,7 @@ public class Character : MonoBehaviour
 
 	private Rigidbody mRigidbody;
 	private BoxCollider mBoxCollider;
+	private Triggerable mTriggerable;
 
 	[SerializeField] private Physics mPhysics;
 	[SerializeField] private Movement mMovement;
@@ -43,6 +44,19 @@ public class Character : MonoBehaviour
 	{
 		mRigidbody = GetComponent<Rigidbody>();
 		mBoxCollider = GetComponent<BoxCollider>();
+		mTriggerable = GetComponent<Triggerable>();
+		mTriggerable.OnTriggered += Trigger;
+	}
+
+	private void OnDestroy()
+	{
+		mTriggerable.OnTriggered -= Trigger;
+	}
+
+	private void Trigger(Vector2 aExplosionSource, float aExplosionRadius)
+	{
+		OnKilled?.Invoke();
+		Destroy(gameObject);
 	}
 
 	private void Update()

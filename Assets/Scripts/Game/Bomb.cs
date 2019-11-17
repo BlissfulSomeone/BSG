@@ -22,7 +22,7 @@ public class Bomb : MonoBehaviour
 	[SerializeField] private SpawnOnDestroy[] mToSpawnOnDestroy;
 
 	private Rigidbody mRigidbody;
-	public Rigidbody Rigidbody { get { return mRigidbody; } }
+	public Rigidbody Rigidbody { get { if (mRigidbody == null) mRigidbody = GetComponent<Rigidbody>(); return mRigidbody; } }
 
 	private Triggerable mTriggerable;
 
@@ -86,7 +86,7 @@ public class Bomb : MonoBehaviour
 		
 		Explosion explosionInstance = Instantiate(mExplosionPrefab);
 		explosionInstance.transform.position = transform.position;
-		explosionInstance.transform.localScale = Vector3.one * mExplosionRadius * 2.0f;
+		explosionInstance.transform.localScale = Vector3.one * mExplosionRadius;
 		Destroy(gameObject);
 	}
 

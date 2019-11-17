@@ -22,7 +22,7 @@ public class GameController : MonoBehaviour
 	private const int CHUNK_HEIGHT = 10;
 	private float mFurthestDepth = 0.0f;
 	private int mChunksSpawned = 0;
-
+	
 	private void Awake()
 	{
 		if (mInstance != null)
@@ -39,8 +39,11 @@ public class GameController : MonoBehaviour
 	
 	private void Update()
 	{
-		UpdateCamera();
-		UpdateChunks();
+		if (mPlayerInstance != null)
+		{
+			UpdateCamera();
+			UpdateChunks();
+		}
 
 		if (Input.GetMouseButtonDown(0) == true)
 		{
@@ -51,6 +54,20 @@ public class GameController : MonoBehaviour
 		{
 			Bomb bomb = Instantiate(mBombPrefabs[Random.Range(0, mBombPrefabs.Length)]);
 			bomb.transform.position = new Vector2(Random.Range(-8.0f, 8.0f), CHUNK_HEIGHT);
+			bomb.Rigidbody.AddForce(Random.Range(-10.0f, 10.0f), 0.0f, 0.0f, ForceMode.VelocityChange);
+		}
+		if (Input.GetKeyDown(KeyCode.R) == true && mPlayerInstance == null)
+		{
+			if (mChunkControllerInstance != null) Destroy(mChunkControllerInstance.gameObject);
+			if (mCameraControllerInstance != null) Destroy(mCameraControllerInstance.gameObject);
+			if (mPlayerInstance != null) Destroy(mPlayerInstance.gameObject);
+			Globals.DestroyAllOfType<Triggerable>();
+			Globals.DestroyAllOfType<Explosion>();
+			mFurthestDepth = 0.0f;
+			mChunksSpawned = 0;
+			mChunkControllerInstance = Instantiate(mChunkControllerPrefab, Vector3.zero, Quaternion.identity);
+			mCameraControllerInstance = Instantiate(mCameraControllerPrefab, new Vector3(0.0f, 0.0f, 10.0f), Quaternion.identity);
+			mPlayerInstance = Instantiate(mPlayerPrefab, Vector3.zero, Quaternion.identity);
 		}
 	}
 
@@ -96,6 +113,14 @@ public class GameController : MonoBehaviour
 					}
 				}
 			}
+		}
+	}
+
+	private void OnGUI()
+	{
+		if (mPlayerInstance == null)
+		{
+			GUI.TextField(new Rect(Screen.width / 2 - 128, Screen.height / 2 - 16, 256, 32), "GAME OVER\nPress R to restart");
 		}
 	}
 }
