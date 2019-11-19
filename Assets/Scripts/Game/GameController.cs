@@ -7,17 +7,21 @@ public class GameController : MonoBehaviour
 	private static GameController mInstance = null;
 	public static GameController Instance { get { return mInstance; } }
 
+	[Header("Controllers")]
 	[SerializeField] protected ChunkController mChunkControllerPrefab;
 	[SerializeField] protected CameraController mCameraControllerPrefab;
 	[SerializeField] protected Character mPlayerPrefab;
+	[SerializeField] protected BombSpawner mBombSpawnerPrefab;
 
 	protected ChunkController mChunkControllerInstance;
 	protected CameraController mCameraControllerInstance;
 	protected UIController mUIControllerInstance;
 	protected Character mPlayerInstance;
-
-	public Bomb[] mBombPrefabs;
+	protected BombSpawner mBombSpawnerInstance;
+	
+	[Header("Temporary stuff")]
 	public UIMenu mDepthMeterPrefab;
+	public Explosion mExplosionPrefab;
 
 	public CameraController CameraControllerInstance { get { return mCameraControllerInstance; } }
 
@@ -39,6 +43,7 @@ public class GameController : MonoBehaviour
 		mChunkControllerInstance = Instantiate(mChunkControllerPrefab, Vector3.zero, Quaternion.identity);
 		mCameraControllerInstance = Instantiate(mCameraControllerPrefab, new Vector3(0.0f, 0.0f, 10.0f), Quaternion.identity);
 		mPlayerInstance = Instantiate(mPlayerPrefab, Vector3.zero, Quaternion.identity);
+		mBombSpawnerInstance = Instantiate(mBombSpawnerPrefab, Vector3.zero, Quaternion.identity);
 
 		GameObject uiObject = new GameObject("UI System");
 		uiObject.transform.SetParent(transform);
@@ -63,13 +68,10 @@ public class GameController : MonoBehaviour
 		if (Input.GetMouseButtonDown(0) == true)
 		{
 			Vector2 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			Explode(mouseWorldPosition, 3.0f);
-		}
-		if (Input.GetMouseButtonDown(1) == true)
-		{
-			Bomb bomb = Instantiate(mBombPrefabs[Random.Range(0, mBombPrefabs.Length)]);
-			bomb.transform.position = new Vector2(Random.Range(-8.0f, 8.0f), CHUNK_HEIGHT);
-			bomb.Rigidbody.AddForce(Random.Range(-10.0f, 10.0f), 0.0f, 0.0f, ForceMode.VelocityChange);
+			Explosion explosion = Instantiate(mExplosionPrefab);
+			explosion.transform.position = mouseWorldPosition;
+			explosion.transform.localScale = Vector3.one * 2.0f;
+			//Explode(mouseWorldPosition, 3.0f);
 		}
 		if (Input.GetKeyDown(KeyCode.R) == true && mPlayerInstance == null)
 		{
@@ -125,7 +127,7 @@ public class GameController : MonoBehaviour
 					float distance = delta.magnitude;
 					if (distance <= aExplosionRadius)
 					{
-						triggerable.Rigidbody.AddExplosionForce(10.0f, aExplosionSource, aExplosionRadius, 2.5f, ForceMode.VelocityChange);
+						triggerable.Rigidbody.AddExplosionForce(10.0f, aExplosionSource, aExplosionRadius, 1.25f, ForceMode.VelocityChange);
 					}
 				}
 			}
