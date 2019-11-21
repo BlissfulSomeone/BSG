@@ -13,9 +13,6 @@ public class UILayer : MonoBehaviour
 
 	public UIMenu PushMenu(UIMenu aMenuPrefab)
 	{
-		UIMenu menu = Instantiate(aMenuPrefab, transform);
-		menu.transform.Reset();
-
 		if (mMenus.Count > 0)
 		{
 			UIMenu topMenu = mMenus.Last();
@@ -23,10 +20,20 @@ public class UILayer : MonoBehaviour
 			topMenu.Interactable = false;
 		}
 
-		mMenus.Add(menu);
+		UIMenu menu = CreateMenu(aMenuPrefab);
 		menu.Alpha = 1.0f;
 		menu.Interactable = true;
+		mMenus.Add(menu);
 
+		return menu;
+	}
+
+	private UIMenu CreateMenu(UIMenu aMenuPrefab)
+	{
+		UIMenu menu = Instantiate(aMenuPrefab, transform);
+		menu.transform.SetParent(transform);
+		menu.transform.Reset();
+		menu.Initialize(this);
 		return menu;
 	}
 

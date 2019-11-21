@@ -223,7 +223,9 @@ MonoBehaviour:
     type: 3}
   mBombSpawnerPrefab: {fileID: 3434283764628108242, guid: 4541032d286d66243a4fe9e4b44ae8ad,
     type: 3}
-  mDepthMeterPrefab: {fileID: -2616936896492422397, guid: 2bc8f66df5182b248aad6ebab6f30a21,
+  mDepthMeterHUDPrefab: {fileID: -2616936896492422397, guid: 2bc8f66df5182b248aad6ebab6f30a21,
+    type: 3}
+  mGameOverMenuPrefab: {fileID: 8775968926283235515, guid: fde1e7666e168bf4da60d87a2226579c,
     type: 3}
   mExplosionPrefab: {fileID: 3506304063819049500, guid: 7e1541da5e9985d41a8846daebcb3b5b,
     type: 3}
