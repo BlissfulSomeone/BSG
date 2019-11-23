@@ -45,18 +45,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mBombSpawnSettings:
   - fromDepth: 0
-    spawnInterval: 2
+    bombsPerSecond: 0.5
+    extraBombsPerSecondPerDepth: 0.01
+    maxBombsPerSecond: 0
     bombsToSpawn:
     - {fileID: 7880601355816889469, guid: a3527ebca6e5bbd408a6cc7e8009b16b, type: 3}
     - {fileID: 4521838813421243912, guid: 1efcee2da2b40f14ab6ee0f3c8867385, type: 3}
   - fromDepth: 10
-    spawnInterval: 1.5
+    bombsPerSecond: 0.75
+    extraBombsPerSecondPerDepth: 0.02
+    maxBombsPerSecond: 0
     bombsToSpawn:
     - {fileID: 7880601355816889469, guid: a3527ebca6e5bbd408a6cc7e8009b16b, type: 3}
     - {fileID: 4521838813421243912, guid: 1efcee2da2b40f14ab6ee0f3c8867385, type: 3}
     - {fileID: 1253800694974450686, guid: fca91b45f7e79554ca92b5faeaacdb55, type: 3}
   - fromDepth: 20
-    spawnInterval: 1
+    bombsPerSecond: 1
+    extraBombsPerSecondPerDepth: 0.03
+    maxBombsPerSecond: 2
     bombsToSpawn:
     - {fileID: 7880601355816889469, guid: a3527ebca6e5bbd408a6cc7e8009b16b, type: 3}
     - {fileID: 4521838813421243912, guid: 1efcee2da2b40f14ab6ee0f3c8867385, type: 3}

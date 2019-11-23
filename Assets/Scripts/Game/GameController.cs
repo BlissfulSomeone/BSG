@@ -11,13 +11,13 @@ public class GameController : MonoBehaviour
 	[SerializeField] protected ChunkController mChunkControllerPrefab;
 	[SerializeField] protected CameraController mCameraControllerPrefab;
 	[SerializeField] protected Character mPlayerPrefab;
-	[SerializeField] protected BombSpawner mBombSpawnerPrefab;
+	[SerializeField] protected InfiniteBombSpawner mBombSpawnerPrefab;
 
 	protected ChunkController mChunkControllerInstance;
 	protected CameraController mCameraControllerInstance;
 	protected UIController mUIControllerInstance;
 	protected Character mPlayerInstance;
-	protected BombSpawner mBombSpawnerInstance;
+	protected InfiniteBombSpawner mBombSpawnerInstance;
 	
 	[Header("Temporary stuff")]
 	public UIMenu mDepthMeterHUDPrefab;
