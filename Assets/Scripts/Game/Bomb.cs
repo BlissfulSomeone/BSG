@@ -77,7 +77,7 @@ public class Bomb : MonoBehaviour
 		}
 	}
 
-	private void Explode()
+	public void Explode()
 	{
 		foreach (SpawnOnDestroy i in mToSpawnOnDestroy)
 		{

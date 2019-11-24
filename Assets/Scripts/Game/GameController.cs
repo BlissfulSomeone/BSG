@@ -12,12 +12,14 @@ public class GameController : MonoBehaviour
 	[SerializeField] protected CameraController mCameraControllerPrefab;
 	[SerializeField] protected Character mPlayerPrefab;
 	[SerializeField] protected InfiniteBombSpawner mBombSpawnerPrefab;
+	[SerializeField] protected GameEventController mGameEventControllerPrefab;
 
 	protected ChunkController mChunkControllerInstance;
 	protected CameraController mCameraControllerInstance;
 	protected UIController mUIControllerInstance;
 	protected Character mPlayerInstance;
 	protected InfiniteBombSpawner mBombSpawnerInstance;
+	protected GameEventController mGameEventControllerInstance;
 	
 	[Header("Temporary stuff")]
 	public UIMenu mDepthMeterHUDPrefab;
@@ -25,6 +27,7 @@ public class GameController : MonoBehaviour
 	public Explosion mExplosionPrefab;
 
 	public CameraController CameraControllerInstance { get { return mCameraControllerInstance; } }
+	public InfiniteBombSpawner BombSpawnerInstance { get { return mBombSpawnerInstance; } }
 
 	private const int CHUNK_HEIGHT = 10;
 	private float mFurthestDepth = 0.0f;
@@ -58,6 +61,7 @@ public class GameController : MonoBehaviour
 		mUIControllerInstance = uiObject.AddComponent<UIController>();
 		mPlayerInstance = Instantiate(mPlayerPrefab, Vector3.zero, Quaternion.identity);
 		mBombSpawnerInstance = Instantiate(mBombSpawnerPrefab, Vector3.zero, Quaternion.identity);
+		mGameEventControllerInstance = Instantiate(mGameEventControllerPrefab, Vector3.zero, Quaternion.identity);
 	
 		mPlayerInstance.OnKilled += OnPlayerKilled;
 		mUIControllerInstance.PushMenu(UIController.ELayer.HUD, mDepthMeterHUDPrefab);

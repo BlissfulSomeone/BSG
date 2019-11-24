@@ -4,32 +4,11 @@ using UnityEngine;
 
 public class InfiniteBombSpawner : MonoBehaviour
 {
-	[System.Serializable]
-	public class BombSpawnSetting
-	{
-		public int fromDepth;
-		public float bombsPerSecond;
-		public float extraBombsPerSecondPerDepth;
-		public float maxBombsPerSecond;
-		public Bomb[] bombsToSpawn;
-
-		public float EvaluateInterval(float aDepth)
-		{
-			float delta = Mathf.Max(aDepth - fromDepth, 0);
-			float extra = extraBombsPerSecondPerDepth * delta;
-			float bps = bombsPerSecond + extra;
-			if (maxBombsPerSecond != 0.0f)
-				bps = Mathf.Min(bps, maxBombsPerSecond);
-			float interval = 1.0f / bps;
-			return interval;
-		}
-	}
-
-	[SerializeField] private List<BombSpawnSetting> mBombSpawnSettings;
-	public List<BombSpawnSetting> BombSpawnSettings { get { return mBombSpawnSettings; } }
-
-	private BombSpawnSetting mCachedBombSettings;
+	private Bomb[] mBombPrefabs;
+	private float mBombsPerSecond;
 	private float mSpawnTimer;
+
+	private Bomb[] BombPrefabs { get { if (mBombPrefabs == null) mBombPrefabs = new Bomb[0]; return mBombPrefabs; } set { mBombPrefabs = value; } }
 
 	private void Awake()
 	{
@@ -38,28 +17,28 @@ public class InfiniteBombSpawner : MonoBehaviour
 
 	private void Update()
 	{
-		float furthestDepth = GameController.Instance.FurthestDepth;
-		for (int i = mBombSpawnSettings.Count - 1; i >= 0; --i)
-		{
-			if (GameController.Instance.FurthestDepth > mBombSpawnSettings[i].fromDepth)
-			{
-				mCachedBombSettings = mBombSpawnSettings[i];
-				break;
-			}
-		}
-
-		if (mCachedBombSettings != null)
+		if (BombPrefabs.Length > 0 && mBombsPerSecond > 0.0f)
 		{
 			mSpawnTimer += Time.deltaTime;
-			float interval = mCachedBombSettings.EvaluateInterval(furthestDepth);
+			float interval = mBombsPerSecond;
 			if (mSpawnTimer >= interval)
 			{
 				mSpawnTimer -= interval;
 
-				Bomb bomb = Instantiate(mCachedBombSettings.bombsToSpawn[Random.Range(0, mCachedBombSettings.bombsToSpawn.Length)]);
+				Bomb bomb = Instantiate(BombPrefabs[Random.Range(0, BombPrefabs.Length)]);
 				bomb.transform.position = new Vector2(Random.Range(-8.0f, 8.0f), 10.0f);
 				bomb.Rigidbody.AddForce(Random.Range(-10.0f, 10.0f), 0.0f, 0.0f, ForceMode.VelocityChange);
 			}
 		}
+	}
+
+	public void SetBPS(float aBPS)
+	{
+		mBombsPerSecond = aBPS;
+	}
+
+	public void SetAllowedBombs(Bomb[] aBombPrefabs)
+	{
+		BombPrefabs = aBombPrefabs;
 	}
 }
