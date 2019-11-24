@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -9,15 +8,7 @@ public class GameEventControllerInspector : Editor
 {
 	public override void OnInspectorGUI()
 	{
-		if (GUILayout.Button(new GUIContent("Create Game Event"), GUILayout.Height(50)) == true)
-		{
-			GenericMenu menu = new GenericMenu();
-			menu.AddItem(new GUIContent("Infinite Bomb Pattern"), false, OnClickedMenu, typeof(InfiniteBombPattern));
-			menu.AddItem(new GUIContent("Staged Bomb Pattern"), false, OnClickedMenu, typeof(StagedBombPattern));
-			menu.AddItem(new GUIContent("Nested Game Events"), false, OnClickedMenu, typeof(NestedGameEvent));
-			menu.AddItem(new GUIContent("Remove Bomb Event"), false, OnClickedMenu, typeof(RemoveBombsEvent));
-			menu.ShowAsContext();
-		}
+		GUIGlobals.PrefabMenu<GameEventBase>("Create Game Event", OnClickedMenu, GUILayout.Height(50));
 		if (GUILayout.Button(new GUIContent("Sanitize Game Events"), GUILayout.Height(50)) == true)
 		{
 			((GameEventController)target).ClearEvents();
@@ -29,10 +20,9 @@ public class GameEventControllerInspector : Editor
 
 	private void OnClickedMenu(object aObject)
 	{
-		GameObject go = new GameObject(((Type)aObject).ToString());
-		go.transform.SetParent(((GameEventController)target).transform);
-		go.transform.Reset(true);
-		Component component = go.AddComponent((Type)aObject);
-		((GameEventController)target).AddEvent((GameEventBase)component);
+		GameEventBase gameEvent = Instantiate((GameEventBase)aObject);
+		gameEvent.transform.SetParent(((GameEventController)target).transform);
+		gameEvent.transform.Reset(true);
+		((GameEventController)target).AddEvent(gameEvent);
 	}
 }

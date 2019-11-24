@@ -10,5 +10,6 @@ public class NestedGameEvent : GameEventBase
 	{
 		GameEventController gameEventController = Instantiate(mGameEventControllerPrefab);
 		gameEventController.transform.Reset();
+		gameEventController.DepthOffset = depthToTrigger;
 	}
 }

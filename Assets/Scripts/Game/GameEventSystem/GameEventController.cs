@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class GameEventController : MonoBehaviour
 {
@@ -18,6 +19,15 @@ public class GameEventController : MonoBehaviour
 			}
 			return mGameEvents;
 		}
+	}
+
+	[MenuItem("GameObject/Bomb Survival Game/Game Event Controller", false, -100)]
+	public static void CreateGameEventController(MenuCommand aMenuCommand)
+	{
+		GameObject gameEventControllerObject = new GameObject("Game Event Controller");
+		GameObjectUtility.SetParentAndAlign(gameEventControllerObject, Selection.activeTransform?.gameObject);
+		gameEventControllerObject.transform.Reset(true);
+		gameEventControllerObject.AddComponent<GameEventController>();
 	}
 
 	private void Awake()

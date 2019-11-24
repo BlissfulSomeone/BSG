@@ -6,7 +6,7 @@ public static class TransformExtensions
 {
 	public static void Reset(this Transform transform, bool local = false)
 	{
-		if (local == false)
+		if (local == false || transform.parent == null)
 		{
 			transform.position = Vector3.zero;
 			transform.rotation = Quaternion.identity;

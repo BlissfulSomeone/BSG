@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class StagedBombSpawner : MonoBehaviour
 {
-	[SerializeField] private Bomb bombPrefab;
+	[SerializeField] private Bomb[] bombPrefabs;
 	[SerializeField] private int numberOfBombs = 1;
 	[SerializeField] private Vector2 spawnOffset;
 	[SerializeField] private float spawnForce;
@@ -12,6 +12,8 @@ public class StagedBombSpawner : MonoBehaviour
 	[SerializeField] private float spawnAngleSpread;
 	[SerializeField] private float spawnDelay;
 	
+	private Bomb[] BombPrefabs { get { if (bombPrefabs == null) bombPrefabs = new Bomb[0]; return bombPrefabs; } }
+
 	private void Start()
 	{
 		StartCoroutine(Coroutine_SpawnBombs());
@@ -21,7 +23,7 @@ public class StagedBombSpawner : MonoBehaviour
 	{
 		yield return new WaitForSeconds(spawnDelay);
 
-		if (bombPrefab != null)
+		if (BombPrefabs.Length > 0)
 		{
 			for (int i = 0; i < numberOfBombs; ++i)
 			{
@@ -40,7 +42,8 @@ public class StagedBombSpawner : MonoBehaviour
 				float sin = Mathf.Sin(radians);
 				Vector3 force = new Vector3(cos, sin, 0.0f) * spawnForce;
 
-				Bomb bomb = Instantiate(bombPrefab, bombPrefab.transform.position, Quaternion.identity);
+				Bomb bomb = Instantiate(BombPrefabs.Random());
+				bomb.transform.Reset();
 				bomb.transform.position = transform.position + offset;
 				bomb.Rigidbody.AddForce(force, ForceMode.VelocityChange);
 			}
@@ -49,7 +52,7 @@ public class StagedBombSpawner : MonoBehaviour
 
 	private void OnDrawGizmos()
 	{
-		Gizmos.color = bombPrefab != null ? Color.green : Color.red;
+		Gizmos.color = BombPrefabs.Length > 0 ? Color.green : Color.red;
 		Gizmos.DrawSphere(transform.position, 0.5f);
 	}
 
