@@ -77,4 +77,14 @@ public class GameEventController : MonoBehaviour
 			}
 		}
 	}
+
+	private void OnDrawGizmos()
+	{
+		const float width = 20.0f;
+		const float height = width * (9.0f / 16.0f);
+		const float halfHeight = height * 0.5f;
+
+		Gizmos.color = Color.yellow;
+		Gizmos.DrawWireCube(new Vector3(0.0f, -halfHeight, 0.0f), new Vector3(width, height, 0.0f));
+	}
 }
