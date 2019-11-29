@@ -40,12 +40,12 @@ public class StagedBombSpawner : MonoBehaviour
 				float radians = (spawnAngle + spread) * Mathf.Deg2Rad;
 				float cos = Mathf.Cos(radians);
 				float sin = Mathf.Sin(radians);
-				Vector3 force = new Vector3(cos, sin, 0.0f) * spawnForce;
+				Vector2 force = new Vector3(cos, sin) * spawnForce;
 
 				Bomb bomb = Instantiate(BombPrefabs.Random());
 				bomb.transform.Reset();
 				bomb.transform.position = transform.position + offset;
-				bomb.Rigidbody.AddForce(force, ForceMode.VelocityChange);
+				bomb.FakePhysics.AddForce(force);
 			}
 		}
 	}

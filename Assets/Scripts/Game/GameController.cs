@@ -103,8 +103,10 @@ public class GameController : MonoBehaviour
 			if (mUIControllerInstance != null) Destroy(mUIControllerInstance.gameObject);
 			if (mPlayerInstance != null) Destroy(mPlayerInstance.gameObject);
 			if (mBombSpawnerInstance != null) Destroy(mBombSpawnerInstance.gameObject);
+			if (mGameEventControllerInstance != null) Destroy(mGameEventControllerInstance.gameObject);
 			Globals.DestroyAllOfType<Triggerable>();
 			Globals.DestroyAllOfType<Explosion>();
+			Globals.DestroyAllOfType<GameEventController>();
 
 			Setup();
 		}
@@ -148,7 +150,7 @@ public class GameController : MonoBehaviour
 					float distance = delta.magnitude;
 					if (distance <= aExplosionRadius)
 					{
-						triggerable.Rigidbody.AddExplosionForce(10.0f, aExplosionSource, aExplosionRadius, 1.25f, ForceMode.VelocityChange);
+						triggerable.FakePhysics.AddExplosionForce(10.0f, aExplosionSource, aExplosionRadius, 1.25f);
 					}
 				}
 			}
