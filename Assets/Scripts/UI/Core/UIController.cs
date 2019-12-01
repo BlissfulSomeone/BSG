@@ -28,6 +28,8 @@ public class UIController : MonoBehaviour
 			return mLayers[aLayer];
 
 		GameObject layerObject = new GameObject("UI Layer [" + aLayer.ToString() + "]");
+		layerObject.transform.SetParent(transform);
+		layerObject.transform.Reset();
 
 		UILayer layer = layerObject.AddComponent<UILayer>();
 		mLayers.Add(aLayer, layer);

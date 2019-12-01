@@ -10,4 +10,11 @@ public class UIMenu : MonoBehaviour
 
 	public float Alpha { get { return CanvasGroup.alpha; } set { CanvasGroup.alpha = value; } }
 	public bool Interactable { get { return CanvasGroup.interactable; } set { CanvasGroup.interactable = value; } }
+
+	private UILayer mParentLayer;
+
+	public void Initialize(UILayer aParentLayer)
+	{
+		mParentLayer = aParentLayer;
+	}
 }

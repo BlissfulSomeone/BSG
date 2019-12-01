@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 2950464157502008508}
   - component: {fileID: 8955749530271637044}
-  - component: {fileID: 4316514456330581998}
-  - component: {fileID: 537079578448679728}
-  - component: {fileID: 1470371614573847795}
+  - component: {fileID: 7738004995828439044}
+  - component: {fileID: 5846369959637905557}
   - component: {fileID: -5315311812896183097}
+  - component: {fileID: 1470371614573847795}
   m_Layer: 9
   m_Name: Bomb Base
   m_TagString: Untagged
@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 4076826606511422155}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -84,35 +84,54 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!135 &4316514456330581998
-SphereCollider:
+--- !u!65 &7738004995828439044
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4076826606511422155}
-  m_Material: {fileID: 13400000, guid: 4f7a95903e7115b4bbe3deb101b120bd, type: 2}
+  m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &537079578448679728
-Rigidbody:
+--- !u!114 &5846369959637905557
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4076826606511422155}
-  serializedVersion: 2
-  m_Mass: 4
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 120
-  m_CollisionDetection: 0
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b450db1fe68ce1d42a78f6505c700515, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mPhysics:
+    horizontal:
+      numberOfRaycasts: 4
+      raycastMargin: 0.01
+    vertical:
+      numberOfRaycasts: 4
+      raycastMargin: 0.01
+    bounciness: 0.25
+    gravityScale: 1
+    friction: 0.5
+--- !u!114 &-5315311812896183097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4076826606511422155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bba19f9028d401c468aa7c1d93fb01dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mHasPhysics: 1
 --- !u!114 &1470371614573847795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,16 +151,3 @@ MonoBehaviour:
   mExplosionPrefab: {fileID: 3506304063819049500, guid: 7e1541da5e9985d41a8846daebcb3b5b,
     type: 3}
   mToSpawnOnDestroy: []
---- !u!114 &-5315311812896183097
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4076826606511422155}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bba19f9028d401c468aa7c1d93fb01dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mHasPhysics: 1

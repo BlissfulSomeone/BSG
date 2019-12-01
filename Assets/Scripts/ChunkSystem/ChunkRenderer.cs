@@ -60,10 +60,14 @@ public class ChunkRenderer
 			}
 
 			Material material = mMaterials[kvp.Key];
+			int textureWidth = material.mainTexture.width;
+			int textureHeight = material.mainTexture.height;
+			float pixelsPerUnit = kvp.Key.pixelsPerUnit;
+			Vector3 scale = new Vector3(textureWidth / pixelsPerUnit, textureHeight / pixelsPerUnit, 1.0f);
 
 			foreach (RenderQueue.RenderQueueTransform transform in kvp.Value)
 			{
-				Graphics.DrawMesh(mMesh, Matrix4x4.TRS(transform.position, Quaternion.identity, transform.scale), material, 0);
+				Graphics.DrawMesh(mMesh, Matrix4x4.TRS(transform.position, Quaternion.identity, Vector3.Scale(scale, transform.scale)), material, 0);
 			}
 		}
 	}

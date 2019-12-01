@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(BSGFakePhysics))]
 public class Triggerable : MonoBehaviour
 {
 	public delegate void OnTriggeredHandle(Vector2 aExplosionSource, float aExplosionRadius);
@@ -10,14 +11,14 @@ public class Triggerable : MonoBehaviour
 	[SerializeField] private bool mHasPhysics;
 	public bool HasPhysics { get { return mHasPhysics; } }
 
-	public Rigidbody Rigidbody
+	private BSGFakePhysics mFakePhysics;
+	public BSGFakePhysics FakePhysics
 	{
 		get
 		{
-			Rigidbody body = GetComponent<Rigidbody>();
-			if (body == null)
-				body = gameObject.AddComponent<Rigidbody>();
-			return body;
+			if (mFakePhysics == null)
+				mFakePhysics = GetComponent<BSGFakePhysics>();
+			return mFakePhysics;
 		}
 	}
 

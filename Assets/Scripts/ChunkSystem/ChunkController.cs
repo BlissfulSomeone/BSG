@@ -53,7 +53,7 @@ public class ChunkController : MonoBehaviour
 		debrisSpriteRenderer.sprite = aTileInstance.CurrentSprite;
 		
 		Rigidbody debrisRigidbody = debrisTransform.GetComponent<Rigidbody>();
-		debrisRigidbody.AddExplosionForce(10.0f, aTileDestroyData.destroySource, aTileDestroyData.destoryStrength, 2.5f, ForceMode.VelocityChange);
+		debrisRigidbody.AddExplosionForce(15.0f, aTileDestroyData.destroySource, aTileDestroyData.destoryStrength, 1.0f, ForceMode.VelocityChange);
 
 		Destroy(debrisTransform.gameObject, 3.0f);
 	}

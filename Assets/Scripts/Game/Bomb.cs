@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody), typeof(Triggerable))]
+[RequireComponent(typeof(BSGFakePhysics), typeof(Triggerable))]
 public class Bomb : MonoBehaviour
 {
 	[System.Serializable]
@@ -21,8 +21,8 @@ public class Bomb : MonoBehaviour
 
 	[SerializeField] private SpawnOnDestroy[] mToSpawnOnDestroy;
 
-	private Rigidbody mRigidbody;
-	public Rigidbody Rigidbody { get { if (mRigidbody == null) mRigidbody = GetComponent<Rigidbody>(); return mRigidbody; } }
+	private BSGFakePhysics mFakePhysics;
+	public BSGFakePhysics FakePhysics { get { if (mFakePhysics == null) mFakePhysics = GetComponent<BSGFakePhysics>(); return mFakePhysics; } }
 
 	private Triggerable mTriggerable;
 
@@ -31,7 +31,7 @@ public class Bomb : MonoBehaviour
 	
 	private void Awake()
 	{
-		mRigidbody = GetComponent<Rigidbody>();
+		mFakePhysics = GetComponent<BSGFakePhysics>();
 		mTriggerable = GetComponent<Triggerable>();
 		mTriggerable.OnTriggered += Trigger;
 	}
@@ -56,7 +56,7 @@ public class Bomb : MonoBehaviour
 		{
 			if (mIsTriggered == false)
 			{
-				if (mRigidbody.velocity.IsZero() == true)
+				if (mFakePhysics.Velocity.IsZero() == true)
 				{
 					mIsTriggered = true;
 					mCurrentTimer = mTimer;
@@ -77,7 +77,7 @@ public class Bomb : MonoBehaviour
 		}
 	}
 
-	private void Explode()
+	public void Explode()
 	{
 		foreach (SpawnOnDestroy i in mToSpawnOnDestroy)
 		{
@@ -95,11 +95,11 @@ public class Bomb : MonoBehaviour
 		if (mHasTimer == true)
 		{
 			Vector2 screenPosition = GameController.Instance.CameraControllerInstance.CameraComponent.WorldToScreenPoint(transform.position);
-			float x = screenPosition.x - 16.0f;
-			float y = Screen.height - (screenPosition.y + 16.0f);
-			float w = 32.0f;
-			float h = 32.0f;
-			GUI.TextField(new Rect(x, y, w, h), mCurrentTimer.ToString());
+			float w = 64.0f;
+			float h = 64.0f;
+			float x = screenPosition.x - w * 0.5f;
+			float y = Screen.height - (screenPosition.y + w * 0.5f);
+			GUI.TextField(new Rect(x, y, w, h), FakePhysics.Velocity.x.ToString() + "\n" + FakePhysics.Velocity.y.ToString() + "\n" + mCurrentTimer.ToString());
 		}
 	}
 }

@@ -24,7 +24,7 @@ public class Character : MonoBehaviour
 		public float jumpTime;
 	}
 
-	public delegate void OnKilledHandler();
+	public delegate void OnKilledHandler(Character aKilledCharacter);
 	public OnKilledHandler OnKilled;
 
 	private Rigidbody mRigidbody;
@@ -55,7 +55,7 @@ public class Character : MonoBehaviour
 
 	private void Trigger(Vector2 aExplosionSource, float aExplosionRadius)
 	{
-		OnKilled?.Invoke();
+		OnKilled?.Invoke(this);
 		Destroy(gameObject);
 	}
 

@@ -7,19 +7,27 @@ public class GameController : MonoBehaviour
 	private static GameController mInstance = null;
 	public static GameController Instance { get { return mInstance; } }
 
+	[Header("Controllers")]
 	[SerializeField] protected ChunkController mChunkControllerPrefab;
 	[SerializeField] protected CameraController mCameraControllerPrefab;
 	[SerializeField] protected Character mPlayerPrefab;
+	[SerializeField] protected InfiniteBombSpawner mBombSpawnerPrefab;
+	[SerializeField] protected GameEventController mGameEventControllerPrefab;
 
 	protected ChunkController mChunkControllerInstance;
 	protected CameraController mCameraControllerInstance;
 	protected UIController mUIControllerInstance;
 	protected Character mPlayerInstance;
-
-	public Bomb[] mBombPrefabs;
-	public UIMenu mDepthMeterPrefab;
+	protected InfiniteBombSpawner mBombSpawnerInstance;
+	protected GameEventController mGameEventControllerInstance;
+	
+	[Header("Temporary stuff")]
+	public UIMenu mDepthMeterHUDPrefab;
+	public UIMenu mGameOverMenuPrefab;
+	public Explosion mExplosionPrefab;
 
 	public CameraController CameraControllerInstance { get { return mCameraControllerInstance; } }
+	public InfiniteBombSpawner BombSpawnerInstance { get { return mBombSpawnerInstance; } }
 
 	private const int CHUNK_HEIGHT = 10;
 	private float mFurthestDepth = 0.0f;
@@ -36,20 +44,40 @@ public class GameController : MonoBehaviour
 		}
 		mInstance = this;
 
-		mChunkControllerInstance = Instantiate(mChunkControllerPrefab, Vector3.zero, Quaternion.identity);
-		mCameraControllerInstance = Instantiate(mCameraControllerPrefab, new Vector3(0.0f, 0.0f, 10.0f), Quaternion.identity);
-		mPlayerInstance = Instantiate(mPlayerPrefab, Vector3.zero, Quaternion.identity);
+		Setup();
+	}
+
+	private void Setup()
+	{
+		mFurthestDepth = 0.0f;
+		mChunksSpawned = 0;
 
 		GameObject uiObject = new GameObject("UI System");
 		uiObject.transform.SetParent(transform);
 		uiObject.transform.Reset();
 
+		mChunkControllerInstance = Instantiate(mChunkControllerPrefab, Vector3.zero, Quaternion.identity);
+		mCameraControllerInstance = Instantiate(mCameraControllerPrefab, new Vector3(0.0f, 0.0f, 10.0f), Quaternion.identity);
 		mUIControllerInstance = uiObject.AddComponent<UIController>();
+		mPlayerInstance = Instantiate(mPlayerPrefab, Vector3.zero, Quaternion.identity);
+		mBombSpawnerInstance = Instantiate(mBombSpawnerPrefab, Vector3.zero, Quaternion.identity);
+		mGameEventControllerInstance = Instantiate(mGameEventControllerPrefab, Vector3.zero, Quaternion.identity);
+	
+		mPlayerInstance.OnKilled += OnPlayerKilled;
+		mUIControllerInstance.PushMenu(UIController.ELayer.HUD, mDepthMeterHUDPrefab);
 	}
 
-	private void Start()
+	private void OnPlayerKilled(Character aKilledCharacter)
 	{
-		mUIControllerInstance.PushMenu(UIController.ELayer.HUD, mDepthMeterPrefab);
+		if (aKilledCharacter != mPlayerInstance)
+		{
+			Debug.LogError("We only have one character in the game so this REALLY shouldn't happen. But yknow. Safety checks.");
+			return;
+		}
+
+		aKilledCharacter.OnKilled -= OnPlayerKilled;
+
+		mUIControllerInstance.PushMenu(UIController.ELayer.Menus, mGameOverMenuPrefab);
 	}
 
 	private void Update()
@@ -63,27 +91,24 @@ public class GameController : MonoBehaviour
 		if (Input.GetMouseButtonDown(0) == true)
 		{
 			Vector2 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			Explode(mouseWorldPosition, 3.0f);
-		}
-		if (Input.GetMouseButtonDown(1) == true)
-		{
-			Bomb bomb = Instantiate(mBombPrefabs[Random.Range(0, mBombPrefabs.Length)]);
-			bomb.transform.position = new Vector2(Random.Range(-8.0f, 8.0f), CHUNK_HEIGHT);
-			bomb.Rigidbody.AddForce(Random.Range(-10.0f, 10.0f), 0.0f, 0.0f, ForceMode.VelocityChange);
+			Explosion explosion = Instantiate(mExplosionPrefab);
+			explosion.transform.position = mouseWorldPosition;		// Set explosion source.
+			explosion.transform.localScale = Vector3.one * 2.0f;	// Set explosion size. localScale = explosion radius :)
 		}
 		if (Input.GetKeyDown(KeyCode.R) == true && mPlayerInstance == null)
 		{
 			// Super naive way to reset game
 			if (mChunkControllerInstance != null) Destroy(mChunkControllerInstance.gameObject);
 			if (mCameraControllerInstance != null) Destroy(mCameraControllerInstance.gameObject);
+			if (mUIControllerInstance != null) Destroy(mUIControllerInstance.gameObject);
 			if (mPlayerInstance != null) Destroy(mPlayerInstance.gameObject);
+			if (mBombSpawnerInstance != null) Destroy(mBombSpawnerInstance.gameObject);
+			if (mGameEventControllerInstance != null) Destroy(mGameEventControllerInstance.gameObject);
 			Globals.DestroyAllOfType<Triggerable>();
 			Globals.DestroyAllOfType<Explosion>();
-			mFurthestDepth = 0.0f;
-			mChunksSpawned = 0;
-			mChunkControllerInstance = Instantiate(mChunkControllerPrefab, Vector3.zero, Quaternion.identity);
-			mCameraControllerInstance = Instantiate(mCameraControllerPrefab, new Vector3(0.0f, 0.0f, 10.0f), Quaternion.identity);
-			mPlayerInstance = Instantiate(mPlayerPrefab, Vector3.zero, Quaternion.identity);
+			Globals.DestroyAllOfType<GameEventController>();
+
+			Setup();
 		}
 	}
 
@@ -125,18 +150,10 @@ public class GameController : MonoBehaviour
 					float distance = delta.magnitude;
 					if (distance <= aExplosionRadius)
 					{
-						triggerable.Rigidbody.AddExplosionForce(10.0f, aExplosionSource, aExplosionRadius, 2.5f, ForceMode.VelocityChange);
+						triggerable.FakePhysics.AddExplosionForce(10.0f, aExplosionSource, aExplosionRadius, 1.25f);
 					}
 				}
 			}
-		}
-	}
-
-	private void OnGUI()
-	{
-		if (mPlayerInstance == null)
-		{
-			GUI.TextField(new Rect(Screen.width / 2 - 128, Screen.height / 2 - 16, 256, 32), "GAME OVER\nPress R to restart");
 		}
 	}
 }

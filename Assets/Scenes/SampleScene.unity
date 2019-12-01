@@ -221,12 +221,15 @@ MonoBehaviour:
     type: 3}
   mPlayerPrefab: {fileID: 8377611175049075330, guid: 1cce0683c959cef4b923747277ac1320,
     type: 3}
-  mBombPrefabs:
-  - {fileID: 7880601355816889469, guid: a3527ebca6e5bbd408a6cc7e8009b16b, type: 3}
-  - {fileID: 4521838813421243912, guid: 1efcee2da2b40f14ab6ee0f3c8867385, type: 3}
-  - {fileID: 1253800694974450686, guid: fca91b45f7e79554ca92b5faeaacdb55, type: 3}
-  - {fileID: 551826394380437524, guid: a51fea408f270594c86db97c6aca166d, type: 3}
-  mDepthMeterPrefab: {fileID: -2616936896492422397, guid: 2bc8f66df5182b248aad6ebab6f30a21,
+  mBombSpawnerPrefab: {fileID: 3434283764628108242, guid: 4541032d286d66243a4fe9e4b44ae8ad,
+    type: 3}
+  mGameEventControllerPrefab: {fileID: 2100074805700649560, guid: 981fcfb3f314d674a9aa04b3e4573266,
+    type: 3}
+  mDepthMeterHUDPrefab: {fileID: -2616936896492422397, guid: 2bc8f66df5182b248aad6ebab6f30a21,
+    type: 3}
+  mGameOverMenuPrefab: {fileID: 8775968926283235515, guid: fde1e7666e168bf4da60d87a2226579c,
+    type: 3}
+  mExplosionPrefab: {fileID: 3506304063819049500, guid: 7e1541da5e9985d41a8846daebcb3b5b,
     type: 3}
 --- !u!4 &2134779021
 Transform:

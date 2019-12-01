@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ed44e3777708674284bcca15cf40a90, type: 3}
+  m_Name: TestAnimation
+  m_EditorClassIdentifier: 
+  frames:
+  - {fileID: -5005734642172061861, guid: 18a7f955b95641e4a89c1a808db1807a, type: 3}
+  - {fileID: -944179757325973520, guid: 18a7f955b95641e4a89c1a808db1807a, type: 3}
+  - {fileID: -2814057685782066064, guid: 18a7f955b95641e4a89c1a808db1807a, type: 3}
+  - {fileID: 7649216383780524778, guid: 18a7f955b95641e4a89c1a808db1807a, type: 3}
+  - {fileID: 874406200765286648, guid: 18a7f955b95641e4a89c1a808db1807a, type: 3}
+  - {fileID: -984520988586428341, guid: 18a7f955b95641e4a89c1a808db1807a, type: 3}
+  - {fileID: -1270413258884762463, guid: 18a7f955b95641e4a89c1a808db1807a, type: 3}
+  - {fileID: 6882183906302674250, guid: 18a7f955b95641e4a89c1a808db1807a, type: 3}
