@@ -10,15 +10,16 @@ public class GameController : MonoBehaviour
 	[Header("Controllers")]
 	[SerializeField] protected ChunkController mChunkControllerPrefab;
 	[SerializeField] protected CameraController mCameraControllerPrefab;
+	[SerializeField] private UIController mUIControllerPrefab;
 	[SerializeField] protected Character mPlayerPrefab;
-	[SerializeField] protected InfiniteBombSpawner mBombSpawnerPrefab;
+	[SerializeField] private InfiniteBombSpawner mInfiniteBombSpawnerPrefab;
 	[SerializeField] protected GameEventController mGameEventControllerPrefab;
 
 	protected ChunkController mChunkControllerInstance;
 	protected CameraController mCameraControllerInstance;
 	protected UIController mUIControllerInstance;
 	protected Character mPlayerInstance;
-	protected InfiniteBombSpawner mBombSpawnerInstance;
+	protected InfiniteBombSpawner mInfiniteBombSpawnerInstance;
 	protected GameEventController mGameEventControllerInstance;
 	
 	[Header("Temporary stuff")]
@@ -27,7 +28,7 @@ public class GameController : MonoBehaviour
 	public Explosion mExplosionPrefab;
 
 	public CameraController CameraControllerInstance { get { return mCameraControllerInstance; } }
-	public InfiniteBombSpawner BombSpawnerInstance { get { return mBombSpawnerInstance; } }
+	public InfiniteBombSpawner BombSpawnerInstance { get { return mInfiniteBombSpawnerInstance; } }
 
 	private const int CHUNK_HEIGHT = 10;
 	private float mFurthestDepth = 0.0f;
@@ -51,20 +52,24 @@ public class GameController : MonoBehaviour
 	{
 		mFurthestDepth = 0.0f;
 		mChunksSpawned = 0;
-
-		GameObject uiObject = new GameObject("UI System");
-		uiObject.transform.SetParent(transform);
-		uiObject.transform.Reset();
-
-		mChunkControllerInstance = Instantiate(mChunkControllerPrefab, Vector3.zero, Quaternion.identity);
-		mCameraControllerInstance = Instantiate(mCameraControllerPrefab, new Vector3(0.0f, 0.0f, 10.0f), Quaternion.identity);
-		mUIControllerInstance = uiObject.AddComponent<UIController>();
-		mPlayerInstance = Instantiate(mPlayerPrefab, Vector3.zero, Quaternion.identity);
-		mBombSpawnerInstance = Instantiate(mBombSpawnerPrefab, Vector3.zero, Quaternion.identity);
-		mGameEventControllerInstance = Instantiate(mGameEventControllerPrefab, Vector3.zero, Quaternion.identity);
+		
+		mChunkControllerInstance = SpawnControllerPrefab(mChunkControllerPrefab);
+		mCameraControllerInstance = SpawnControllerPrefab(mCameraControllerPrefab);
+		mUIControllerInstance = SpawnControllerPrefab(mUIControllerPrefab);
+		mPlayerInstance = SpawnControllerPrefab(mPlayerPrefab);
+		mInfiniteBombSpawnerInstance = SpawnControllerPrefab(mInfiniteBombSpawnerPrefab);
+		mGameEventControllerInstance = SpawnControllerPrefab(mGameEventControllerPrefab);
 	
 		mPlayerInstance.OnKilled += OnPlayerKilled;
 		mUIControllerInstance.PushMenu(UIController.ELayer.HUD, mDepthMeterHUDPrefab);
+	}
+
+	private T SpawnControllerPrefab<T>(T aControllerPrefab) where T : MonoBehaviour
+	{
+		T controller = Instantiate(aControllerPrefab);
+		controller.transform.SetParent(transform);
+		controller.transform.Reset();
+		return controller;
 	}
 
 	private void OnPlayerKilled(Character aKilledCharacter)
@@ -78,6 +83,12 @@ public class GameController : MonoBehaviour
 		aKilledCharacter.OnKilled -= OnPlayerKilled;
 
 		mUIControllerInstance.PushMenu(UIController.ELayer.Menus, mGameOverMenuPrefab);
+	}
+
+	private void Start()
+	{
+		//mChunkControllerInstance.CreateChunk(new ChunkEmpty(new Vector2(-9.5f, 0.0f), Vector2.one, new Vector2Int(20, 10)));
+		//mChunkControllerInstance.CreateChunk(new ChunkCustom(new Vector2(-9.5f, -10.0f), Vector2.one, new Vector2Int(20, 10)));
 	}
 
 	private void Update()
@@ -102,7 +113,7 @@ public class GameController : MonoBehaviour
 			if (mCameraControllerInstance != null) Destroy(mCameraControllerInstance.gameObject);
 			if (mUIControllerInstance != null) Destroy(mUIControllerInstance.gameObject);
 			if (mPlayerInstance != null) Destroy(mPlayerInstance.gameObject);
-			if (mBombSpawnerInstance != null) Destroy(mBombSpawnerInstance.gameObject);
+			if (mInfiniteBombSpawnerInstance != null) Destroy(mInfiniteBombSpawnerInstance.gameObject);
 			if (mGameEventControllerInstance != null) Destroy(mGameEventControllerInstance.gameObject);
 			Globals.DestroyAllOfType<Triggerable>();
 			Globals.DestroyAllOfType<Explosion>();
