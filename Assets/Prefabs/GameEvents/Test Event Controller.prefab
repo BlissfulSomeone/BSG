@@ -97,7 +97,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mGameEvents:
   - {fileID: 5025520368405673349}
-  - {fileID: 8728740186498064729}
 --- !u!1 &5368702289330143219
 GameObject:
   m_ObjectHideFlags: 0

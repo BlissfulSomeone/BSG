@@ -13,6 +13,21 @@ MonoBehaviour:
   m_Name: TileDirt
   m_EditorClassIdentifier: 
   sprites:
-  - {fileID: 21300000, guid: 9a1f54cdec95aae4ca4947b2c232763d, type: 3}
+  - sprites:
+    - {fileID: 21300000, guid: 96e4218d2682b124ab18af28cdaf30d0, type: 3}
+    - {fileID: 21300000, guid: f45407c1cff759140a9a25348a5255fa, type: 3}
+    - {fileID: 21300000, guid: bd61cb0fd1ce7214f884bbd57fd74604, type: 3}
+    - {fileID: 21300000, guid: 200df86c232ff1f4599551aa1ac2b3c4, type: 3}
+    - {fileID: 21300000, guid: a9439a7f09737274cbc7b2bfac83f8e4, type: 3}
+    - {fileID: 21300000, guid: 3aa74ea6408ad4b4fb13aea5d96177f5, type: 3}
+    - {fileID: 21300000, guid: 63e3c9bc722a4be49ab8ae2f01eaf81e, type: 3}
+    - {fileID: 21300000, guid: 47035ffdf65d07f489580f25befd65b5, type: 3}
+    - {fileID: 21300000, guid: 275a3790edd51bd4aa2408c31526da0c, type: 3}
+    - {fileID: 21300000, guid: f9684a4c5eb5a5445a6b030748d1fd69, type: 3}
+    - {fileID: 21300000, guid: 9f49d7cb97a97404e86e167fdffa667d, type: 3}
+    - {fileID: 21300000, guid: 714d26bbcedd71c42a938c9c12847e6e, type: 3}
+    - {fileID: 21300000, guid: 9401779da6f2d76449d13235237d01f9, type: 3}
+    - {fileID: 21300000, guid: 7dc55d5db274e854fba1ed6df6daec8e, type: 3}
+    - {fileID: 21300000, guid: f307fe6db6ed42f4bbe2093f99dbb2ad, type: 3}
   indestructible: 0
   hasCollision: 1

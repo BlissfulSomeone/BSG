@@ -16,8 +16,8 @@ public class Chunk
 		public TileInstance(TileData aTileData)
 		{
 			tileData = aTileData;
-			currentSprite = tileData.sprites[tileData.sprites.Length - 1];
 			health = tileData.sprites.Length - 1;
+			currentSprite = tileData.GetRandomSpriteFromHealth(health);
 		}
 
 		public bool Damage(int aDamage)
@@ -28,10 +28,11 @@ public class Chunk
 			health -= aDamage;
 			if (health >= 0)
 			{
-				currentSprite = tileData.sprites[health];
+				
+				currentSprite = tileData.GetRandomSpriteFromHealth(health);
 				return false;
 			}
-			currentSprite = tileData.sprites[0];
+			currentSprite = tileData.GetRandomSpriteFromHealth(0);
 			return true;
 		}
 	}

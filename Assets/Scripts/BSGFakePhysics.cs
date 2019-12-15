@@ -6,7 +6,7 @@ using UnityEngine;
 public class BSGFakePhysics : MonoBehaviour
 {
 	private const float GROUND_CHECK_DISTANCE = 0.01f;
-	private const float STATIONARY_VELOCITY_EPSILON = 0.01f;
+	private const float STATIONARY_VELOCITY_EPSILON = 0.1f;
 
 	private enum EAxisIndex
 	{
@@ -28,7 +28,8 @@ public class BSGFakePhysics : MonoBehaviour
 		public RaycastSettings vertical;
 		[Range(0.0f, 1.0f)] public float bounciness = 0.0f;
 		public float gravityScale = 1.0f;
-		[Range(0.0f, 1.0f)] public float friction = 0.5f;
+		public float friction = 10.0f;
+		public float airControl = 0.0f;
 	}
 
 	[SerializeField] private Physics mPhysics;
@@ -38,12 +39,13 @@ public class BSGFakePhysics : MonoBehaviour
 	private bool mIsGrounded = false;
 	private Vector2 mVelocity = Vector2.zero;
 
+	public bool IsGrounded { get { return mIsGrounded; } }
 	public Vector2 Velocity { get { return mVelocity; } set { mVelocity = value; } }
 
 	private void Awake()
 	{
 		int layer = gameObject.layer;
-		for (int i = 0; i < 32; ++i)
+		for (int i = 0; i < 16; ++i)
 		{
 			if (UnityEngine.Physics.GetIgnoreLayerCollision(layer, i) == false)
 			{
@@ -56,6 +58,10 @@ public class BSGFakePhysics : MonoBehaviour
 
 	private void FixedUpdate()
 	{
+		if (mVelocity.x > 0.0f)
+			mVelocity.x = Mathf.Max(mVelocity.x - (mIsGrounded == true ? mPhysics.friction : mPhysics.airControl) * Time.fixedDeltaTime, 0.0f);
+		if (mVelocity.x < 0.0f)
+			mVelocity.x = Mathf.Min(mVelocity.x + (mIsGrounded == true ? mPhysics.friction : mPhysics.airControl) * Time.fixedDeltaTime, 0.0f);
 		if (mIsGrounded == false)
 			mVelocity.y -= 20.0f * mPhysics.gravityScale * Time.fixedDeltaTime;
 		DoRaycasts(Vector2.right, mPhysics.horizontal, EAxisIndex.Horizontal);
@@ -83,7 +89,7 @@ public class BSGFakePhysics : MonoBehaviour
 			Vector3 rayOrigin = Vector3.Lerp(start, end, i / (aRaycastSettings.numberOfRaycasts - 1.0f));
 			Ray ray = new Ray(rayOrigin, rayDirection);
 			RaycastHit hitInfo;
-			Debug.DrawLine(rayOrigin, rayOrigin + rayDirection * rayLength, Color.red, 0.0f);
+			//Debug.DrawLine(rayOrigin, rayOrigin + rayDirection * rayLength, Color.red, 0.0f);
 			if (UnityEngine.Physics.Raycast(ray, out hitInfo, rayLength, mCollisionMask))
 			{
 				float distance = Mathf.Abs(start[axisIndex] - hitInfo.point[axisIndex]) - (mBoxCollider.size[axisIndex] * 0.5f);
@@ -91,11 +97,14 @@ public class BSGFakePhysics : MonoBehaviour
 				{
 					distanceToMove = distance;
 					mVelocity[axisIndex] = -mVelocity[axisIndex] * mPhysics.bounciness;
-					mVelocity *= mPhysics.friction;
-					if (Mathf.Abs(mVelocity.x) < STATIONARY_VELOCITY_EPSILON)
-						mVelocity.x = 0.0f;
-					if (Mathf.Abs(mVelocity.y) < STATIONARY_VELOCITY_EPSILON)
-						mVelocity.y = 0.0f;
+					if (mVelocity[axisIndex] > 0.0f)
+						mVelocity[axisIndex] = Mathf.Max(mVelocity[axisIndex] - STATIONARY_VELOCITY_EPSILON, 0.0f);
+					if (mVelocity[axisIndex] < 0.0f)
+						mVelocity[axisIndex] = Mathf.Min(mVelocity[axisIndex] + STATIONARY_VELOCITY_EPSILON, 0.0f);
+					//if (Mathf.Abs(mVelocity.x) <= STATIONARY_VELOCITY_EPSILON)
+					//	mVelocity.x = 0.0f;
+					//if (Mathf.Abs(mVelocity.y) <= STATIONARY_VELOCITY_EPSILON)
+					//	mVelocity.y = 0.0f;
 				}
 			}
 		}
@@ -117,7 +126,7 @@ public class BSGFakePhysics : MonoBehaviour
 			if (UnityEngine.Physics.Raycast(ray, out hitInfo, rayLength, mCollisionMask))
 			{
 				mIsGrounded = true;
-				break;
+				return;
 			}
 		}
 		mIsGrounded = false;

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: TileMetal
   m_EditorClassIdentifier: 
   sprites:
-  - {fileID: 21300000, guid: bc756128c5f538d4ca5b53f29024df56, type: 3}
+  - sprites:
+    - {fileID: 21300000, guid: bc756128c5f538d4ca5b53f29024df56, type: 3}
   indestructible: 1
   hasCollision: 1

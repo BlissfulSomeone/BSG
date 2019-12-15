@@ -50,7 +50,7 @@ public class Bomb : MonoBehaviour
 		}
 	}
 
-	private void Update()
+	private void FixedUpdate()
 	{
 		if (mHasTimer == true)
 		{
@@ -63,7 +63,13 @@ public class Bomb : MonoBehaviour
 				}
 			}
 		}
+		//Debug.Log("======");
+		//Debug.Log(mFakePhysics.Velocity.x + ", " + mFakePhysics.Velocity.y);
+		//Debug.Log(mFakePhysics.IsGrounded);
+	}
 
+	private void Update()
+	{
 		if (mIsTriggered == true)
 		{
 			if (mCurrentTimer > 0.0f)
@@ -96,10 +102,10 @@ public class Bomb : MonoBehaviour
 		{
 			Vector2 screenPosition = GameController.Instance.CameraControllerInstance.CameraComponent.WorldToScreenPoint(transform.position);
 			float w = 64.0f;
-			float h = 64.0f;
+			float h = 24.0f;
 			float x = screenPosition.x - w * 0.5f;
-			float y = Screen.height - (screenPosition.y + w * 0.5f);
-			GUI.TextField(new Rect(x, y, w, h), FakePhysics.Velocity.x.ToString() + "\n" + FakePhysics.Velocity.y.ToString() + "\n" + mCurrentTimer.ToString());
+			float y = Screen.height - (screenPosition.y + h * 0.5f);
+			GUI.TextField(new Rect(x, y, w, h), mCurrentTimer.ToString());
 		}
 	}
 }
