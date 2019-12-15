@@ -5,13 +5,20 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 public class SpriteAnimator : MonoBehaviour
 {
+	public enum EAnimationEndedEvent
+	{
+		Stop,
+		Loop,
+		Destroy,
+	}
+
 	[SerializeField] private SpriteAnimation mSpriteAnimation;
 	[SerializeField] private float mFrameRate = 8.0f;
 	[SerializeField] private bool mPlay = true;
-	[SerializeField] private bool mLoop = true;
+	[SerializeField] private EAnimationEndedEvent mAnimationEndedEvent = EAnimationEndedEvent.Loop;
 
 	public bool IsPlaying { get { return mPlay; } set { mPlay = value; } }
-	public bool IsLooping { get { return mLoop; } set { mLoop = value; } }
+	//public bool IsLooping { get { return mLoop; } set { mLoop = value; } }
 
 	private float mCurrentFrame = 0.0f;
 	private int mPreviousFrameIndex = -1;
@@ -47,19 +54,25 @@ public class SpriteAnimator : MonoBehaviour
 		if (mPlay == true && Mathf.Abs(mFrameRate) > 0.0f)
 		{
 			mCurrentFrame += Time.deltaTime * mFrameRate;
-			if (mCurrentFrame >= mSpriteAnimation.Length)
+			if (mCurrentFrame >= mSpriteAnimation.Length || mCurrentFrame < 0.0f)
 			{
-				if (IsLooping == true)
-					mCurrentFrame -= mSpriteAnimation.Length;
-				else
-					IsPlaying = false;
-			}
-			if (mCurrentFrame < 0.0f)
-			{
-				if (IsLooping == true)
-					mCurrentFrame += mSpriteAnimation.Length;
-				else
-					IsPlaying = false;
+				switch (mAnimationEndedEvent)
+				{
+					case EAnimationEndedEvent.Stop:
+						mCurrentFrame = 0.0f;
+						IsPlaying = false;
+						break;
+
+					case EAnimationEndedEvent.Loop:
+						mCurrentFrame -= Mathf.Sign(mCurrentFrame) * mSpriteAnimation.Length;
+						break;
+
+					case EAnimationEndedEvent.Destroy:
+						mCurrentFrame = 0.0f;
+						IsPlaying = false;
+						Destroy(gameObject);
+						break;
+				}
 			}
 
 			int frameIndex = Mathf.FloorToInt(mCurrentFrame);

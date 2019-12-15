@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1509922096767293334}
   - component: {fileID: 886247936642247528}
   - component: {fileID: 3506304063819049500}
+  - component: {fileID: 6267974963768709179}
   m_Layer: 0
   m_Name: Explosion
   m_TagString: Untagged
@@ -70,7 +71,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: ab2849cae00509b45ba7eaa7db1259a4, type: 3}
+  m_Sprite: {fileID: 6946156285368981564, guid: 8bac4805dc812e848b410fca4fe35588,
+    type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -93,3 +95,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4eda00826132ab6479de3d6b330868dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6267974963768709179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8077914281304040062}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3db93543b41d46b40b0e6035929c6ab6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mSpriteAnimation: {fileID: 11400000, guid: 1a7df728215a49049a49326d0df0288b, type: 2}
+  mFrameRate: 30
+  mPlay: 1
+  mAnimationEndedEvent: 2
