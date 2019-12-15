@@ -118,7 +118,8 @@ MonoBehaviour:
       raycastMargin: 0.01
     bounciness: 0.25
     gravityScale: 1
-    friction: 0.5
+    friction: 10
+    airControl: 0
 --- !u!114 &-5315311812896183097
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -14,7 +14,7 @@ public class ChunkController : MonoBehaviour
 	private ChunkGenerator mChunkGenerator;
 	private ChunkRenderer mChunkRenderer;
 
-	private void Start()
+	private void Awake()
 	{
 		mChunkGenerator = new ChunkGenerator();
 		mChunkGenerator.OnChunkCreated += OnChunkCreated;
