@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 886247936642247528}
   - component: {fileID: 3506304063819049500}
   - component: {fileID: 6267974963768709179}
+  - component: {fileID: 8682656803993625357}
   m_Layer: 0
   m_Name: Explosion
   m_TagString: Untagged
@@ -111,3 +112,22 @@ MonoBehaviour:
   mFrameRate: 30
   mPlay: 1
   mAnimationEndedEvent: 2
+--- !u!95 &8682656803993625357
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8077914281304040062}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d997fc4ba771a324f8d5319a5c8202eb, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
