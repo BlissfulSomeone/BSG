@@ -13,7 +13,7 @@ public class GameController : MonoBehaviour
 	[SerializeField] private UIController mUIControllerPrefab;
 	[SerializeField] protected Character mPlayerPrefab;
 	[SerializeField] private InfiniteBombSpawner mInfiniteBombSpawnerPrefab;
-	[SerializeField] protected GameEventController mGameEventControllerPrefab;
+	[SerializeField] protected GameEvent mGameEventRootPrefab;
 
 	protected ChunkController mChunkControllerInstance;
 	protected CameraController mCameraControllerInstance;
@@ -58,7 +58,12 @@ public class GameController : MonoBehaviour
 		mUIControllerInstance = SpawnControllerPrefab(mUIControllerPrefab);
 		mPlayerInstance = SpawnControllerPrefab(mPlayerPrefab);
 		mInfiniteBombSpawnerInstance = SpawnControllerPrefab(mInfiniteBombSpawnerPrefab);
-		mGameEventControllerInstance = SpawnControllerPrefab(mGameEventControllerPrefab);
+
+		GameObject go = new GameObject("Game Event Controller");
+		go.transform.SetParent(transform);
+		go.transform.Reset();
+		mGameEventControllerInstance = go.AddComponent<GameEventController>();
+		mGameEventControllerInstance.GameEventRoot = Instantiate(mGameEventRootPrefab);
 	
 		mPlayerInstance.OnKilled += OnPlayerKilled;
 		mUIControllerInstance.PushMenu(UIController.ELayer.HUD, mDepthMeterHUDPrefab);

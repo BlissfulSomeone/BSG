@@ -20,7 +20,7 @@ public class InfiniteBombSpawner : MonoBehaviour
 		if (BombPrefabs.Length > 0 && mBombsPerSecond > 0.0f)
 		{
 			mSpawnTimer += Time.deltaTime;
-			float interval = mBombsPerSecond;
+			float interval = 1.0f / mBombsPerSecond;
 			if (mSpawnTimer >= interval)
 			{
 				mSpawnTimer -= interval;

@@ -5,86 +5,40 @@ using UnityEditor;
 
 public class GameEventController : MonoBehaviour
 {
-	private float mDepthOffset;
-	public float DepthOffset { get { return mDepthOffset; } set { mDepthOffset = value; } }
+	private int mDepthOffset = 0;
+	public int DepthOffset { get { return mDepthOffset; } set { mDepthOffset = value; } }
 
-	[SerializeField] private List<GameEventBase> mGameEvents;
-	private List<GameEventBase> GameEvents
+	[SerializeField] private GameEvent mGameEventRoot;
+	public GameEvent GameEventRoot { get { return mGameEventRoot; } set { mGameEventRoot = value; } }
+
+	private void Start()
 	{
-		get
+		for (int i = 0; i < mGameEventRoot.Count; ++i)
 		{
-			if (mGameEvents == null)
-			{
-				mGameEvents = new List<GameEventBase>();
-			}
-			return mGameEvents;
+			GameEventData gameEvent = mGameEventRoot.GetGameEvent(i);
+			gameEvent.TriggerAtDepth += DepthOffset;
+			mGameEventRoot.UpdateGameEvent(gameEvent, i);
 		}
-	}
-
-	[MenuItem("GameObject/Bomb Survival Game/Game Event Controller", false, -100)]
-	public static void CreateGameEventController(MenuCommand aMenuCommand)
-	{
-		GameObject gameEventControllerObject = new GameObject("Game Event Controller");
-		GameObjectUtility.SetParentAndAlign(gameEventControllerObject, Selection.activeTransform?.gameObject);
-		gameEventControllerObject.transform.Reset(true);
-		gameEventControllerObject.AddComponent<GameEventController>();
-	}
-
-	private void Awake()
-	{
-		FetchEvents();
-	}
-
-	public void FetchEvents()
-	{
-		if (GameEvents.Count == 0 && transform.childCount > 0)
-		{
-			GameEventBase[] gameEvents = GetComponentsInChildren<GameEventBase>();
-			GameEvents.AddRange(gameEvents);
-		}
-	}
-
-	public void AddEvent(GameEventBase aGameEvent)
-	{
-		GameEvents.Add(aGameEvent);
-	}
-
-	public void ClearEvents()
-	{
-		GameEvents.Clear();
 	}
 
 	private void Update()
 	{
-		float depth = GameController.Instance.FurthestDepth - DepthOffset;
-		for (int i = 0; i < GameEvents.Count; ++i)
+		if (mGameEventRoot == null || transform.parent == null)
+			return;
+
+		float depth = GameController.Instance.FurthestDepth;
+		for (int i = 0; i < mGameEventRoot.Count; ++i)
 		{
-			GameEventBase gameEvent = GameEvents[i];
-			if (gameEvent.Evaluate(depth) == true)
+			GameEventData gameEvent = mGameEventRoot.GetGameEvent(i);
+			if (gameEvent.TriggerAtDepth <= depth)
 			{
 				if (gameEvent.HasBeenTriggered == false)
 				{
-					gameEvent.Execute();
+					GameEventCore.GameEventActions[(int)gameEvent.EventType].OnAction(gameEvent);
+					gameEvent.HasBeenTriggered = true;
+					mGameEventRoot.UpdateGameEvent(gameEvent, i);
 				}
 			}
 		}
-		for (int i = GameEvents.Count - 1; i >= 0; --i)
-		{
-			GameEventBase gameEvent = GameEvents[i];
-			if (gameEvent.HasBeenTriggered == true)
-			{
-				GameEvents.Remove(gameEvent);
-			}
-		}
-	}
-
-	private void OnDrawGizmos()
-	{
-		const float width = 20.0f;
-		const float height = width * (9.0f / 16.0f);
-		const float halfHeight = height * 0.5f;
-
-		Gizmos.color = Color.yellow;
-		Gizmos.DrawWireCube(new Vector3(0.0f, -halfHeight, 0.0f), new Vector3(width, height, 0.0f));
 	}
 }
