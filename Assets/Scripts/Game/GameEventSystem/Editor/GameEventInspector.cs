@@ -46,12 +46,20 @@ public class GameEventInspector : Editor
 	{
 		SerializedProperty foldoutProperty = GetPropertyFromIndexAndName(index, "IsFoldOut");
 		SerializedProperty depthProperty = GetPropertyFromIndexAndName(index, "TriggerAtDepth");
+		SerializedProperty delayProperty = GetPropertyFromIndexAndName(index, "TriggerDelayTime");
 		SerializedProperty typeProperty = GetPropertyFromIndexAndName(index, "EventType");
-
-		Rect depthRect = new Rect(rect.x, rect.y, EditorGUIUtility.labelWidth - 4.0f, LINE_HEIGHT);
-		Rect typeRect = new Rect(rect.x + EditorGUIUtility.labelWidth, rect.y, rect.width - EditorGUIUtility.labelWidth, LINE_HEIGHT);
-		EditorGUI.PropertyField(depthRect, depthProperty, GUIContent.none);
-		EditorGUI.PropertyField(typeRect, typeProperty, GUIContent.none);
+		float[] widths = new float[] { rect.width / 4.0f, rect.width / 4.0f, rect.width / 2.0f};
+		float[] offsets = new float[] { 0.0f, rect.width / 4.0f, rect.width / 2.0f };
+		SerializedProperty[] properties = new SerializedProperty[] { depthProperty, delayProperty, typeProperty };
+		for (int i = 0; i < 3; ++i)
+		{
+			Rect r = new Rect(rect.x + offsets[i] + (i != 0 ? LINE_SPACING / 2 : 0.0f), rect.y, widths[i] - (i == 0 || i == 2 ? LINE_SPACING / 2 : LINE_SPACING), LINE_HEIGHT);
+			EditorGUI.PropertyField(r, properties[i], GUIContent.none);
+		}
+		//Rect depthRect = new Rect(rect.x, rect.y, EditorGUIUtility.labelWidth - 4.0f, LINE_HEIGHT);
+		//Rect typeRect = new Rect(rect.x + EditorGUIUtility.labelWidth, rect.y, rect.width - EditorGUIUtility.labelWidth, LINE_HEIGHT);
+		//EditorGUI.PropertyField(depthRect, depthProperty, GUIContent.none);
+		//EditorGUI.PropertyField(typeRect, typeProperty, GUIContent.none);
 
 		GameEventCore.EGameEventType type = (GameEventCore.EGameEventType)typeProperty.enumValueIndex;
 

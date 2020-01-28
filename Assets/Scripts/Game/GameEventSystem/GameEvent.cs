@@ -12,7 +12,8 @@ public struct GameEventData
 	// All game events include these.
 	[SerializeField] public string Name;
 	[SerializeField] public int TriggerAtDepth;
-	[SerializeField] public float TimeDelay;
+	[SerializeField] public float TriggerDelayTime;
+	public float TriggerAtTime;
 	[SerializeField] public GameEventCore.EGameEventType EventType;
 
 	// Game event specific variables.
