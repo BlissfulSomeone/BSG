@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 
 public class GameEventController : MonoBehaviour
 {
@@ -34,9 +33,25 @@ public class GameEventController : MonoBehaviour
 			{
 				if (gameEvent.HasBeenTriggered == false)
 				{
-					GameEventCore.GameEventActions[(int)gameEvent.EventType].OnAction(gameEvent);
-					gameEvent.HasBeenTriggered = true;
-					mGameEventRoot.UpdateGameEvent(gameEvent, i);
+					bool dirty = false;
+
+					if (gameEvent.TriggerAtTime == 0.0f)
+					{
+						gameEvent.TriggerAtTime = Time.timeSinceLevelLoad + gameEvent.TriggerDelayTime;
+						dirty = true;
+					}
+
+					if (Time.timeSinceLevelLoad >= gameEvent.TriggerAtTime)
+					{
+						GameEventCore.GameEventActions[(int)gameEvent.EventType].OnAction(gameEvent);
+						gameEvent.HasBeenTriggered = true;
+						dirty = true;
+					}
+
+					if (dirty)
+					{
+						mGameEventRoot.UpdateGameEvent(gameEvent, i);
+					}
 				}
 			}
 		}
