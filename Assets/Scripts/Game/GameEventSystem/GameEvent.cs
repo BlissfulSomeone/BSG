@@ -12,17 +12,20 @@ public struct GameEventData
 	// All game events include these.
 	[SerializeField] public string Name;
 	[SerializeField] public int TriggerAtDepth;
+	[SerializeField] public float TimeDelay;
 	[SerializeField] public GameEventCore.EGameEventType EventType;
 
 	// Game event specific variables.
 	[SerializeField] public float BombsPerSecond;
+	[SerializeField] public float RampPerDepth;
+	[SerializeField] public float MaxBombsPerSecond;
 	[SerializeField] [EnumFlags] public GameEventCore.EBombType BombType;
 	[SerializeField] public Bomb BombPrefab;
 	[SerializeField] public Bomb[] BombPrefabs;
 	[SerializeField] public Vector2 Position;
 	[SerializeField] [Range(0.0f, 360.0f)] public float Rotation;
 	[SerializeField] [Range(0.0f, 180.0f)] public float Spread;
-	[SerializeField] public float Speed;
+	[SerializeField] public MinMaxFloat Speed;
 	[SerializeField] public GameEvent NestedEvent;
 }
 
