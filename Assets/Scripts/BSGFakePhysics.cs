@@ -154,8 +154,9 @@ public class BSGFakePhysics : MonoBehaviour
 		float distance = delta.magnitude;
 		if (distance <= aExplosionRadius)
 		{
-			float force = 1.0f - (distance / aExplosionRadius);
-			mVelocity += delta.normalized * force + Vector2.up * aUpModifier;
+			float falloff = 1.0f - (distance / aExplosionRadius);
+			float force = 10.0f * falloff;
+			mVelocity += delta.normalized * force + Vector2.up * force * aUpModifier;
 		}
 	}
 }

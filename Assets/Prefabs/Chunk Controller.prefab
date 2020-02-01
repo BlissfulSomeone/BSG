@@ -43,9 +43,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbae90543a681f148bb49106adb7eda4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mRenderMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
-  mRenderMaterial: {fileID: 2100000, guid: cb42ea202760ba64ca51503cbc38a8fd, type: 2}
-  mDebrisPrefab: {fileID: 1078611352492277084, guid: e167eb3289464cc458abec852a19852f,
-    type: 3}
-  mTestObject: {fileID: 1826635988823530939, guid: 34815a82723abc64abbdc662cd3b917a,
+  mChunkSettings:
+    ChunkWidth: 20
+    NumberOfColumns: 21
+    NumberOfRows: 10
+    TileData:
+    - {fileID: 11400000, guid: 9a1547cbfaf095e4290dbe087b4e0386, type: 2}
+    - {fileID: 11400000, guid: e269a62cde533bf47a035ec094ad8278, type: 2}
+    - {fileID: 11400000, guid: af87bbe266897da46ad736f285fe8a0f, type: 2}
+  mGenerateChunksAhead: 3
+  mDebrisPrefab: {fileID: 8398154527657335140, guid: e167eb3289464cc458abec852a19852f,
     type: 3}

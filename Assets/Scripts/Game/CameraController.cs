@@ -8,13 +8,15 @@ public class CameraController : MonoBehaviour
 	private struct ViewInfo
 	{
 		public Vector3 position;
-		public float blocksToFit;
+		public float viewWidth;
+		public float fov;
 
 		public static ViewInfo Lerp(ViewInfo from, ViewInfo to, float t)
 		{
 			ViewInfo result;
 			result.position = Vector3.Lerp(from.position, to.position, t);
-			result.blocksToFit = Mathf.Lerp(from.blocksToFit, to.blocksToFit, t);
+			result.viewWidth = Mathf.Lerp(from.viewWidth, to.viewWidth, t);
+			result.fov = Mathf.Lerp(from.fov, to.fov, t);
 			return result;
 		}
 	}
@@ -36,14 +38,21 @@ public class CameraController : MonoBehaviour
 
 	private void FixedUpdate()
 	{
+		float frustumHeight = mTargetViewInfo.viewWidth / CameraComponent.aspect;
+		float distance = frustumHeight * 0.5f / Mathf.Tan(CameraComponent.fieldOfView * 0.5f * Mathf.Deg2Rad);
+		mTargetViewInfo.position.z = distance * -1;
+
 		mCurrentViewInfo = ViewInfo.Lerp(mCurrentViewInfo, mTargetViewInfo, 0.05f);
 
-		transform.position = new Vector3(mCurrentViewInfo.position.x, mCurrentViewInfo.position.y, -10.0f);
-		mCamera.orthographicSize = (mCurrentViewInfo.blocksToFit * 0.5f) / mCamera.aspect;
+		transform.position = mCurrentViewInfo.position;
+		CameraComponent.fieldOfView = mCurrentViewInfo.fov;
 	}
 
-	public void SetTargetPosition(Vector3 position)
+	public void SetTargetPosition(Vector2 targetPosition)
 	{
+		Vector3 position = mTargetViewInfo.position;
+		position.x = targetPosition.x;
+		position.y = targetPosition.y;
 		mTargetViewInfo.position = position;
 	}
 }

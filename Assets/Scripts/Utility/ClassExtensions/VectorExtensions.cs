@@ -31,6 +31,11 @@ public static class VectorExtensions
 		return new Vector3(vec.x, vec.y, 0.0f);
 	}
 
+	public static Vector3 ToVec3_1(this Vector2 vec)
+	{
+		return new Vector3(vec.x, vec.y, 1.0f);
+	}
+
 	public static bool IsZero(this Vector2 vec, float epsilon = 1.0E-6f)
 	{
 		return vec.sqrMagnitude < epsilon;

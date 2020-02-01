@@ -29,11 +29,8 @@ public class GameController : MonoBehaviour
 
 	public CameraController CameraControllerInstance { get { return mCameraControllerInstance; } }
 	public InfiniteBombSpawner BombSpawnerInstance { get { return mInfiniteBombSpawnerInstance; } }
-
-	private const int CHUNK_HEIGHT = 10;
+	
 	private float mFurthestDepth = 0.0f;
-	private int mChunksSpawned = 0;
-
 	public float FurthestDepth { get { return mFurthestDepth; } }
 	
 	private void Awake()
@@ -51,7 +48,6 @@ public class GameController : MonoBehaviour
 	private void Setup()
 	{
 		mFurthestDepth = 0.0f;
-		mChunksSpawned = 0;
 		
 		mChunkControllerInstance = SpawnControllerPrefab(mChunkControllerPrefab);
 		mCameraControllerInstance = SpawnControllerPrefab(mCameraControllerPrefab);
@@ -67,6 +63,9 @@ public class GameController : MonoBehaviour
 	
 		mPlayerInstance.OnKilled += OnPlayerKilled;
 		mUIControllerInstance.PushMenu(UIController.ELayer.HUD, mDepthMeterHUDPrefab);
+
+		mChunkControllerInstance.CreateChunk(true);
+		mChunkControllerInstance.CreateChunk(false);
 	}
 
 	private T SpawnControllerPrefab<T>(T aControllerPrefab) where T : MonoBehaviour
@@ -89,26 +88,24 @@ public class GameController : MonoBehaviour
 
 		mUIControllerInstance.PushMenu(UIController.ELayer.Menus, mGameOverMenuPrefab);
 	}
-
-	private void Start()
-	{
-		//mChunkControllerInstance.CreateChunk(new ChunkEmpty(new Vector2(-9.5f, 0.0f), Vector2.one, new Vector2Int(20, 10)));
-		//mChunkControllerInstance.CreateChunk(new ChunkCustom(new Vector2(-9.5f, -10.0f), Vector2.one, new Vector2Int(20, 10)));
-	}
-
+	
 	private void Update()
 	{
 		if (mPlayerInstance != null)
 		{
+			mFurthestDepth = Mathf.Max(mFurthestDepth, -mPlayerInstance.transform.position.y);
 			UpdateCamera();
-			UpdateChunks();
 		}
 
 		if (Input.GetMouseButtonDown(0) == true)
 		{
-			Vector2 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+			//Vector2 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+			Plane plane = new Plane(Vector3.back, 0.0f);
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			float distance;
+			plane.Raycast(ray, out distance);
 			Explosion explosion = Instantiate(mExplosionPrefab);
-			explosion.transform.position = mouseWorldPosition;		// Set explosion source.
+			explosion.transform.position = ray.GetPoint(distance);	// Set explosion source.
 			explosion.transform.localScale = Vector3.one * 2.0f;	// Set explosion size. localScale = explosion radius :)
 		}
 		if (Input.GetKeyDown(KeyCode.R) == true && mPlayerInstance == null)
@@ -135,21 +132,6 @@ public class GameController : MonoBehaviour
 		mCameraControllerInstance.SetTargetPosition(cameraTargetPosition);
 	}
 
-	private void UpdateChunks()
-	{
-		mFurthestDepth = Mathf.Max(mFurthestDepth, -mPlayerInstance.transform.position.y);
-
-		if (mFurthestDepth + CHUNK_HEIGHT * 3 >= mChunksSpawned * CHUNK_HEIGHT)
-		{
-			if (mChunksSpawned == 0)
-				mChunkControllerInstance.CreateChunk(new ChunkEmpty(new Vector2(-9.5f, -mChunksSpawned * CHUNK_HEIGHT), new Vector2(1.0f, 1.0f), new Vector2Int(20, CHUNK_HEIGHT)));
-			else
-				mChunkControllerInstance.CreateChunk(new ChunkDirt(new Vector2(-9.5f, -mChunksSpawned * CHUNK_HEIGHT), new Vector2(1.0f, 1.0f), new Vector2Int(20, CHUNK_HEIGHT)));
-
-			++mChunksSpawned;
-		}
-	}
-
 	public void Explode(Vector2 aExplosionSource, float aExplosionRadius)
 	{
 		mChunkControllerInstance.Explode(aExplosionSource, aExplosionRadius);
@@ -166,7 +148,7 @@ public class GameController : MonoBehaviour
 					float distance = delta.magnitude;
 					if (distance <= aExplosionRadius)
 					{
-						triggerable.FakePhysics.AddExplosionForce(10.0f, aExplosionSource, aExplosionRadius, 1.25f);
+						triggerable.FakePhysics.AddExplosionForce(10.0f, aExplosionSource, aExplosionRadius, 1.0f);
 					}
 				}
 			}
