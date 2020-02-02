@@ -143,10 +143,13 @@ public class Chunk : MonoBehaviour
 		{
 			for (int x = 0; x < mChunkSettings.NumberOfColumns; ++x)
 			{
-				if (x == 0 || x == mChunkSettings.NumberOfColumns - 1)
-					SetTile(x, y, 1);
-				else
-					SetTile(x, y, empty ? 0 : 2);
+				for (int z = 0; z < mChunkSettings.NumberOfLayers; ++z)
+				{
+					if (x == 0 || x == mChunkSettings.NumberOfColumns - 1)
+						SetTile(x, y, z, 1);
+					else
+						SetTile(x, y, z, empty ? 0 : 2);
+				}
 			}
 		}
 	}
@@ -163,75 +166,78 @@ public class Chunk : MonoBehaviour
 		{
 			for (int x = 0; x < mChunkSettings.NumberOfColumns; ++x)
 			{
-				int tileId = GetTile(x, y);
-				if (tileId == 0)
-					continue;
+				for (int z = 0; z < mChunkSettings.NumberOfLayers; ++z)
+				{
+					int tileId = GetTile(x, y, z);
+					if (tileId == 0)
+						continue;
 
-				Vector3 tilePosition = new Vector2(-mChunkSettings.ChunkWidth / 2 + x * mChunkSettings.TileSize, mChunkSettings.ChunkHeight - y * mChunkSettings.TileSize).ToVec3();
-
-				mMeshGenerationData.AddQuad(
-					tileId,
-					tilePosition + new Vector3(0, 1, 0) * mChunkSettings.TileSize,
-					tilePosition + new Vector3(1, 1, 0) * mChunkSettings.TileSize,
-					tilePosition + new Vector3(1, 0, 0) * mChunkSettings.TileSize,
-					tilePosition + new Vector3(0, 0, 0) * mChunkSettings.TileSize,
-					Vector3.back,
-					new Vector2(0, 0),
-					new Vector2(1, 0),
-					new Vector2(1, 1),
-					new Vector2(0, 1));
-
-				if (tileId != GetTile(x + 1, y))
+					Vector3 tilePosition = new Vector3(-mChunkSettings.ChunkWidth / 2 + x * mChunkSettings.TileSize, mChunkSettings.ChunkHeight - y * mChunkSettings.TileSize, z * mChunkSettings.TileSize - mChunkSettings.TileSize / 2);
+				
 					mMeshGenerationData.AddQuad(
 						tileId,
-						tilePosition + new Vector3(1, 1, 0) * mChunkSettings.TileSize,
-						tilePosition + new Vector3(1, 1, 1) * mChunkSettings.TileSize,
-						tilePosition + new Vector3(1, 0, 1) * mChunkSettings.TileSize,
-						tilePosition + new Vector3(1, 0, 0) * mChunkSettings.TileSize,
-						Vector3.right,
-						new Vector2(0, 0),
-						new Vector2(1, 0),
-						new Vector2(1, 1),
-						new Vector2(0, 1));
-
-				if (tileId != GetTile(x - 1, y))
-					mMeshGenerationData.AddQuad(
-						tileId,
-						tilePosition + new Vector3(0, 1, 1) * mChunkSettings.TileSize,
 						tilePosition + new Vector3(0, 1, 0) * mChunkSettings.TileSize,
-						tilePosition + new Vector3(0, 0, 0) * mChunkSettings.TileSize,
-						tilePosition + new Vector3(0, 0, 1) * mChunkSettings.TileSize,
-						Vector3.left,
-						new Vector2(0, 0),
-						new Vector2(1, 0),
-						new Vector2(1, 1),
-						new Vector2(0, 1));
-
-				if (tileId != GetTile(x, y + 1))
-					mMeshGenerationData.AddQuad(
-						tileId,
-						tilePosition + new Vector3(1, 0, 1) * mChunkSettings.TileSize,
-						tilePosition + new Vector3(0, 0, 1) * mChunkSettings.TileSize,
-						tilePosition + new Vector3(0, 0, 0) * mChunkSettings.TileSize,
-						tilePosition + new Vector3(1, 0, 0) * mChunkSettings.TileSize,
-						Vector3.down,
-						new Vector2(0, 0),
-						new Vector2(1, 0),
-						new Vector2(1, 1),
-						new Vector2(0, 1));
-
-				if (tileId != GetTile(x, y - 1))
-					mMeshGenerationData.AddQuad(
-						tileId,
 						tilePosition + new Vector3(1, 1, 0) * mChunkSettings.TileSize,
-						tilePosition + new Vector3(0, 1, 0) * mChunkSettings.TileSize,
-						tilePosition + new Vector3(0, 1, 1) * mChunkSettings.TileSize,
-						tilePosition + new Vector3(1, 1, 1) * mChunkSettings.TileSize,
-						Vector3.up,
+						tilePosition + new Vector3(1, 0, 0) * mChunkSettings.TileSize,
+						tilePosition + new Vector3(0, 0, 0) * mChunkSettings.TileSize,
+						Vector3.back,
 						new Vector2(0, 0),
 						new Vector2(1, 0),
 						new Vector2(1, 1),
 						new Vector2(0, 1));
+
+					if (tileId != GetTile(x + 1, y, z))
+						mMeshGenerationData.AddQuad(
+							tileId,
+							tilePosition + new Vector3(1, 1, 0) * mChunkSettings.TileSize,
+							tilePosition + new Vector3(1, 1, 1) * mChunkSettings.TileSize,
+							tilePosition + new Vector3(1, 0, 1) * mChunkSettings.TileSize,
+							tilePosition + new Vector3(1, 0, 0) * mChunkSettings.TileSize,
+							Vector3.right,
+							new Vector2(0, 0),
+							new Vector2(1, 0),
+							new Vector2(1, 1),
+							new Vector2(0, 1));
+
+					if (tileId != GetTile(x - 1, y, z))
+						mMeshGenerationData.AddQuad(
+							tileId,
+							tilePosition + new Vector3(0, 1, 1) * mChunkSettings.TileSize,
+							tilePosition + new Vector3(0, 1, 0) * mChunkSettings.TileSize,
+							tilePosition + new Vector3(0, 0, 0) * mChunkSettings.TileSize,
+							tilePosition + new Vector3(0, 0, 1) * mChunkSettings.TileSize,
+							Vector3.left,
+							new Vector2(0, 0),
+							new Vector2(1, 0),
+							new Vector2(1, 1),
+							new Vector2(0, 1));
+
+					if (tileId != GetTile(x, y + 1, z))
+						mMeshGenerationData.AddQuad(
+							tileId,
+							tilePosition + new Vector3(1, 0, 1) * mChunkSettings.TileSize,
+							tilePosition + new Vector3(0, 0, 1) * mChunkSettings.TileSize,
+							tilePosition + new Vector3(0, 0, 0) * mChunkSettings.TileSize,
+							tilePosition + new Vector3(1, 0, 0) * mChunkSettings.TileSize,
+							Vector3.down,
+							new Vector2(0, 0),
+							new Vector2(1, 0),
+							new Vector2(1, 1),
+							new Vector2(0, 1));
+
+					if (tileId != GetTile(x, y - 1, z))
+						mMeshGenerationData.AddQuad(
+							tileId,
+							tilePosition + new Vector3(1, 1, 0) * mChunkSettings.TileSize,
+							tilePosition + new Vector3(0, 1, 0) * mChunkSettings.TileSize,
+							tilePosition + new Vector3(0, 1, 1) * mChunkSettings.TileSize,
+							tilePosition + new Vector3(1, 1, 1) * mChunkSettings.TileSize,
+							Vector3.up,
+							new Vector2(0, 0),
+							new Vector2(1, 0),
+							new Vector2(1, 1),
+							new Vector2(0, 1));
+				}
 			}
 		}
 	}
@@ -242,13 +248,13 @@ public class Chunk : MonoBehaviour
 		{
 			for (int x = 0; x < mChunkSettings.NumberOfColumns; ++x)
 			{
-				bool hasCollision = mChunkSettings.TileData[GetTile(x, y)].IsCollision;
+				bool hasCollision = mChunkSettings.TileData[GetTile(x, y, 0)].IsCollision;
 				if (!hasCollision)
 					continue;
 
-				Vector3 tilePosition = new Vector2(-mChunkSettings.ChunkWidth / 2 + x * mChunkSettings.TileSize, mChunkSettings.ChunkHeight - y * mChunkSettings.TileSize).ToVec3();
+				Vector3 tilePosition = new Vector3(-mChunkSettings.ChunkWidth / 2 + x * mChunkSettings.TileSize, mChunkSettings.ChunkHeight - y * mChunkSettings.TileSize, -mChunkSettings.TileSize / 2);
 				
-				if (hasCollision != mChunkSettings.TileData[GetTile(x + 1, y)].IsCollision)
+				if (hasCollision != mChunkSettings.TileData[GetTile(x + 1, y, 0)].IsCollision)
 					mColliderGenerationData.AddQuad(
 						0,
 						tilePosition + new Vector3(1, 1, 0) * mChunkSettings.TileSize,
@@ -261,7 +267,7 @@ public class Chunk : MonoBehaviour
 						new Vector2(1, 1),
 						new Vector2(0, 1));
 
-				if (hasCollision != mChunkSettings.TileData[GetTile(x - 1, y)].IsCollision)
+				if (hasCollision != mChunkSettings.TileData[GetTile(x - 1, y, 0)].IsCollision)
 					mColliderGenerationData.AddQuad(
 						0,
 						tilePosition + new Vector3(0, 1, 1) * mChunkSettings.TileSize,
@@ -274,7 +280,7 @@ public class Chunk : MonoBehaviour
 						new Vector2(1, 1),
 						new Vector2(0, 1));
 
-				if (hasCollision != mChunkSettings.TileData[GetTile(x, y + 1)].IsCollision)
+				if (hasCollision != mChunkSettings.TileData[GetTile(x, y + 1, 0)].IsCollision)
 					mColliderGenerationData.AddQuad(
 						0,
 						tilePosition + new Vector3(1, 0, 1) * mChunkSettings.TileSize,
@@ -287,7 +293,7 @@ public class Chunk : MonoBehaviour
 						new Vector2(1, 1),
 						new Vector2(0, 1));
 
-				if (hasCollision != mChunkSettings.TileData[GetTile(x, y - 1)].IsCollision)
+				if (hasCollision != mChunkSettings.TileData[GetTile(x, y - 1, 0)].IsCollision)
 					mColliderGenerationData.AddQuad(
 						0,
 						tilePosition + new Vector3(1, 1, 0) * mChunkSettings.TileSize,
@@ -303,18 +309,18 @@ public class Chunk : MonoBehaviour
 		}
 	}
 
-	private int GetTile(int x, int y)
+	private int GetTile(int x, int y, int z)
 	{
-		if (x < 0 || x >= mChunkSettings.NumberOfColumns || y < 0 || y >= mChunkSettings.NumberOfRows)
+		if (x < 0 || x >= mChunkSettings.NumberOfColumns || y < 0 || y >= mChunkSettings.NumberOfRows || z < 0 || z >= mChunkSettings.NumberOfLayers)
 			return 0;
-		return mTiles[x + y * mChunkSettings.NumberOfColumns];
+		return mTiles[x + y * mChunkSettings.NumberOfColumns + z * mChunkSettings.NumberOfColumns * mChunkSettings.NumberOfRows];
 	}
 
-	private void SetTile(int x, int y, int tileId)
+	private void SetTile(int x, int y, int z, int tileId)
 	{
-		if (x < 0 || x >= mChunkSettings.NumberOfColumns || y < 0 || y >= mChunkSettings.NumberOfRows)
+		if (x < 0 || x >= mChunkSettings.NumberOfColumns || y < 0 || y >= mChunkSettings.NumberOfRows || z < 0 || z >= mChunkSettings.NumberOfLayers)
 			return;
-		mTiles[x + y * mChunkSettings.NumberOfColumns] = tileId;
+		mTiles[x + y * mChunkSettings.NumberOfColumns + z * mChunkSettings.NumberOfColumns * mChunkSettings.NumberOfRows] = tileId;
 	}
 
 	private void Build()
@@ -335,26 +341,34 @@ public class Chunk : MonoBehaviour
 		mMeshCollider.convex = false;
 	}
 
-	public void Explode(Vector2 explosionSource, float explosionRadius)
+	public void Explode(Vector3 explosionSource, float explosionRadius)
 	{
 		bool dirty = false;
 		for (int y = 0; y < mChunkSettings.NumberOfRows; ++y)
 		{
 			for (int x = 0; x < mChunkSettings.NumberOfColumns; ++x)
 			{
-				int tileId = GetTile(x, y);
-				bool isIndistructible = mChunkSettings.TileData[tileId].IsIndestructible;
-				if (isIndistructible)
-					continue;
-
-				Vector2 tilePosition = transform.position.ToVec2() + new Vector2(-mChunkSettings.ChunkWidth / 2 + x * mChunkSettings.TileSize, mChunkSettings.ChunkHeight - y * mChunkSettings.TileSize);
-				float distance = Vector2.Distance(tilePosition, explosionSource);
-
-				if (distance <= explosionRadius)
+				for (int z = 0; z < mChunkSettings.NumberOfLayers; ++z)
 				{
-					SetTile(x, y, 0);
-					OnTileDestroyed(tilePosition.ToVec3() + Vector3.one * mChunkSettings.TileSize / 2, tileId, explosionSource.ToVec3() + Vector3.forward * mChunkSettings.TileSize / 2, explosionRadius);
-					dirty = true;
+					int tileId = GetTile(x, y, z);
+					bool isIndistructible = mChunkSettings.TileData[tileId].IsIndestructible;
+					if (isIndistructible)
+						continue;
+
+					Vector3 tilePosition =
+						transform.position +
+						new Vector3(
+							-mChunkSettings.ChunkWidth / 2 + x * mChunkSettings.TileSize + mChunkSettings.TileSize / 2,
+							mChunkSettings.ChunkHeight - y * mChunkSettings.TileSize + mChunkSettings.TileSize / 2,
+							z * mChunkSettings.TileSize);
+					float distance = Vector3.Distance(tilePosition, explosionSource);
+
+					if (distance <= explosionRadius)
+					{
+						SetTile(x, y, z, 0);
+						OnTileDestroyed(tilePosition, tileId, explosionSource, explosionRadius);
+						dirty = true;
+					}
 				}
 			}
 		}

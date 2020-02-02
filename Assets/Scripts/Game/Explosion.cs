@@ -7,6 +7,6 @@ public class Explosion : MonoBehaviour
 {
 	private void Start()
 	{
-		GameController.Instance.Explode(transform.position.ToVec2(), transform.localScale.x);
+		GameController.Instance.Explode(transform.position, transform.localScale.x);
 	}
 }

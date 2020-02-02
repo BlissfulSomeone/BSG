@@ -98,5 +98,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mInitialViewInfo:
     position: {x: 0, y: 0, z: 0}
-    viewWidth: 20
+    viewWidth: 21
     fov: 30

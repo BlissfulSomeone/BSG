@@ -27,6 +27,7 @@ public class GameController : MonoBehaviour
 	public UIMenu mGameOverMenuPrefab;
 	public Explosion mExplosionPrefab;
 
+	public ChunkController ChunkControllerInstance { get { return mChunkControllerInstance; } }
 	public CameraController CameraControllerInstance { get { return mCameraControllerInstance; } }
 	public InfiniteBombSpawner BombSpawnerInstance { get { return mInfiniteBombSpawnerInstance; } }
 	
@@ -132,23 +133,23 @@ public class GameController : MonoBehaviour
 		mCameraControllerInstance.SetTargetPosition(cameraTargetPosition);
 	}
 
-	public void Explode(Vector2 aExplosionSource, float aExplosionRadius)
+	public void Explode(Vector3 explosionSource, float explosionRadius)
 	{
-		mChunkControllerInstance.Explode(aExplosionSource, aExplosionRadius);
-		Collider[] colliders = Physics.OverlapSphere(aExplosionSource, aExplosionRadius);
+		mChunkControllerInstance.Explode(explosionSource, explosionRadius);
+		Collider[] colliders = Physics.OverlapSphere(explosionSource, explosionRadius);
 		foreach (Collider collider in colliders)
 		{
 			Triggerable triggerable = collider.gameObject.GetComponent<Triggerable>();
 			if (triggerable != null)
 			{
-				triggerable.Trigger(aExplosionSource, aExplosionRadius);
+				triggerable.Trigger(explosionSource, explosionRadius);
 				if (triggerable.HasPhysics == true)
 				{
-					Vector2 delta = collider.transform.position.ToVec2() - aExplosionSource;
+					Vector3 delta = collider.transform.position - explosionSource;
 					float distance = delta.magnitude;
-					if (distance <= aExplosionRadius)
+					if (distance <= explosionRadius)
 					{
-						triggerable.FakePhysics.AddExplosionForce(10.0f, aExplosionSource, aExplosionRadius, 1.0f);
+						triggerable.FakePhysics.AddExplosionForce(10.0f, explosionSource, explosionRadius, 1.0f);
 					}
 				}
 			}
