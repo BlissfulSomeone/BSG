@@ -27,6 +27,8 @@ public struct GameEventData
 	[SerializeField] [Range(0.0f, 360.0f)] public float Rotation;
 	[SerializeField] [Range(0.0f, 180.0f)] public float Spread;
 	[SerializeField] public MinMaxFloat Speed;
+	[SerializeField] public Vector2 Offset;
+	[SerializeField] public int Number;
 	[SerializeField] public GameEvent NestedEvent;
 }
 

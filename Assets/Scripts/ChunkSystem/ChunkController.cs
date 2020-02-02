@@ -43,7 +43,7 @@ public class ChunkController : MonoBehaviour
 
 		chunkObject.transform.SetParent(transform);
 		chunkObject.transform.Reset();
-		chunkObject.transform.position = new Vector2(0.0f, (mChunkSettings.ChunkHeight / 2 + mChunksSpawned * mChunkSettings.ChunkHeight) * -1).ToVec3();
+		chunkObject.transform.position = new Vector2(0.0f, (mChunksSpawned * mChunkSettings.ChunkHeight) * -1).ToVec3();
 
 		Chunk chunk = chunkObject.AddComponent<Chunk>();
 		chunk.Generate(mChunkSettings, empty);
@@ -58,13 +58,13 @@ public class ChunkController : MonoBehaviour
 		const int SPLITS = 2;
 		for (int x = 0; x < SPLITS; ++x)
 		{
-			float positionX = tilePosition.x - mChunkSettings.TileSize / (SPLITS * 2) + x * mChunkSettings.TileSize / SPLITS;
+			float positionX = tilePosition.x - (SPLITS == 1 ? 0 : (mChunkSettings.TileSize / (SPLITS * 2) - x * mChunkSettings.TileSize / SPLITS));
 			for (int y = 0; y < SPLITS; ++y)
 			{
-				float positionY = tilePosition.y - mChunkSettings.TileSize / (SPLITS * 2) + y * mChunkSettings.TileSize / SPLITS;
+				float positionY = tilePosition.y - (SPLITS == 1 ? 0 : (mChunkSettings.TileSize / (SPLITS * 2) - y * mChunkSettings.TileSize / SPLITS));
 				for (int z = 0; z < SPLITS; ++z)
 				{
-					float positionZ = tilePosition.z - mChunkSettings.TileSize / (SPLITS * 2) + z * mChunkSettings.TileSize / SPLITS;
+					float positionZ = tilePosition.z - (SPLITS == 1 ? 0 : (mChunkSettings.TileSize / (SPLITS * 2) - z * mChunkSettings.TileSize / SPLITS));
 
 					Vector3 spawnPosition = new Vector3(positionX, positionY, positionZ);
 

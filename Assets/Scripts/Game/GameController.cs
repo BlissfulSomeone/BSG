@@ -63,6 +63,7 @@ public class GameController : MonoBehaviour
 		mGameEventControllerInstance.GameEventRoot = Instantiate(mGameEventRootPrefab);
 	
 		mPlayerInstance.OnKilled += OnPlayerKilled;
+		mPlayerInstance.transform.position = new Vector3(0.0f, 10.0f, 0.0f);
 		mUIControllerInstance.PushMenu(UIController.ELayer.HUD, mDepthMeterHUDPrefab);
 
 		mChunkControllerInstance.CreateChunk(true);
@@ -107,7 +108,7 @@ public class GameController : MonoBehaviour
 			plane.Raycast(ray, out distance);
 			Explosion explosion = Instantiate(mExplosionPrefab);
 			explosion.transform.position = ray.GetPoint(distance);	// Set explosion source.
-			explosion.transform.localScale = Vector3.one * 2.0f;	// Set explosion size. localScale = explosion radius :)
+			explosion.transform.localScale = Vector3.one * 2.5f;	// Set explosion size. localScale = explosion radius :)
 		}
 		if (Input.GetKeyDown(KeyCode.R) == true && mPlayerInstance == null)
 		{

@@ -23,8 +23,8 @@ public class GameEventCore
 	public enum EGameEventType
 	{
 		None,
-		SetBombsPerSecond,
-		SetRandomBombEnabled,
+		BombsPerSecond,
+		RandomBombEnabled,
 		SpawnBomb,
 		NestedEvent,
 	}

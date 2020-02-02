@@ -172,14 +172,15 @@ public class Chunk : MonoBehaviour
 					if (tileId == 0)
 						continue;
 
-					Vector3 tilePosition = new Vector3(-mChunkSettings.ChunkWidth / 2 + x * mChunkSettings.TileSize, mChunkSettings.ChunkHeight - y * mChunkSettings.TileSize, z * mChunkSettings.TileSize - mChunkSettings.TileSize / 2);
-				
+					//Vector3 tilePosition = new Vector3(-mChunkSettings.ChunkWidth / 2 + x * mChunkSettings.TileSize, mChunkSettings.ChunkHeight + y * mChunkSettings.TileSize, z * mChunkSettings.TileSize - mChunkSettings.TileSize / 2);
+					Vector3 tilePosition = GetTileLocalPosition(x, y, z);
+
 					mMeshGenerationData.AddQuad(
 						tileId,
-						tilePosition + new Vector3(0, 1, 0) * mChunkSettings.TileSize,
-						tilePosition + new Vector3(1, 1, 0) * mChunkSettings.TileSize,
-						tilePosition + new Vector3(1, 0, 0) * mChunkSettings.TileSize,
-						tilePosition + new Vector3(0, 0, 0) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(0, 1, 0) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(1, 1, 0) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(1, 0, 0) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(0, 0, 0) * mChunkSettings.TileSize,
 						Vector3.back,
 						new Vector2(0, 0),
 						new Vector2(1, 0),
@@ -189,10 +190,10 @@ public class Chunk : MonoBehaviour
 					if (tileId != GetTile(x + 1, y, z))
 						mMeshGenerationData.AddQuad(
 							tileId,
-							tilePosition + new Vector3(1, 1, 0) * mChunkSettings.TileSize,
-							tilePosition + new Vector3(1, 1, 1) * mChunkSettings.TileSize,
-							tilePosition + new Vector3(1, 0, 1) * mChunkSettings.TileSize,
-							tilePosition + new Vector3(1, 0, 0) * mChunkSettings.TileSize,
+							tilePosition - Vector3.one / 2 + new Vector3(1, 1, 0) * mChunkSettings.TileSize,
+							tilePosition - Vector3.one / 2 + new Vector3(1, 1, 1) * mChunkSettings.TileSize,
+							tilePosition - Vector3.one / 2 + new Vector3(1, 0, 1) * mChunkSettings.TileSize,
+							tilePosition - Vector3.one / 2 + new Vector3(1, 0, 0) * mChunkSettings.TileSize,
 							Vector3.right,
 							new Vector2(0, 0),
 							new Vector2(1, 0),
@@ -202,10 +203,10 @@ public class Chunk : MonoBehaviour
 					if (tileId != GetTile(x - 1, y, z))
 						mMeshGenerationData.AddQuad(
 							tileId,
-							tilePosition + new Vector3(0, 1, 1) * mChunkSettings.TileSize,
-							tilePosition + new Vector3(0, 1, 0) * mChunkSettings.TileSize,
-							tilePosition + new Vector3(0, 0, 0) * mChunkSettings.TileSize,
-							tilePosition + new Vector3(0, 0, 1) * mChunkSettings.TileSize,
+							tilePosition - Vector3.one / 2 + new Vector3(0, 1, 1) * mChunkSettings.TileSize,
+							tilePosition - Vector3.one / 2 + new Vector3(0, 1, 0) * mChunkSettings.TileSize,
+							tilePosition - Vector3.one / 2 + new Vector3(0, 0, 0) * mChunkSettings.TileSize,
+							tilePosition - Vector3.one / 2 + new Vector3(0, 0, 1) * mChunkSettings.TileSize,
 							Vector3.left,
 							new Vector2(0, 0),
 							new Vector2(1, 0),
@@ -215,10 +216,10 @@ public class Chunk : MonoBehaviour
 					if (tileId != GetTile(x, y + 1, z))
 						mMeshGenerationData.AddQuad(
 							tileId,
-							tilePosition + new Vector3(1, 0, 1) * mChunkSettings.TileSize,
-							tilePosition + new Vector3(0, 0, 1) * mChunkSettings.TileSize,
-							tilePosition + new Vector3(0, 0, 0) * mChunkSettings.TileSize,
-							tilePosition + new Vector3(1, 0, 0) * mChunkSettings.TileSize,
+							tilePosition - Vector3.one / 2 + new Vector3(1, 0, 1) * mChunkSettings.TileSize,
+							tilePosition - Vector3.one / 2 + new Vector3(0, 0, 1) * mChunkSettings.TileSize,
+							tilePosition - Vector3.one / 2 + new Vector3(0, 0, 0) * mChunkSettings.TileSize,
+							tilePosition - Vector3.one / 2 + new Vector3(1, 0, 0) * mChunkSettings.TileSize,
 							Vector3.down,
 							new Vector2(0, 0),
 							new Vector2(1, 0),
@@ -228,10 +229,10 @@ public class Chunk : MonoBehaviour
 					if (tileId != GetTile(x, y - 1, z))
 						mMeshGenerationData.AddQuad(
 							tileId,
-							tilePosition + new Vector3(1, 1, 0) * mChunkSettings.TileSize,
-							tilePosition + new Vector3(0, 1, 0) * mChunkSettings.TileSize,
-							tilePosition + new Vector3(0, 1, 1) * mChunkSettings.TileSize,
-							tilePosition + new Vector3(1, 1, 1) * mChunkSettings.TileSize,
+							tilePosition - Vector3.one / 2 + new Vector3(1, 1, 0) * mChunkSettings.TileSize,
+							tilePosition - Vector3.one / 2 + new Vector3(0, 1, 0) * mChunkSettings.TileSize,
+							tilePosition - Vector3.one / 2 + new Vector3(0, 1, 1) * mChunkSettings.TileSize,
+							tilePosition - Vector3.one / 2 + new Vector3(1, 1, 1) * mChunkSettings.TileSize,
 							Vector3.up,
 							new Vector2(0, 0),
 							new Vector2(1, 0),
@@ -252,15 +253,16 @@ public class Chunk : MonoBehaviour
 				if (!hasCollision)
 					continue;
 
-				Vector3 tilePosition = new Vector3(-mChunkSettings.ChunkWidth / 2 + x * mChunkSettings.TileSize, mChunkSettings.ChunkHeight - y * mChunkSettings.TileSize, -mChunkSettings.TileSize / 2);
-				
+				//Vector3 tilePosition = new Vector3(-mChunkSettings.ChunkWidth / 2 + x * mChunkSettings.TileSize, mChunkSettings.ChunkHeight + y * mChunkSettings.TileSize, -mChunkSettings.TileSize / 2);
+				Vector3 tilePosition = GetTileLocalPosition(x, y, 0);
+
 				if (hasCollision != mChunkSettings.TileData[GetTile(x + 1, y, 0)].IsCollision)
 					mColliderGenerationData.AddQuad(
 						0,
-						tilePosition + new Vector3(1, 1, 0) * mChunkSettings.TileSize,
-						tilePosition + new Vector3(1, 1, 1) * mChunkSettings.TileSize,
-						tilePosition + new Vector3(1, 0, 1) * mChunkSettings.TileSize,
-						tilePosition + new Vector3(1, 0, 0) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(1, 1, 0) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(1, 1, 1) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(1, 0, 1) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(1, 0, 0) * mChunkSettings.TileSize,
 						Vector3.right,
 						new Vector2(0, 0),
 						new Vector2(1, 0),
@@ -270,10 +272,10 @@ public class Chunk : MonoBehaviour
 				if (hasCollision != mChunkSettings.TileData[GetTile(x - 1, y, 0)].IsCollision)
 					mColliderGenerationData.AddQuad(
 						0,
-						tilePosition + new Vector3(0, 1, 1) * mChunkSettings.TileSize,
-						tilePosition + new Vector3(0, 1, 0) * mChunkSettings.TileSize,
-						tilePosition + new Vector3(0, 0, 0) * mChunkSettings.TileSize,
-						tilePosition + new Vector3(0, 0, 1) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(0, 1, 1) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(0, 1, 0) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(0, 0, 0) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(0, 0, 1) * mChunkSettings.TileSize,
 						Vector3.left,
 						new Vector2(0, 0),
 						new Vector2(1, 0),
@@ -283,10 +285,10 @@ public class Chunk : MonoBehaviour
 				if (hasCollision != mChunkSettings.TileData[GetTile(x, y + 1, 0)].IsCollision)
 					mColliderGenerationData.AddQuad(
 						0,
-						tilePosition + new Vector3(1, 0, 1) * mChunkSettings.TileSize,
-						tilePosition + new Vector3(0, 0, 1) * mChunkSettings.TileSize,
-						tilePosition + new Vector3(0, 0, 0) * mChunkSettings.TileSize,
-						tilePosition + new Vector3(1, 0, 0) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(1, 0, 1) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(0, 0, 1) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(0, 0, 0) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(1, 0, 0) * mChunkSettings.TileSize,
 						Vector3.down,
 						new Vector2(0, 0),
 						new Vector2(1, 0),
@@ -296,10 +298,10 @@ public class Chunk : MonoBehaviour
 				if (hasCollision != mChunkSettings.TileData[GetTile(x, y - 1, 0)].IsCollision)
 					mColliderGenerationData.AddQuad(
 						0,
-						tilePosition + new Vector3(1, 1, 0) * mChunkSettings.TileSize,
-						tilePosition + new Vector3(0, 1, 0) * mChunkSettings.TileSize,
-						tilePosition + new Vector3(0, 1, 1) * mChunkSettings.TileSize,
-						tilePosition + new Vector3(1, 1, 1) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(1, 1, 0) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(0, 1, 0) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(0, 1, 1) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(1, 1, 1) * mChunkSettings.TileSize,
 						Vector3.up,
 						new Vector2(0, 0),
 						new Vector2(1, 0),
@@ -355,12 +357,13 @@ public class Chunk : MonoBehaviour
 					if (isIndistructible)
 						continue;
 
-					Vector3 tilePosition =
-						transform.position +
-						new Vector3(
-							-mChunkSettings.ChunkWidth / 2 + x * mChunkSettings.TileSize + mChunkSettings.TileSize / 2,
-							mChunkSettings.ChunkHeight - y * mChunkSettings.TileSize + mChunkSettings.TileSize / 2,
-							z * mChunkSettings.TileSize);
+					//Vector3 tilePosition =
+					//	transform.position +
+					//	new Vector3(
+					//		-mChunkSettings.ChunkWidth / 2 + x * mChunkSettings.TileSize + mChunkSettings.TileSize / 2,
+					//		mChunkSettings.ChunkHeight - y * mChunkSettings.TileSize + mChunkSettings.TileSize / 2,
+					//		z * mChunkSettings.TileSize);
+					Vector3 tilePosition = GetTileWorldPosition(x, y, z);
 					float distance = Vector3.Distance(tilePosition, explosionSource);
 
 					if (distance <= explosionRadius)
@@ -381,5 +384,19 @@ public class Chunk : MonoBehaviour
 			GenerateColliderData();
 			Build();
 		}
+	}
+	
+	private Vector3 GetTileLocalPosition(int x, int y, int z)
+	{
+		Vector3 localCenterPosition = new Vector3(
+			-mChunkSettings.ChunkWidth / 2 + x * mChunkSettings.TileSize + mChunkSettings.TileSize / 2,
+			mChunkSettings.ChunkHeight - y * mChunkSettings.TileSize - mChunkSettings.TileSize / 2,
+			z * mChunkSettings.TileSize);
+		return localCenterPosition;
+	}
+
+	private Vector3 GetTileWorldPosition(int x, int y, int z)
+	{
+		return transform.position + GetTileLocalPosition(x, y, z);
 	}
 }
