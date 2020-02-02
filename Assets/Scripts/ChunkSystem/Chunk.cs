@@ -13,6 +13,7 @@ public class Chunk : MonoBehaviour
 		public List<Vector3> Vertices;
 		public List<Vector3> Normals;
 		public List<Vector2> Uvs;
+		public List<Color> Colors;
 		public List<int>[] Triangles;
 		public int TriangleIndex;
 		
@@ -28,6 +29,8 @@ public class Chunk : MonoBehaviour
 				Normals = new List<Vector3>();
 			if (Uvs == null)
 				Uvs = new List<Vector2>();
+			if (Colors == null)
+				Colors = new List<Color>();
 			if (Triangles == null || Triangles.Length != SubmeshCount)
 			{
 				Triangles = new List<int>[SubmeshCount];
@@ -44,6 +47,7 @@ public class Chunk : MonoBehaviour
 			Vertices.Clear();
 			Normals.Clear();
 			Uvs.Clear();
+			Colors.Clear();
 			for (int i = 0; i < Triangles.Length; ++i)
 			{
 				Triangles[i].Clear();
@@ -57,6 +61,7 @@ public class Chunk : MonoBehaviour
 			Mesh.vertices = Vertices.ToArray();
 			Mesh.normals = Normals.ToArray();
 			Mesh.uv = Uvs.ToArray();
+			Mesh.colors = Colors.ToArray();
 			Mesh.subMeshCount = SubmeshCount;
 			for (int i = 0; i < Triangles.Length; ++i)
 			{
@@ -64,7 +69,7 @@ public class Chunk : MonoBehaviour
 			}
 		}
 
-		public void AddQuad(int submeshIndex, Vector3 pos0, Vector3 pos1, Vector3 pos2, Vector3 pos3, Vector3 normal, Vector2 uv0, Vector2 uv1, Vector2 uv2, Vector2 uv3)
+		public void AddQuad(int submeshIndex, Vector3 pos0, Vector3 pos1, Vector3 pos2, Vector3 pos3, Vector3 normal, Vector2 uv0, Vector2 uv1, Vector2 uv2, Vector2 uv3, Color color)
 		{
 			Vertices.Add(pos0);
 			Vertices.Add(pos1);
@@ -80,6 +85,11 @@ public class Chunk : MonoBehaviour
 			Uvs.Add(uv1);
 			Uvs.Add(uv2);
 			Uvs.Add(uv3);
+
+			Colors.Add(color);
+			Colors.Add(color);
+			Colors.Add(color);
+			Colors.Add(color);
 
 			Triangles[submeshIndex].Add(TriangleIndex + 0);
 			Triangles[submeshIndex].Add(TriangleIndex + 1);
@@ -171,9 +181,9 @@ public class Chunk : MonoBehaviour
 					int tileId = GetTile(x, y, z);
 					if (tileId == 0)
 						continue;
-
-					//Vector3 tilePosition = new Vector3(-mChunkSettings.ChunkWidth / 2 + x * mChunkSettings.TileSize, mChunkSettings.ChunkHeight + y * mChunkSettings.TileSize, z * mChunkSettings.TileSize - mChunkSettings.TileSize / 2);
+					
 					Vector3 tilePosition = GetTileLocalPosition(x, y, z);
+					Color layerColor = Color.Lerp(Color.white, mChunkSettings.BackLayerTint, z / (float)(mChunkSettings.NumberOfLayers - 1));
 
 					mMeshGenerationData.AddQuad(
 						tileId,
@@ -185,7 +195,8 @@ public class Chunk : MonoBehaviour
 						new Vector2(0, 0),
 						new Vector2(1, 0),
 						new Vector2(1, 1),
-						new Vector2(0, 1));
+						new Vector2(0, 1),
+						layerColor);
 
 					if (tileId != GetTile(x + 1, y, z))
 						mMeshGenerationData.AddQuad(
@@ -198,7 +209,8 @@ public class Chunk : MonoBehaviour
 							new Vector2(0, 0),
 							new Vector2(1, 0),
 							new Vector2(1, 1),
-							new Vector2(0, 1));
+							new Vector2(0, 1),
+							layerColor);
 
 					if (tileId != GetTile(x - 1, y, z))
 						mMeshGenerationData.AddQuad(
@@ -211,7 +223,8 @@ public class Chunk : MonoBehaviour
 							new Vector2(0, 0),
 							new Vector2(1, 0),
 							new Vector2(1, 1),
-							new Vector2(0, 1));
+							new Vector2(0, 1),
+							layerColor);
 
 					if (tileId != GetTile(x, y + 1, z))
 						mMeshGenerationData.AddQuad(
@@ -224,7 +237,8 @@ public class Chunk : MonoBehaviour
 							new Vector2(0, 0),
 							new Vector2(1, 0),
 							new Vector2(1, 1),
-							new Vector2(0, 1));
+							new Vector2(0, 1),
+							layerColor);
 
 					if (tileId != GetTile(x, y - 1, z))
 						mMeshGenerationData.AddQuad(
@@ -237,7 +251,8 @@ public class Chunk : MonoBehaviour
 							new Vector2(0, 0),
 							new Vector2(1, 0),
 							new Vector2(1, 1),
-							new Vector2(0, 1));
+							new Vector2(0, 1),
+							layerColor);
 				}
 			}
 		}
@@ -252,8 +267,7 @@ public class Chunk : MonoBehaviour
 				bool hasCollision = mChunkSettings.TileData[GetTile(x, y, 0)].IsCollision;
 				if (!hasCollision)
 					continue;
-
-				//Vector3 tilePosition = new Vector3(-mChunkSettings.ChunkWidth / 2 + x * mChunkSettings.TileSize, mChunkSettings.ChunkHeight + y * mChunkSettings.TileSize, -mChunkSettings.TileSize / 2);
+				
 				Vector3 tilePosition = GetTileLocalPosition(x, y, 0);
 
 				if (hasCollision != mChunkSettings.TileData[GetTile(x + 1, y, 0)].IsCollision)
@@ -267,7 +281,8 @@ public class Chunk : MonoBehaviour
 						new Vector2(0, 0),
 						new Vector2(1, 0),
 						new Vector2(1, 1),
-						new Vector2(0, 1));
+						new Vector2(0, 1),
+						Color.white);
 
 				if (hasCollision != mChunkSettings.TileData[GetTile(x - 1, y, 0)].IsCollision)
 					mColliderGenerationData.AddQuad(
@@ -280,7 +295,8 @@ public class Chunk : MonoBehaviour
 						new Vector2(0, 0),
 						new Vector2(1, 0),
 						new Vector2(1, 1),
-						new Vector2(0, 1));
+						new Vector2(0, 1),
+						Color.white);
 
 				if (hasCollision != mChunkSettings.TileData[GetTile(x, y + 1, 0)].IsCollision)
 					mColliderGenerationData.AddQuad(
@@ -293,7 +309,8 @@ public class Chunk : MonoBehaviour
 						new Vector2(0, 0),
 						new Vector2(1, 0),
 						new Vector2(1, 1),
-						new Vector2(0, 1));
+						new Vector2(0, 1),
+						Color.white);
 
 				if (hasCollision != mChunkSettings.TileData[GetTile(x, y - 1, 0)].IsCollision)
 					mColliderGenerationData.AddQuad(
@@ -306,7 +323,8 @@ public class Chunk : MonoBehaviour
 						new Vector2(0, 0),
 						new Vector2(1, 0),
 						new Vector2(1, 1),
-						new Vector2(0, 1));
+						new Vector2(0, 1),
+						Color.white);
 			}
 		}
 	}
@@ -356,13 +374,7 @@ public class Chunk : MonoBehaviour
 					bool isIndistructible = mChunkSettings.TileData[tileId].IsIndestructible;
 					if (isIndistructible)
 						continue;
-
-					//Vector3 tilePosition =
-					//	transform.position +
-					//	new Vector3(
-					//		-mChunkSettings.ChunkWidth / 2 + x * mChunkSettings.TileSize + mChunkSettings.TileSize / 2,
-					//		mChunkSettings.ChunkHeight - y * mChunkSettings.TileSize + mChunkSettings.TileSize / 2,
-					//		z * mChunkSettings.TileSize);
+					
 					Vector3 tilePosition = GetTileWorldPosition(x, y, z);
 					float distance = Vector3.Distance(tilePosition, explosionSource);
 

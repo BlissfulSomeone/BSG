@@ -12,6 +12,7 @@ public class ChunkController : MonoBehaviour
 		[SerializeField] public int NumberOfRows;
 		[SerializeField] public int NumberOfLayers;
 		[SerializeField] public TileData[] TileData;
+		[SerializeField] public Color BackLayerTint;
 
 		public float TileSize { get { return ChunkWidth / NumberOfColumns; } }
 		public float ChunkHeight { get { return TileSize * NumberOfRows; } }
@@ -90,24 +91,6 @@ public class ChunkController : MonoBehaviour
 				}
 			}
 		}
-
-		//GameObject debrisObject = Instantiate(mDebrisPrefab);
-		//debrisObject.transform.Reset();
-		//debrisObject.transform.position = tilePosition;
-		//debrisObject.transform.localScale = Vector3.one * mChunkSettings.TileSize;
-		//
-		//MeshRenderer debrisMeshRenderer = debrisObject.GetComponent<MeshRenderer>();
-		//debrisMeshRenderer.material = mChunkSettings.TileData[tileId].Material;
-		//
-		//Rigidbody debrisRigidbody = debrisObject.GetComponent<Rigidbody>();
-		////debrisRigidbody.AddExplosionForce(15.0f, explosionSource, explosionRadius, 1.0f, ForceMode.VelocityChange);
-		//Vector3 delta = tilePosition - explosionSource;
-		//float distance = delta.magnitude;
-		//float falloff = 1.0f - (distance / explosionRadius);
-		//float force = 10.0f * falloff;
-		//debrisRigidbody.velocity += delta.normalized * force + Vector3.up * force + Vector3.forward * Random.Range(force / 2, -force / 2);
-		//
-		//Destroy(debrisObject, 3.0f);
 	}
 
 	public void Explode(Vector3 explosionSource, float explosionRadius)
