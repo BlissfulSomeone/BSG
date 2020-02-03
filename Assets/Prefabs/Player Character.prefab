@@ -59,6 +59,7 @@ MonoBehaviour:
     maxSpeed: 5
     jumpForce: 10
     jumpTime: 0.15
+  mMaxHealth: 100
 --- !u!212 &8377611175049075331
 SpriteRenderer:
   m_ObjectHideFlags: 0

@@ -18,4 +18,9 @@ public static class ListExtensions
 	{
 		return list[UnityEngine.Random.Range(0, list.Count - 1)];
 	}
+
+	public static int LastIndex<T>(this List<T> list)
+	{
+		return list.Count - 1;
+	}
 }

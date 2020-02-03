@@ -4,7 +4,16 @@ using UnityEngine;
 
 public class UILayer : MonoBehaviour
 {
+	public enum ELayerType
+	{
+		Single,
+		Multi
+	}
+
 	private List<UIMenu> mMenus;
+	private ELayerType mType;
+
+	public ELayerType LayerType { get { return mType; } set { mType = value; UpdateMenuVisibilities(); } }
 
 	private void Awake()
 	{
@@ -13,7 +22,7 @@ public class UILayer : MonoBehaviour
 
 	public UIMenu PushMenu(UIMenu aMenuPrefab)
 	{
-		if (mMenus.Count > 0)
+		if (mMenus.Count > 0 && LayerType == ELayerType.Single)
 		{
 			UIMenu topMenu = mMenus.Last();
 			topMenu.Alpha = 0.0f;
@@ -39,7 +48,7 @@ public class UILayer : MonoBehaviour
 
 	public void PopMenu()
 	{
-		if (mMenus.Count > 0)
+		if (mMenus.Count > 0 && LayerType == ELayerType.Single)
 		{
 			Destroy(mMenus.Last().gameObject);
 			mMenus.RemoveLast();
@@ -49,6 +58,16 @@ public class UILayer : MonoBehaviour
 				topMenu.Alpha = 1.0f;
 				topMenu.Interactable = true;
 			}
+		}
+	}
+
+	private void UpdateMenuVisibilities()
+	{ 
+		for (int i = 0; i < mMenus.Count; ++i)
+		{
+			bool isVisible = i == mMenus.LastIndex() || mType == ELayerType.Multi;
+			mMenus[i].Alpha = isVisible ? 1.0f : 0.0f;
+			mMenus[i].Interactable = isVisible;
 		}
 	}
 }

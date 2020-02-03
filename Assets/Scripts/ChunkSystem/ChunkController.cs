@@ -54,7 +54,7 @@ public class ChunkController : MonoBehaviour
 		++mChunksSpawned;
 	}
 
-	private void OnTileDestroyed(Vector3 tilePosition, int tileId, Vector3 explosionSource, float explosionRadius)
+	private void OnTileDestroyed(Vector3 tilePosition, int tileId, ExplosionData explosionData)
 	{
 		const int SPLITS = 2;
 		for (int x = 0; x < SPLITS; ++x)
@@ -78,10 +78,10 @@ public class ChunkController : MonoBehaviour
 					debrisMeshRenderer.material = mChunkSettings.TileData[tileId].Material;
 
 					Rigidbody debrisRigidbody = debrisObject.GetComponent<Rigidbody>();
-					Vector3 alignedExplosionSource = new Vector3(explosionSource.x, explosionSource.y, spawnPosition.z);
+					Vector3 alignedExplosionSource = new Vector3(explosionData.Position.x, explosionData.Position.y, spawnPosition.z);
 					Vector3 delta = spawnPosition - alignedExplosionSource;
 					float distance = delta.magnitude;
-					float falloff = 1.0f - (distance / explosionRadius);
+					float falloff = 1.0f - (distance / explosionData.Radius);
 					float force = 10.0f * falloff * Random.Range(0.25f, 1.0f);
 					float forceZ = Random.Range(force / 2, -force / 2);
 					debrisRigidbody.velocity += delta.normalized * force + Vector3.up * force + Vector3.forward * forceZ;
@@ -93,11 +93,11 @@ public class ChunkController : MonoBehaviour
 		}
 	}
 
-	public void Explode(Vector3 explosionSource, float explosionRadius)
+	public void Explode(ExplosionData explosionData)
 	{
 		foreach (Chunk chunk in Chunks)
 		{
-			chunk.Explode(explosionSource, explosionRadius);
+			chunk.Explode(explosionData);
 		}
 	}
 }

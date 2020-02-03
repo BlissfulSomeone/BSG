@@ -102,7 +102,7 @@ public class Chunk : MonoBehaviour
 		}
 	}
 
-	public delegate void OnTileDestroyedHandler(Vector3 tilePosition, int tileId, Vector3 explosionSource, float explosionRadius);
+	public delegate void OnTileDestroyedHandler(Vector3 tilePosition, int tileId, ExplosionData explosionData);
 	public OnTileDestroyedHandler OnTileDestroyed;
 	
 	private MeshFilter mMeshFilter;
@@ -361,7 +361,7 @@ public class Chunk : MonoBehaviour
 		mMeshCollider.convex = false;
 	}
 
-	public void Explode(Vector3 explosionSource, float explosionRadius)
+	public void Explode(ExplosionData explosionData)
 	{
 		bool dirty = false;
 		for (int y = 0; y < mChunkSettings.NumberOfRows; ++y)
@@ -376,12 +376,12 @@ public class Chunk : MonoBehaviour
 						continue;
 					
 					Vector3 tilePosition = GetTileWorldPosition(x, y, z);
-					float distance = Vector3.Distance(tilePosition, explosionSource);
+					float distance = Vector3.Distance(tilePosition, explosionData.Position);
 
-					if (distance <= explosionRadius)
+					if (distance <= explosionData.Radius)
 					{
 						SetTile(x, y, z, 0);
-						OnTileDestroyed(tilePosition, tileId, explosionSource, explosionRadius);
+						OnTileDestroyed(tilePosition, tileId, explosionData);
 						dirty = true;
 					}
 				}
