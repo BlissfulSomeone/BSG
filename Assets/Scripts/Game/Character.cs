@@ -34,7 +34,7 @@ public class Character : MonoBehaviour
 	[SerializeField] private Physics mPhysics;
 	[SerializeField] private Movement mMovement;
 	[SerializeField] private float mMaxHealth;
-	
+
 	private bool mIsGrounded = false;
 	private Vector3 mMovementInput = Vector3.zero;
 	private bool mWantToJump = false;
@@ -44,8 +44,10 @@ public class Character : MonoBehaviour
 	private float mHealth;
 	public float Health { get { return mHealth; } }
 	public float MaxHealth { get { return mMaxHealth; } }
+    public Vector3 Velocity { get { return mVelocity; } }
 
-	private void Awake()
+
+    private void Awake()
 	{
 		mRigidbody = GetComponent<Rigidbody>();
 		mBoxCollider = GetComponent<BoxCollider>();
@@ -65,7 +67,7 @@ public class Character : MonoBehaviour
 		if (explosionData.Friendly == false)
 		{
 			mHealth -= explosionData.Damage;
-			if (mHealth <= 0.0f)
+            if (mHealth <= 0.0f)
 			{
 				OnKilled?.Invoke(this);
 				Destroy(gameObject);
