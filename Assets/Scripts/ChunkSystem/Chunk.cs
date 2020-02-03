@@ -2,145 +2,413 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Chunk
+[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider))]
+public class Chunk : MonoBehaviour
 {
-	public struct TileInstance
+	[System.Serializable]
+	private class MeshGenerationData
 	{
-		private TileData tileData;
-		private Sprite currentSprite;
-		private int health;
-
-		public TileData TileData { get { return tileData; } }
-		public Sprite CurrentSprite { get { return currentSprite; } }
-
-		public TileInstance(TileData aTileData)
+		public Mesh Mesh;
+		public int SubmeshCount;
+		public List<Vector3> Vertices;
+		public List<Vector3> Normals;
+		public List<Vector2> Uvs;
+		public List<Color> Colors;
+		public List<int>[] Triangles;
+		public int TriangleIndex;
+		
+		public void Sanitize(int submeshCount)
 		{
-			tileData = aTileData;
-			health = tileData.sprites.Length - 1;
-			currentSprite = tileData.GetRandomSpriteFromHealth(health);
-		}
+			SubmeshCount = submeshCount;
 
-		public bool Damage(int aDamage)
-		{
-			if (tileData.indestructible == true)
-				return false;
-
-			health -= aDamage;
-			if (health >= 0)
+			if (Mesh == null)
+				Mesh = new Mesh();
+			if (Vertices == null)
+				Vertices = new List<Vector3>();
+			if (Normals == null)
+				Normals = new List<Vector3>();
+			if (Uvs == null)
+				Uvs = new List<Vector2>();
+			if (Colors == null)
+				Colors = new List<Color>();
+			if (Triangles == null || Triangles.Length != SubmeshCount)
 			{
-				
-				currentSprite = tileData.GetRandomSpriteFromHealth(health);
-				return false;
-			}
-			currentSprite = tileData.GetRandomSpriteFromHealth(0);
-			return true;
-		}
-	}
-
-	public struct TileDestroyData
-	{
-		public Vector2 destroySource;
-		public float destoryStrength;
-	}
-
-	public delegate void OnTileDestroyedHandler(TileInstance aTileInstance, Vector3 aTilePosition, TileDestroyData aTileDestroyData);
-	public OnTileDestroyedHandler OnTileDestroyed;
-
-	private TileInstance[] mTiles;
-
-	private Vector2 mPosition;
-	private Vector2 mTileSize;
-	protected Vector2Int mGridSize;
-	public Vector2 Position { get { return mPosition; } }
-	public Vector2 TileSize { get { return mTileSize; } }
-	public Vector2Int GridSize { get { return mGridSize; } }
-
-	protected TileData mEmptyTileData;
-	protected TileData mMetalTileData;
-	protected TileData mDirtTileData;
-	protected TileData mRocksTileData;
-
-	private Sprite mDebugSprite;
-
-	public Chunk(Vector2 aPosition, Vector2 aTileSize, Vector2Int aGridSize)
-	{
-		mEmptyTileData = Resources.Load<TileData>("Tiles/TileVoid");
-		mMetalTileData = Resources.Load<TileData>("Tiles/TileMetal");
-		mDirtTileData = Resources.Load<TileData>("Tiles/TileDirt");
-		mRocksTileData = Resources.Load<TileData>("Tiles/TileRocks");
-
-		mDebugSprite = Resources.Load<Sprite>("Textures/Sprites/SprDebugPoint");
-
-		mPosition = aPosition;
-		mTileSize = aTileSize;
-		mGridSize = aGridSize;
-		mTiles = new TileInstance[mGridSize.x * mGridSize.y];
-		for (int y = 0; y < mGridSize.y; ++y)
-		{
-			for (int x = 0; x < mGridSize.x; ++x)
-			{
-				SetTile(x, y, (x == 0 || x == mGridSize.x - 1) ? mMetalTileData : (Random.Range(0, 4) == 0 ? mRocksTileData : mDirtTileData));
-			}
-		}
-	}
-
-	protected void SetTile(int aX, int aY, TileData aTileData)
-	{
-		mTiles[aX + aY * mGridSize.x] = new TileInstance(aTileData);
-	}
-
-	public TileInstance GetTile(int aX, int aY)
-	{
-		return mTiles[aX + aY * mGridSize.x];
-	}
-
-	protected ref TileInstance GetTileReference(int aX, int aY)
-	{
-		return ref mTiles[aX + aY * mGridSize.x];
-	}
-
-	public bool IsCollision(int aX, int aY)
-	{
-		if (aX < 0 || aX >= mGridSize.x || aY < 0 || aY >= mGridSize.y)
-			return false;
-
-		return GetTile(aX, aY).TileData.hasCollision;
-	}
-
-	public void Explode(Vector2 aExplosionPoint, float aExplosionRadius)
-	{
-		for (int y = 0; y < mGridSize.y; ++y)
-		{
-			for (int x = 0; x < mGridSize.x; ++x)
-			{
-				Vector2 tilePosition = new Vector2(
-					mPosition.x + x * mTileSize.x /*+ mTileSize.x * 0.5f*/,
-					mPosition.y + y * mTileSize.y /*+ mTileSize.y * 0.5f*/);
-
-				if (Vector2.Distance(tilePosition, aExplosionPoint) < aExplosionRadius)
+				Triangles = new List<int>[SubmeshCount];
+				for (int i = 0; i < Triangles.Length; ++i)
 				{
-					if (GetTileReference(x, y).Damage(1) == true)
-					{
-						TileInstance destroyedTile = GetTile(x, y);
-						SetTile(x, y, mEmptyTileData);
-						TileDestroyData tileDestroyData;
-						tileDestroyData.destroySource = aExplosionPoint;
-						tileDestroyData.destoryStrength = aExplosionRadius;
-						OnTileDestroyed?.Invoke(destroyedTile, tilePosition, tileDestroyData);
-					}
+					Triangles[i] = new List<int>();
+				}
+			}
+		}
+
+		public void Reset()
+		{
+			Mesh.Clear();
+			Vertices.Clear();
+			Normals.Clear();
+			Uvs.Clear();
+			Colors.Clear();
+			for (int i = 0; i < Triangles.Length; ++i)
+			{
+				Triangles[i].Clear();
+			}
+			TriangleIndex = 0;
+		}
+
+		public void Build()
+		{
+			Mesh.Clear();
+			Mesh.vertices = Vertices.ToArray();
+			Mesh.normals = Normals.ToArray();
+			Mesh.uv = Uvs.ToArray();
+			Mesh.colors = Colors.ToArray();
+			Mesh.subMeshCount = SubmeshCount;
+			for (int i = 0; i < Triangles.Length; ++i)
+			{
+				Mesh.SetTriangles(Triangles[i].ToArray(), i);
+			}
+		}
+
+		public void AddQuad(int submeshIndex, Vector3 pos0, Vector3 pos1, Vector3 pos2, Vector3 pos3, Vector3 normal, Vector2 uv0, Vector2 uv1, Vector2 uv2, Vector2 uv3, Color color)
+		{
+			Vertices.Add(pos0);
+			Vertices.Add(pos1);
+			Vertices.Add(pos2);
+			Vertices.Add(pos3);
+
+			Normals.Add(normal);
+			Normals.Add(normal);
+			Normals.Add(normal);
+			Normals.Add(normal);
+
+			Uvs.Add(uv0);
+			Uvs.Add(uv1);
+			Uvs.Add(uv2);
+			Uvs.Add(uv3);
+
+			Colors.Add(color);
+			Colors.Add(color);
+			Colors.Add(color);
+			Colors.Add(color);
+
+			Triangles[submeshIndex].Add(TriangleIndex + 0);
+			Triangles[submeshIndex].Add(TriangleIndex + 1);
+			Triangles[submeshIndex].Add(TriangleIndex + 2);
+			Triangles[submeshIndex].Add(TriangleIndex + 0);
+			Triangles[submeshIndex].Add(TriangleIndex + 2);
+			Triangles[submeshIndex].Add(TriangleIndex + 3);
+
+			TriangleIndex += 4;
+		}
+	}
+
+	public delegate void OnTileDestroyedHandler(Vector3 tilePosition, int tileId, Vector3 explosionSource, float explosionRadius);
+	public OnTileDestroyedHandler OnTileDestroyed;
+	
+	private MeshFilter mMeshFilter;
+	private MeshRenderer mMeshRenderer;
+	private MeshCollider mMeshCollider;
+
+	private ChunkController.ChunkSettings mChunkSettings;
+
+	private MeshGenerationData mMeshGenerationData;
+	private MeshGenerationData mColliderGenerationData;
+
+	private int[] mTiles;
+
+	public void Generate(ChunkController.ChunkSettings chunkSettings, bool empty)
+	{
+		mChunkSettings = chunkSettings;
+
+		Sanitize();
+		GenerateTiles(empty);
+		ResetData();
+		GenerateMeshData();
+		GenerateColliderData();
+		Build();
+	}
+
+	private void Sanitize()
+	{
+		if (mMeshFilter == null)
+			mMeshFilter = GetComponent<MeshFilter>();
+		if (mMeshRenderer == null)
+			mMeshRenderer = GetComponent<MeshRenderer>();
+		if (mMeshCollider == null)
+			mMeshCollider = GetComponent<MeshCollider>();
+
+		if (mMeshGenerationData == null)
+			mMeshGenerationData = new MeshGenerationData();
+		if (mColliderGenerationData == null)
+			mColliderGenerationData = new MeshGenerationData();
+
+		mMeshGenerationData.Sanitize(mChunkSettings.TileData.Length);
+		mColliderGenerationData.Sanitize(mChunkSettings.TileData.Length);
+	}
+
+	private void GenerateTiles(bool empty)
+	{
+		mTiles = new int[mChunkSettings.NumberOfTiles];
+		for (int y = 0; y < mChunkSettings.NumberOfRows; ++y)
+		{
+			for (int x = 0; x < mChunkSettings.NumberOfColumns; ++x)
+			{
+				for (int z = 0; z < mChunkSettings.NumberOfLayers; ++z)
+				{
+					if (x == 0 || x == mChunkSettings.NumberOfColumns - 1)
+						SetTile(x, y, z, 1);
+					else
+						SetTile(x, y, z, empty ? 0 : 2);
 				}
 			}
 		}
 	}
 
-	public void Render(RenderQueue aRenderQueue)
+	private void ResetData()
 	{
-		for (int y = 0; y < mGridSize.y; ++y)
+		mMeshGenerationData.Reset();
+		mColliderGenerationData.Reset();
+	}
+
+	private void GenerateMeshData()
+	{
+		for (int y = 0; y < mChunkSettings.NumberOfRows; ++y)
 		{
-			for (int x = 0; x < mGridSize.x; ++x)
+			for (int x = 0; x < mChunkSettings.NumberOfColumns; ++x)
 			{
-				aRenderQueue.AddSprite(GetTileReference(x, y).CurrentSprite, new Vector3(mPosition.x + x * mTileSize.x, mPosition.y + y * mTileSize.y, 0.0f), Vector3.one);
+				for (int z = 0; z < mChunkSettings.NumberOfLayers; ++z)
+				{
+					int tileId = GetTile(x, y, z);
+					if (tileId == 0)
+						continue;
+					
+					Vector3 tilePosition = GetTileLocalPosition(x, y, z);
+					Color layerColor = Color.Lerp(Color.white, mChunkSettings.BackLayerTint, z / (float)(mChunkSettings.NumberOfLayers - 1));
+
+					mMeshGenerationData.AddQuad(
+						tileId,
+						tilePosition - Vector3.one / 2 + new Vector3(0, 1, 0) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(1, 1, 0) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(1, 0, 0) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(0, 0, 0) * mChunkSettings.TileSize,
+						Vector3.back,
+						new Vector2(0, 0),
+						new Vector2(1, 0),
+						new Vector2(1, 1),
+						new Vector2(0, 1),
+						layerColor);
+
+					if (tileId != GetTile(x + 1, y, z))
+						mMeshGenerationData.AddQuad(
+							tileId,
+							tilePosition - Vector3.one / 2 + new Vector3(1, 1, 0) * mChunkSettings.TileSize,
+							tilePosition - Vector3.one / 2 + new Vector3(1, 1, 1) * mChunkSettings.TileSize,
+							tilePosition - Vector3.one / 2 + new Vector3(1, 0, 1) * mChunkSettings.TileSize,
+							tilePosition - Vector3.one / 2 + new Vector3(1, 0, 0) * mChunkSettings.TileSize,
+							Vector3.right,
+							new Vector2(0, 0),
+							new Vector2(1, 0),
+							new Vector2(1, 1),
+							new Vector2(0, 1),
+							layerColor);
+
+					if (tileId != GetTile(x - 1, y, z))
+						mMeshGenerationData.AddQuad(
+							tileId,
+							tilePosition - Vector3.one / 2 + new Vector3(0, 1, 1) * mChunkSettings.TileSize,
+							tilePosition - Vector3.one / 2 + new Vector3(0, 1, 0) * mChunkSettings.TileSize,
+							tilePosition - Vector3.one / 2 + new Vector3(0, 0, 0) * mChunkSettings.TileSize,
+							tilePosition - Vector3.one / 2 + new Vector3(0, 0, 1) * mChunkSettings.TileSize,
+							Vector3.left,
+							new Vector2(0, 0),
+							new Vector2(1, 0),
+							new Vector2(1, 1),
+							new Vector2(0, 1),
+							layerColor);
+
+					if (tileId != GetTile(x, y + 1, z))
+						mMeshGenerationData.AddQuad(
+							tileId,
+							tilePosition - Vector3.one / 2 + new Vector3(1, 0, 1) * mChunkSettings.TileSize,
+							tilePosition - Vector3.one / 2 + new Vector3(0, 0, 1) * mChunkSettings.TileSize,
+							tilePosition - Vector3.one / 2 + new Vector3(0, 0, 0) * mChunkSettings.TileSize,
+							tilePosition - Vector3.one / 2 + new Vector3(1, 0, 0) * mChunkSettings.TileSize,
+							Vector3.down,
+							new Vector2(0, 0),
+							new Vector2(1, 0),
+							new Vector2(1, 1),
+							new Vector2(0, 1),
+							layerColor);
+
+					if (tileId != GetTile(x, y - 1, z))
+						mMeshGenerationData.AddQuad(
+							tileId,
+							tilePosition - Vector3.one / 2 + new Vector3(1, 1, 0) * mChunkSettings.TileSize,
+							tilePosition - Vector3.one / 2 + new Vector3(0, 1, 0) * mChunkSettings.TileSize,
+							tilePosition - Vector3.one / 2 + new Vector3(0, 1, 1) * mChunkSettings.TileSize,
+							tilePosition - Vector3.one / 2 + new Vector3(1, 1, 1) * mChunkSettings.TileSize,
+							Vector3.up,
+							new Vector2(0, 0),
+							new Vector2(1, 0),
+							new Vector2(1, 1),
+							new Vector2(0, 1),
+							layerColor);
+				}
 			}
 		}
+	}
+	
+	private void GenerateColliderData()
+	{
+		for (int y = 0; y < mChunkSettings.NumberOfRows; ++y)
+		{
+			for (int x = 0; x < mChunkSettings.NumberOfColumns; ++x)
+			{
+				bool hasCollision = mChunkSettings.TileData[GetTile(x, y, 0)].IsCollision;
+				if (!hasCollision)
+					continue;
+				
+				Vector3 tilePosition = GetTileLocalPosition(x, y, 0);
+
+				if (hasCollision != mChunkSettings.TileData[GetTile(x + 1, y, 0)].IsCollision)
+					mColliderGenerationData.AddQuad(
+						0,
+						tilePosition - Vector3.one / 2 + new Vector3(1, 1, 0) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(1, 1, 1) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(1, 0, 1) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(1, 0, 0) * mChunkSettings.TileSize,
+						Vector3.right,
+						new Vector2(0, 0),
+						new Vector2(1, 0),
+						new Vector2(1, 1),
+						new Vector2(0, 1),
+						Color.white);
+
+				if (hasCollision != mChunkSettings.TileData[GetTile(x - 1, y, 0)].IsCollision)
+					mColliderGenerationData.AddQuad(
+						0,
+						tilePosition - Vector3.one / 2 + new Vector3(0, 1, 1) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(0, 1, 0) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(0, 0, 0) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(0, 0, 1) * mChunkSettings.TileSize,
+						Vector3.left,
+						new Vector2(0, 0),
+						new Vector2(1, 0),
+						new Vector2(1, 1),
+						new Vector2(0, 1),
+						Color.white);
+
+				if (hasCollision != mChunkSettings.TileData[GetTile(x, y + 1, 0)].IsCollision)
+					mColliderGenerationData.AddQuad(
+						0,
+						tilePosition - Vector3.one / 2 + new Vector3(1, 0, 1) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(0, 0, 1) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(0, 0, 0) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(1, 0, 0) * mChunkSettings.TileSize,
+						Vector3.down,
+						new Vector2(0, 0),
+						new Vector2(1, 0),
+						new Vector2(1, 1),
+						new Vector2(0, 1),
+						Color.white);
+
+				if (hasCollision != mChunkSettings.TileData[GetTile(x, y - 1, 0)].IsCollision)
+					mColliderGenerationData.AddQuad(
+						0,
+						tilePosition - Vector3.one / 2 + new Vector3(1, 1, 0) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(0, 1, 0) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(0, 1, 1) * mChunkSettings.TileSize,
+						tilePosition - Vector3.one / 2 + new Vector3(1, 1, 1) * mChunkSettings.TileSize,
+						Vector3.up,
+						new Vector2(0, 0),
+						new Vector2(1, 0),
+						new Vector2(1, 1),
+						new Vector2(0, 1),
+						Color.white);
+			}
+		}
+	}
+
+	private int GetTile(int x, int y, int z)
+	{
+		if (x < 0 || x >= mChunkSettings.NumberOfColumns || y < 0 || y >= mChunkSettings.NumberOfRows || z < 0 || z >= mChunkSettings.NumberOfLayers)
+			return 0;
+		return mTiles[x + y * mChunkSettings.NumberOfColumns + z * mChunkSettings.NumberOfColumns * mChunkSettings.NumberOfRows];
+	}
+
+	private void SetTile(int x, int y, int z, int tileId)
+	{
+		if (x < 0 || x >= mChunkSettings.NumberOfColumns || y < 0 || y >= mChunkSettings.NumberOfRows || z < 0 || z >= mChunkSettings.NumberOfLayers)
+			return;
+		mTiles[x + y * mChunkSettings.NumberOfColumns + z * mChunkSettings.NumberOfColumns * mChunkSettings.NumberOfRows] = tileId;
+	}
+
+	private void Build()
+	{
+		mMeshGenerationData.Build();
+		mColliderGenerationData.Build();
+
+		mMeshFilter.mesh = mMeshGenerationData.Mesh;
+		
+		Material[] materials = new Material[mChunkSettings.TileData.Length];
+		for (int i = 0; i < materials.Length; ++i)
+		{
+			materials[i] = mChunkSettings.TileData[i].Material;
+		}
+		mMeshRenderer.materials = materials;
+
+		mMeshCollider.sharedMesh = mColliderGenerationData.Mesh;
+		mMeshCollider.convex = false;
+	}
+
+	public void Explode(Vector3 explosionSource, float explosionRadius)
+	{
+		bool dirty = false;
+		for (int y = 0; y < mChunkSettings.NumberOfRows; ++y)
+		{
+			for (int x = 0; x < mChunkSettings.NumberOfColumns; ++x)
+			{
+				for (int z = 0; z < mChunkSettings.NumberOfLayers; ++z)
+				{
+					int tileId = GetTile(x, y, z);
+					bool isIndistructible = mChunkSettings.TileData[tileId].IsIndestructible;
+					if (isIndistructible)
+						continue;
+					
+					Vector3 tilePosition = GetTileWorldPosition(x, y, z);
+					float distance = Vector3.Distance(tilePosition, explosionSource);
+
+					if (distance <= explosionRadius)
+					{
+						SetTile(x, y, z, 0);
+						OnTileDestroyed(tilePosition, tileId, explosionSource, explosionRadius);
+						dirty = true;
+					}
+				}
+			}
+		}
+		
+		if (dirty)
+		{
+			Sanitize();
+			ResetData();
+			GenerateMeshData();
+			GenerateColliderData();
+			Build();
+		}
+	}
+	
+	private Vector3 GetTileLocalPosition(int x, int y, int z)
+	{
+		Vector3 localCenterPosition = new Vector3(
+			-mChunkSettings.ChunkWidth / 2 + x * mChunkSettings.TileSize + mChunkSettings.TileSize / 2,
+			mChunkSettings.ChunkHeight - y * mChunkSettings.TileSize - mChunkSettings.TileSize / 2,
+			z * mChunkSettings.TileSize);
+		return localCenterPosition;
+	}
+
+	private Vector3 GetTileWorldPosition(int x, int y, int z)
+	{
+		return transform.position + GetTileLocalPosition(x, y, z);
 	}
 }

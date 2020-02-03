@@ -32,6 +32,9 @@ public class BSGFakePhysics : MonoBehaviour
 		public float airControl = 0.0f;
 	}
 
+	public delegate void OnImpactHandler();
+	public OnImpactHandler OnImpact;
+
 	[SerializeField] private Physics mPhysics;
 
 	private int mCollisionMask = 0;
@@ -64,12 +67,17 @@ public class BSGFakePhysics : MonoBehaviour
 			mVelocity.x = Mathf.Min(mVelocity.x + (mIsGrounded == true ? mPhysics.friction : mPhysics.airControl) * Time.fixedDeltaTime, 0.0f);
 		if (mIsGrounded == false)
 			mVelocity.y -= 20.0f * mPhysics.gravityScale * Time.fixedDeltaTime;
-		DoRaycasts(Vector2.right, mPhysics.horizontal, EAxisIndex.Horizontal);
-		DoRaycasts(Vector2.up, mPhysics.vertical, EAxisIndex.Vertical);
+		bool hit = false;
+		if (DoRaycasts(Vector2.right, mPhysics.horizontal, EAxisIndex.Horizontal))
+			hit = true;
+		if (DoRaycasts(Vector2.up, mPhysics.vertical, EAxisIndex.Vertical))
+			hit = true;
+		if (hit)
+			OnImpact?.Invoke();
 		DoGroundCheck();
 	}
 
-	private void DoRaycasts(Vector2 aDirection, RaycastSettings aRaycastSettings, EAxisIndex aAxisIndex)
+	private bool DoRaycasts(Vector2 aDirection, RaycastSettings aRaycastSettings, EAxisIndex aAxisIndex)
 	{
 		int axisIndex = (int)aAxisIndex;
 		float distanceThisFrame = mVelocity[axisIndex] * Time.fixedDeltaTime;
@@ -84,31 +92,29 @@ public class BSGFakePhysics : MonoBehaviour
 		float distanceToMove = absDistanceThisFrame;
 		float rayLength = mBoxCollider.size[axisIndex] * 0.5f + absDistanceThisFrame;
 		Vector3 rayDirection = aDirection.ToVec3() * Mathf.Sign(distanceThisFrame);
+		bool hit = false;
 		for (int i = 0; i < aRaycastSettings.numberOfRaycasts; ++i)
 		{
 			Vector3 rayOrigin = Vector3.Lerp(start, end, i / (aRaycastSettings.numberOfRaycasts - 1.0f));
 			Ray ray = new Ray(rayOrigin, rayDirection);
 			RaycastHit hitInfo;
-			//Debug.DrawLine(rayOrigin, rayOrigin + rayDirection * rayLength, Color.red, 0.0f);
 			if (UnityEngine.Physics.Raycast(ray, out hitInfo, rayLength, mCollisionMask))
 			{
 				float distance = Mathf.Abs(start[axisIndex] - hitInfo.point[axisIndex]) - (mBoxCollider.size[axisIndex] * 0.5f);
 				if (distance < distanceToMove)
 				{
+					hit = true;
 					distanceToMove = distance;
 					mVelocity[axisIndex] = -mVelocity[axisIndex] * mPhysics.bounciness;
 					if (mVelocity[axisIndex] > 0.0f)
 						mVelocity[axisIndex] = Mathf.Max(mVelocity[axisIndex] - STATIONARY_VELOCITY_EPSILON, 0.0f);
 					if (mVelocity[axisIndex] < 0.0f)
 						mVelocity[axisIndex] = Mathf.Min(mVelocity[axisIndex] + STATIONARY_VELOCITY_EPSILON, 0.0f);
-					//if (Mathf.Abs(mVelocity.x) <= STATIONARY_VELOCITY_EPSILON)
-					//	mVelocity.x = 0.0f;
-					//if (Mathf.Abs(mVelocity.y) <= STATIONARY_VELOCITY_EPSILON)
-					//	mVelocity.y = 0.0f;
 				}
 			}
 		}
 		transform.position += rayDirection * distanceToMove;
+		return hit;
 	}
 
 	private void DoGroundCheck()
@@ -148,8 +154,9 @@ public class BSGFakePhysics : MonoBehaviour
 		float distance = delta.magnitude;
 		if (distance <= aExplosionRadius)
 		{
-			float force = 1.0f - (distance / aExplosionRadius);
-			mVelocity += delta.normalized * force + Vector2.up * aUpModifier;
+			float falloff = 1.0f - (distance / aExplosionRadius);
+			float force = 10.0f * falloff;
+			mVelocity += delta.normalized * force + Vector2.up * force * aUpModifier;
 		}
 	}
 }

@@ -16,6 +16,7 @@ public class Bomb : MonoBehaviour
 	[SerializeField] private float mTimer;
 	[SerializeField] private float mExplosionRadius;
 	[SerializeField] private bool mCanBeTriggeredByExplosion;
+	[SerializeField] private bool mCanBeTriggeredByImpact;
 
 	[SerializeField] private Explosion mExplosionPrefab;
 
@@ -32,6 +33,7 @@ public class Bomb : MonoBehaviour
 	private void Awake()
 	{
 		mFakePhysics = GetComponent<BSGFakePhysics>();
+		mFakePhysics.OnImpact += OnImpact;
 		mTriggerable = GetComponent<Triggerable>();
 		mTriggerable.OnTriggered += Trigger;
 	}
@@ -41,12 +43,20 @@ public class Bomb : MonoBehaviour
 		mTriggerable.OnTriggered -= Trigger;
 	}
 
-	private void Trigger(Vector2 aExplosionSource, float aExplosionRadius)
+	private void Trigger(Vector2 explosionSource, float explosionRadius)
 	{
-		if (mCanBeTriggeredByExplosion == true && mIsTriggered == false)
+		if (mCanBeTriggeredByExplosion && !mIsTriggered)
 		{
 			mIsTriggered = true;
 			mCurrentTimer = Random.Range(0.3f, 0.6f);
+		}
+	}
+
+	private void OnImpact()
+	{
+		if (mCanBeTriggeredByImpact)
+		{
+			Explode();
 		}
 	}
 
@@ -63,9 +73,6 @@ public class Bomb : MonoBehaviour
 				}
 			}
 		}
-		//Debug.Log("======");
-		//Debug.Log(mFakePhysics.Velocity.x + ", " + mFakePhysics.Velocity.y);
-		//Debug.Log(mFakePhysics.IsGrounded);
 	}
 
 	private void Update()

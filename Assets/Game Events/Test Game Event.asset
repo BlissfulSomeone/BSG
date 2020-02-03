@@ -1,0 +1,115 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f6fee7dfa5aaa44b8a143b503c0069f, type: 3}
+  m_Name: Test Game Event
+  m_EditorClassIdentifier: 
+  mGameEventData:
+  - HasBeenTriggered: 0
+    IsFoldOut: 1
+    Name: Set Default Bombs
+    TriggerAtDepth: 0
+    EventType: 2
+    BombsPerSecond: 5
+    BombType: 3
+    BombPrefab: {fileID: 0}
+    BombPrefabs:
+    - {fileID: 7880601355816889469, guid: a3527ebca6e5bbd408a6cc7e8009b16b, type: 3}
+    - {fileID: 4521838813421243912, guid: 1efcee2da2b40f14ab6ee0f3c8867385, type: 3}
+    Position: {x: 0, y: 0}
+    Rotation: 0
+    Spread: 0
+    Speed: 0
+    NestedEvent: {fileID: 0}
+  - HasBeenTriggered: 0
+    IsFoldOut: 1
+    Name: Set Initial BPS
+    TriggerAtDepth: 0
+    EventType: 1
+    BombsPerSecond: 1
+    BombType: 3
+    BombPrefab: {fileID: 0}
+    BombPrefabs: []
+    Position: {x: 0, y: 0}
+    Rotation: 0
+    Spread: 0
+    Speed: 0
+    NestedEvent: {fileID: 0}
+  - HasBeenTriggered: 0
+    IsFoldOut: 1
+    Name: Nested Layer 1
+    TriggerAtDepth: 5
+    EventType: 4
+    BombsPerSecond: 2
+    BombType: 3
+    BombPrefab: {fileID: 0}
+    BombPrefabs: []
+    Position: {x: 0, y: 0}
+    Rotation: 0
+    Spread: 0
+    Speed: 0
+    NestedEvent: {fileID: 11400000, guid: b6ad7e18e463dbf4c889a72663f88f87, type: 2}
+  - HasBeenTriggered: 0
+    IsFoldOut: 1
+    Name: Nested Layer 2
+    TriggerAtDepth: 6
+    EventType: 4
+    BombsPerSecond: 5
+    BombType: 3
+    BombPrefab: {fileID: 0}
+    BombPrefabs: []
+    Position: {x: 0, y: 0}
+    Rotation: 0
+    Spread: 0
+    Speed: 0
+    NestedEvent: {fileID: 11400000, guid: b6ad7e18e463dbf4c889a72663f88f87, type: 2}
+  - HasBeenTriggered: 0
+    IsFoldOut: 1
+    Name: Nested Layer 3
+    TriggerAtDepth: 7
+    EventType: 4
+    BombsPerSecond: 5
+    BombType: 3
+    BombPrefab: {fileID: 0}
+    BombPrefabs: []
+    Position: {x: 0, y: 0}
+    Rotation: 0
+    Spread: 0
+    Speed: 0
+    NestedEvent: {fileID: 11400000, guid: b6ad7e18e463dbf4c889a72663f88f87, type: 2}
+  - HasBeenTriggered: 0
+    IsFoldOut: 1
+    Name: Nested Layer 4
+    TriggerAtDepth: 8
+    EventType: 4
+    BombsPerSecond: 5
+    BombType: 3
+    BombPrefab: {fileID: 0}
+    BombPrefabs: []
+    Position: {x: 0, y: 0}
+    Rotation: 0
+    Spread: 0
+    Speed: 0
+    NestedEvent: {fileID: 11400000, guid: b6ad7e18e463dbf4c889a72663f88f87, type: 2}
+  - HasBeenTriggered: 0
+    IsFoldOut: 1
+    Name: Nested Layer 5
+    TriggerAtDepth: 9
+    EventType: 4
+    BombsPerSecond: 5
+    BombType: 3
+    BombPrefab: {fileID: 0}
+    BombPrefabs: []
+    Position: {x: 0, y: 0}
+    Rotation: 0
+    Spread: 0
+    Speed: 0
+    NestedEvent: {fileID: 11400000, guid: b6ad7e18e463dbf4c889a72663f88f87, type: 2}

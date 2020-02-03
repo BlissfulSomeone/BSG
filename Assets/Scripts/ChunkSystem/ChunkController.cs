@@ -4,74 +4,100 @@ using UnityEngine;
 
 public class ChunkController : MonoBehaviour
 {
-	[SerializeField] private Mesh mRenderMesh;
-	[SerializeField] private Material mRenderMaterial;
-
-	[SerializeField] private Transform mDebrisPrefab;
-
-	[SerializeField] private Rigidbody mTestObject;
-
-	private ChunkGenerator mChunkGenerator;
-	private ChunkRenderer mChunkRenderer;
-
-	private void Awake()
+	[System.Serializable]
+	public struct ChunkSettings
 	{
-		mChunkGenerator = new ChunkGenerator();
-		mChunkGenerator.OnChunkCreated += OnChunkCreated;
-		mChunkGenerator.Generate();
+		[SerializeField] public float ChunkWidth;
+		[SerializeField] public int NumberOfColumns;
+		[SerializeField] public int NumberOfRows;
+		[SerializeField] public int NumberOfLayers;
+		[SerializeField] public TileData[] TileData;
+		[SerializeField] public Color BackLayerTint;
 
-		mChunkRenderer = new ChunkRenderer();
-		mChunkRenderer.Initialize(mRenderMesh, mRenderMaterial);
+		public float TileSize { get { return ChunkWidth / NumberOfColumns; } }
+		public float ChunkHeight { get { return TileSize * NumberOfRows; } }
+		public int NumberOfTiles { get { return NumberOfColumns * NumberOfRows * NumberOfLayers; } }
 	}
 
-	private void OnDestroy()
-	{
-		if (mChunkGenerator != null)
-			mChunkGenerator.OnChunkCreated -= OnChunkCreated;
-	}
+	[SerializeField] private ChunkSettings mChunkSettings;
+	[SerializeField] private int mGenerateChunksAhead;
+	[SerializeField] private GameObject mDebrisPrefab;
 
-	private void OnChunkCreated(Chunk aChunk)
-	{
-		GameObject colliderObject = new GameObject("Chunk Collider");
+	public ChunkSettings Settings { get { return mChunkSettings; } }
 
-		colliderObject.transform.SetParent(transform);
-		colliderObject.transform.position = Vector3.zero;
-		colliderObject.transform.rotation = Quaternion.identity;
-		colliderObject.transform.localScale = Vector3.one;
-
-		ChunkCollider chunkCollider = colliderObject.AddComponent<ChunkCollider>();
-		chunkCollider.AttachToChunk(aChunk);
-
-		aChunk.OnTileDestroyed += OnTileDestroyed;
-	}
-
-	private void OnTileDestroyed(Chunk.TileInstance aTileInstance, Vector3 aTilePosition, Chunk.TileDestroyData aTileDestroyData)
-	{
-		Transform debrisTransform = Instantiate(mDebrisPrefab, aTilePosition, Quaternion.identity);
-
-		SpriteRenderer debrisSpriteRenderer = debrisTransform.GetComponent<SpriteRenderer>();
-		debrisSpriteRenderer.sprite = aTileInstance.CurrentSprite;
-		
-		Rigidbody debrisRigidbody = debrisTransform.GetComponent<Rigidbody>();
-		debrisRigidbody.AddExplosionForce(15.0f, aTileDestroyData.destroySource, aTileDestroyData.destoryStrength, 1.0f, ForceMode.VelocityChange);
-
-		Destroy(debrisTransform.gameObject, 3.0f);
-	}
+	private int mChunksSpawned;
+	private List<Chunk> mChunks;
+	private List<Chunk> Chunks { get { if (mChunks == null) mChunks = new List<Chunk>(); return mChunks; } }
 
 	private void Update()
 	{
-		RenderQueue renderQueue = new RenderQueue();
-		mChunkGenerator.Render(renderQueue);
-		mChunkRenderer.Render(renderQueue);
+		float depth = GameController.Instance.FurthestDepth;
+		if (depth + mChunkSettings.ChunkHeight * mGenerateChunksAhead >= mChunksSpawned * mChunkSettings.ChunkHeight)
+		{
+			CreateChunk(false);
+		}
 	}
 
-	public void CreateChunk(Chunk aChunk)
+	public void CreateChunk(bool empty)
 	{
-		mChunkGenerator.AddChunk(aChunk);
+		GameObject chunkObject = new GameObject("Chunk");
+
+		chunkObject.transform.SetParent(transform);
+		chunkObject.transform.Reset();
+		chunkObject.transform.position = new Vector2(0.0f, (mChunksSpawned * mChunkSettings.ChunkHeight) * -1).ToVec3();
+
+		Chunk chunk = chunkObject.AddComponent<Chunk>();
+		chunk.Generate(mChunkSettings, empty);
+		chunk.OnTileDestroyed += OnTileDestroyed;
+		Chunks.Add(chunk);
+
+		++mChunksSpawned;
 	}
 
-	public void Explode(Vector2 aExplosionSource, float aExplosionRadius)
+	private void OnTileDestroyed(Vector3 tilePosition, int tileId, Vector3 explosionSource, float explosionRadius)
 	{
-		mChunkGenerator.Explode(aExplosionSource, aExplosionRadius);
+		const int SPLITS = 2;
+		for (int x = 0; x < SPLITS; ++x)
+		{
+			float positionX = tilePosition.x - (SPLITS == 1 ? 0 : (mChunkSettings.TileSize / (SPLITS * 2) - x * mChunkSettings.TileSize / SPLITS));
+			for (int y = 0; y < SPLITS; ++y)
+			{
+				float positionY = tilePosition.y - (SPLITS == 1 ? 0 : (mChunkSettings.TileSize / (SPLITS * 2) - y * mChunkSettings.TileSize / SPLITS));
+				for (int z = 0; z < SPLITS; ++z)
+				{
+					float positionZ = tilePosition.z - (SPLITS == 1 ? 0 : (mChunkSettings.TileSize / (SPLITS * 2) - z * mChunkSettings.TileSize / SPLITS));
+
+					Vector3 spawnPosition = new Vector3(positionX, positionY, positionZ);
+
+					GameObject debrisObject = Instantiate(mDebrisPrefab);
+					debrisObject.transform.Reset();
+					debrisObject.transform.position = spawnPosition;
+					debrisObject.transform.localScale = Vector3.one * mChunkSettings.TileSize / SPLITS;
+
+					MeshRenderer debrisMeshRenderer = debrisObject.GetComponent<MeshRenderer>();
+					debrisMeshRenderer.material = mChunkSettings.TileData[tileId].Material;
+
+					Rigidbody debrisRigidbody = debrisObject.GetComponent<Rigidbody>();
+					Vector3 alignedExplosionSource = new Vector3(explosionSource.x, explosionSource.y, spawnPosition.z);
+					Vector3 delta = spawnPosition - alignedExplosionSource;
+					float distance = delta.magnitude;
+					float falloff = 1.0f - (distance / explosionRadius);
+					float force = 10.0f * falloff * Random.Range(0.25f, 1.0f);
+					float forceZ = Random.Range(force / 2, -force / 2);
+					debrisRigidbody.velocity += delta.normalized * force + Vector3.up * force + Vector3.forward * forceZ;
+					debrisRigidbody.angularVelocity += Random.onUnitSphere * force;
+
+					Destroy(debrisObject, 3.0f);
+				}
+			}
+		}
+	}
+
+	public void Explode(Vector3 explosionSource, float explosionRadius)
+	{
+		foreach (Chunk chunk in Chunks)
+		{
+			chunk.Explode(explosionSource, explosionRadius);
+		}
 	}
 }

@@ -53,8 +53,8 @@ MonoBehaviour:
     type: 3}
   mInfiniteBombSpawnerPrefab: {fileID: 3434283764628108242, guid: 4541032d286d66243a4fe9e4b44ae8ad,
     type: 3}
-  mGameEventControllerPrefab: {fileID: 2100074805700649560, guid: 981fcfb3f314d674a9aa04b3e4573266,
-    type: 3}
+  mGameEventRootPrefab: {fileID: 11400000, guid: 0a6f0a8e750c2f143b905ce04fd90fe5,
+    type: 2}
   mDepthMeterHUDPrefab: {fileID: -2616936896492422397, guid: 2bc8f66df5182b248aad6ebab6f30a21,
     type: 3}
   mGameOverMenuPrefab: {fileID: 8775968926283235515, guid: fde1e7666e168bf4da60d87a2226579c,
