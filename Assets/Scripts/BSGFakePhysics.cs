@@ -36,7 +36,7 @@ public class BSGFakePhysics : MonoBehaviour
 	public OnImpactHandler OnImpact;
 
 	[SerializeField] private Physics mPhysics;
-
+	
 	private int mCollisionMask = 0;
 	private BoxCollider mBoxCollider;
 	private bool mIsGrounded = false;

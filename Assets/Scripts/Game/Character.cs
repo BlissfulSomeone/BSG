@@ -5,6 +5,17 @@ using UnityEngine;
 public class Character : MonoBehaviour
 {
 	[System.Serializable]
+	private struct InputNames
+	{
+		[Header("Actions")]
+		public string Jump;
+		public string Grab;
+
+		[Header("Axis")]
+		public string Horizontal;
+	}
+
+	[System.Serializable]
 	private struct Physics
 	{
 		public int numberOfHorizontalRaycasts;
@@ -31,19 +42,25 @@ public class Character : MonoBehaviour
 	private BoxCollider mBoxCollider;
 	private Triggerable mTriggerable;
 
+	[SerializeField] private InputNames mInputNames;
 	[SerializeField] private Physics mPhysics;
 	[SerializeField] private Movement mMovement;
 	[SerializeField] private float mMaxHealth;
+	[SerializeField] private Transform mGrabSocket;
 	
 	private bool mIsGrounded = false;
 	private Vector3 mMovementInput = Vector3.zero;
 	private bool mWantToJump = false;
 	private float mJumpTime = 0.0f;
 	private Vector3 mVelocity = Vector3.zero;
+	private Vector3 mDirection = Vector3.right;
 
 	private float mHealth;
 	public float Health { get { return mHealth; } }
 	public float MaxHealth { get { return mMaxHealth; } }
+
+	private bool mIsGrabbing = false;
+	private BSGFakePhysics mGrabbedObject = null;
 
 	private void Awake()
 	{
@@ -62,7 +79,7 @@ public class Character : MonoBehaviour
 
 	private void Trigger(ExplosionData explosionData)
 	{
-		if (explosionData.Friendly == false)
+		if (!explosionData.Friendly)
 		{
 			mHealth -= explosionData.Damage;
 			if (mHealth <= 0.0f)
@@ -75,16 +92,17 @@ public class Character : MonoBehaviour
 
 	private void Update()
 	{
-		mMovementInput.x = Input.GetAxisRaw("Horizontal");
-		mWantToJump = Input.GetButton("Jump") == true;
-		if (mIsGrounded == true && mWantToJump == true)
+		mMovementInput.x = Input.GetAxisRaw(mInputNames.Horizontal);
+		mWantToJump = Input.GetButton(mInputNames.Jump);
+		if (mIsGrounded && mWantToJump)
 		{
 			mJumpTime = mMovement.jumpTime;
 		}
-		else if (Input.GetButtonUp("Jump") == true)
+		else if (Input.GetButtonUp(mInputNames.Jump))
 		{
 			mJumpTime = -1.0f;
 		}
+		mIsGrabbing = Input.GetButton(mInputNames.Grab);
 	}
 
 	private float Damp(float aSource, float aSmoothing, float aDeltaTime)
@@ -96,12 +114,12 @@ public class Character : MonoBehaviour
 	{
 		mIsGrounded = IsGrounded();
 		
-		if (mIsGrounded == false)
+		if (!mIsGrounded)
 		{
 			mVelocity.y -= 9.82f * mPhysics.gravityScale * Time.fixedDeltaTime;
 		}
 
-		if (mWantToJump == true && mJumpTime >= 0.0f)
+		if (mWantToJump && mJumpTime >= 0.0f)
 		{
 			mVelocity.y = mMovement.jumpForce;
 			mJumpTime -= Time.fixedDeltaTime;
@@ -113,9 +131,48 @@ public class Character : MonoBehaviour
 			mVelocity.x = Mathf.Min(mVelocity.x + mMovement.acceleration * Time.fixedDeltaTime, 0.0f);
 		mVelocity.x += mMovementInput.x * mMovement.acceleration * Time.fixedDeltaTime;
 		mVelocity.x = Mathf.Clamp(mVelocity.x, -mMovement.maxSpeed, mMovement.maxSpeed);
+		if (mVelocity.x > 0.0f)
+			mDirection = Vector3.right;
+		if (mVelocity.x < 0.0f)
+			mDirection = Vector3.left;
 
 		DoHorizontalRaycasts();
 		DoVerticalRaycasts();
+
+		if (mIsGrabbing)
+		{
+			if (mGrabbedObject == null)
+			{
+				Collider[] colliders = UnityEngine.Physics.OverlapSphere(transform.position + Vector3.Scale(mGrabSocket.localPosition, mDirection), 0.5f);
+				for (int i = 0; i < colliders.Length; ++i)
+				{
+					if (colliders[i].gameObject == this)
+						continue;
+
+					BSGFakePhysics fakePhysics = colliders[i].gameObject.GetComponent<BSGFakePhysics>();
+					if (fakePhysics != null)
+					{
+						mGrabbedObject = fakePhysics;
+						fakePhysics.enabled = false;
+						fakePhysics.transform.localScale = Vector3.one * 0.5f;
+					}
+				}
+			}
+			else
+			{
+				mGrabbedObject.transform.position = transform.position + Vector3.Scale(mGrabSocket.localPosition, mDirection);
+			}
+		}
+		else
+		{
+			if (mGrabbedObject != null)
+			{
+				mGrabbedObject.enabled = true;
+				mGrabbedObject.Velocity = new Vector2(10.0f * mDirection.x, 5.0f);
+				mGrabbedObject.transform.localScale = Vector3.one;
+				mGrabbedObject = null;
+			}
+		}
 	}
 
 	private bool IsGrounded()
