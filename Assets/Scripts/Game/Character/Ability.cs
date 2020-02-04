@@ -10,6 +10,9 @@ public class Ability : MonoBehaviour
 	private bool mIsRunning;
 	public bool IsRunning { get { return mIsRunning; } }
 
+	private bool mIsPassive;
+	public bool IsPassive { get { return mIsPassive; } }
+
 	public virtual void Initialize(Character owner)
 	{
 		mOwner = owner;
@@ -29,7 +32,7 @@ public class Ability : MonoBehaviour
 
 	public void UpdateAbility()
 	{
-		if (IsRunning)
+		if (IsRunning || IsPassive)
 		{
 			UpdateAbility_Internal();
 		}
@@ -37,7 +40,7 @@ public class Ability : MonoBehaviour
 
 	public void FixedUpdateAbility()
 	{
-		if (IsRunning)
+		if (IsRunning || IsPassive)
 		{
 			FixedUpdateAbility_Internal();
 		}
