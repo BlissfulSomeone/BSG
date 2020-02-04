@@ -98,7 +98,7 @@ public class GameController : MonoBehaviour
 	{
 		if (mPlayerInstance != null)
 		{
-			mFurthestDepth = Mathf.Max(mFurthestDepth, -mPlayerInstance.transform.position.y);
+			mFurthestDepth = Mathf.Max(mFurthestDepth, -mPlayerInstance.Renderer.bounds.min.y);
 			UpdateCamera();
 		}
 
@@ -110,9 +110,11 @@ public class GameController : MonoBehaviour
 			float distance;
 			plane.Raycast(ray, out distance);
 			Explosion explosion = Instantiate(mExplosionPrefab);
-			explosion.ExplosionData = new ExplosionData(ray.GetPoint(distance), 2.5f, 0.0f, true);
-			explosion.transform.position = ray.GetPoint(distance);	// Set explosion source.
-			explosion.transform.localScale = Vector3.one * 2.5f;	// Set explosion size. localScale = explosion radius :)
+			Vector3 explosionPosition = ray.GetPoint(distance);
+			float explosionRadius = 2.5f;
+			float explosionDamage = 0.0f;
+			bool isFriendly = true;
+			explosion.ExplosionData = new ExplosionData(explosionPosition, explosionRadius, explosionDamage, isFriendly);
 		}
 		if (Input.GetKeyDown(KeyCode.R) == true && mPlayerInstance == null)
 		{
@@ -135,6 +137,7 @@ public class GameController : MonoBehaviour
 	{
 		Vector3 cameraTargetPosition = mPlayerInstance.transform.position;
 		cameraTargetPosition.x = 0.0f;
+        cameraTargetPosition.y += mPlayerInstance.Velocity.y * mCameraControllerInstance.CameraLookAhead;
 		mCameraControllerInstance.SetTargetPosition(cameraTargetPosition);
 	}
 

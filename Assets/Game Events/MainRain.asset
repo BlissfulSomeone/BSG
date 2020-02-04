@@ -17,22 +17,34 @@ MonoBehaviour:
     IsFoldOut: 1
     Name: Set Initial BPS
     TriggerAtDepth: 0
+    TriggerDelayTime: 0
+    TriggerAtTime: 0
     EventType: 1
     BombsPerSecond: 0.25
+    RampPerDepth: 0
+    MaxBombsPerSecond: 0
     BombType: 3
     BombPrefab: {fileID: 0}
     BombPrefabs: []
     Position: {x: 0, y: 0}
     Rotation: 0
     Spread: 0
-    Speed: 0
+    Speed:
+      Min: 0
+      Max: 0
+    Offset: {x: 0, y: 0}
+    Number: 0
     NestedEvent: {fileID: 0}
   - HasBeenTriggered: 0
     IsFoldOut: 1
     Name: Set Default Bombs
     TriggerAtDepth: 0
+    TriggerDelayTime: 0
+    TriggerAtTime: 0
     EventType: 2
     BombsPerSecond: 5
+    RampPerDepth: 0
+    MaxBombsPerSecond: 0
     BombType: 3
     BombPrefab: {fileID: 0}
     BombPrefabs:
@@ -40,14 +52,22 @@ MonoBehaviour:
     Position: {x: 0, y: 0}
     Rotation: 0
     Spread: 0
-    Speed: 0
+    Speed:
+      Min: 0
+      Max: 0
+    Offset: {x: 0, y: 0}
+    Number: 0
     NestedEvent: {fileID: 0}
   - HasBeenTriggered: 0
     IsFoldOut: 1
     Name: Set Default Bombs
     TriggerAtDepth: 3
+    TriggerDelayTime: 0
+    TriggerAtTime: 0
     EventType: 1
     BombsPerSecond: 0.5
+    RampPerDepth: 0
+    MaxBombsPerSecond: 0
     BombType: 3
     BombPrefab: {fileID: 0}
     BombPrefabs:
@@ -55,14 +75,22 @@ MonoBehaviour:
     Position: {x: 0, y: 0}
     Rotation: 0
     Spread: 0
-    Speed: 0
+    Speed:
+      Min: 0
+      Max: 0
+    Offset: {x: 0, y: 0}
+    Number: 0
     NestedEvent: {fileID: 0}
   - HasBeenTriggered: 0
     IsFoldOut: 1
     Name: Set Default Bombs
     TriggerAtDepth: 10
+    TriggerDelayTime: 0
+    TriggerAtTime: 0
     EventType: 2
     BombsPerSecond: 0.5
+    RampPerDepth: 0
+    MaxBombsPerSecond: 0
     BombType: 3
     BombPrefab: {fileID: 0}
     BombPrefabs:
@@ -71,14 +99,22 @@ MonoBehaviour:
     Position: {x: 0, y: 0}
     Rotation: 0
     Spread: 0
-    Speed: 0
+    Speed:
+      Min: 0
+      Max: 0
+    Offset: {x: 0, y: 0}
+    Number: 0
     NestedEvent: {fileID: 0}
   - HasBeenTriggered: 0
     IsFoldOut: 1
     Name: Set Default Bombs
     TriggerAtDepth: 25
+    TriggerDelayTime: 0
+    TriggerAtTime: 0
     EventType: 1
     BombsPerSecond: 0.75
+    RampPerDepth: 0
+    MaxBombsPerSecond: 0
     BombType: 3
     BombPrefab: {fileID: 0}
     BombPrefabs:
@@ -89,14 +125,22 @@ MonoBehaviour:
     Position: {x: 0, y: 0}
     Rotation: 0
     Spread: 0
-    Speed: 0
+    Speed:
+      Min: 0
+      Max: 0
+    Offset: {x: 0, y: 0}
+    Number: 0
     NestedEvent: {fileID: 0}
   - HasBeenTriggered: 0
     IsFoldOut: 1
     Name: Set Default Bombs
-    TriggerAtDepth: 25
+    TriggerAtDepth: 0
+    TriggerDelayTime: 0
+    TriggerAtTime: 0
     EventType: 2
     BombsPerSecond: 0.5
+    RampPerDepth: 0
+    MaxBombsPerSecond: 0
     BombType: 3
     BombPrefab: {fileID: 0}
     BombPrefabs:
@@ -106,14 +150,22 @@ MonoBehaviour:
     Position: {x: 0, y: 0}
     Rotation: 0
     Spread: 0
-    Speed: 0
+    Speed:
+      Min: 0
+      Max: 0
+    Offset: {x: 0, y: 0}
+    Number: 0
     NestedEvent: {fileID: 0}
   - HasBeenTriggered: 0
     IsFoldOut: 1
     Name: Set Default Bombs
     TriggerAtDepth: 50
+    TriggerDelayTime: 0
+    TriggerAtTime: 0
     EventType: 2
     BombsPerSecond: 0.5
+    RampPerDepth: 0
+    MaxBombsPerSecond: 0
     BombType: 3
     BombPrefab: {fileID: 0}
     BombPrefabs:
@@ -124,5 +176,9 @@ MonoBehaviour:
     Position: {x: 0, y: 0}
     Rotation: 0
     Spread: 0
-    Speed: 0
+    Speed:
+      Min: 0
+      Max: 0
+    Offset: {x: 0, y: 0}
+    Number: 0
     NestedEvent: {fileID: 0}

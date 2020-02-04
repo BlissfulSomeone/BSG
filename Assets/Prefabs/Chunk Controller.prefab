@@ -47,7 +47,7 @@ MonoBehaviour:
     ChunkWidth: 21
     NumberOfColumns: 21
     NumberOfRows: 10
-    NumberOfLayers: 3
+    NumberOfLayers: 6
     TileData:
     - {fileID: 11400000, guid: 9a1547cbfaf095e4290dbe087b4e0386, type: 2}
     - {fileID: 11400000, guid: e269a62cde533bf47a035ec094ad8278, type: 2}
