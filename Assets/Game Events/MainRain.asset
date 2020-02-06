@@ -134,7 +134,7 @@ MonoBehaviour:
   - HasBeenTriggered: 0
     IsFoldOut: 1
     Name: Set Default Bombs
-    TriggerAtDepth: 0
+    TriggerAtDepth: 25
     TriggerDelayTime: 0
     TriggerAtTime: 0
     EventType: 2
