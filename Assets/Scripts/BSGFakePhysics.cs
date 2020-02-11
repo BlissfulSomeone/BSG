@@ -36,8 +36,9 @@ public class BSGFakePhysics : MonoBehaviour
 	public OnImpactHandler OnImpact;
 
 	[SerializeField] private Physics mPhysics;
-	
-	private int mCollisionMask = 0;
+	[SerializeField] private bool mHasFalloff;
+
+    private int mCollisionMask = 0;
 	private BoxCollider mBoxCollider;
 	private bool mIsGrounded = false;
 	private Vector2 mVelocity = Vector2.zero;
@@ -158,8 +159,8 @@ public class BSGFakePhysics : MonoBehaviour
 		if (distance <= aExplosionRadius)
 		{
 			float falloff = 1.0f - (distance / aExplosionRadius);
-			float force = 10.0f * falloff;
-			mVelocity += delta.normalized * force + Vector2.up * force * aUpModifier;
+            float force = 10.0f * (mHasFalloff == true ? falloff : 1.0f);
+            mVelocity += delta.normalized * force + Vector2.up * force * aUpModifier;
 		}
 	}
 }

@@ -120,6 +120,7 @@ MonoBehaviour:
     gravityScale: 1
     friction: 20
     airControl: 0
+  mHasFalloff: 1
 --- !u!114 &-5315311812896183097
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -133,6 +134,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mHasPhysics: 1
+  mUpForceMultiplier: 0.5
 --- !u!114 &1470371614573847795
 MonoBehaviour:
   m_ObjectHideFlags: 0

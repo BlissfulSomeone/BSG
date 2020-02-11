@@ -115,7 +115,7 @@ public class GameController : MonoBehaviour
 			bool isFriendly = true;
 			explosion.ExplosionData = new ExplosionData(explosionPosition, explosionRadius, explosionDamage, isFriendly);
 		}
-		if (Input.GetKeyDown(KeyCode.R) == true && mPlayerInstance == null)
+		if (Input.GetButtonDown("Submit") == true && mPlayerInstance == null)
 		{
 			// Super naive way to reset game
 			if (mChunkControllerInstance != null) Destroy(mChunkControllerInstance.gameObject);

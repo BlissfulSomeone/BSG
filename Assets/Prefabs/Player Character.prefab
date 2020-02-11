@@ -134,6 +134,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mHasPhysics: 1
+  mUpForceMultiplier: 2
 --- !u!114 &8377611175049075330
 MonoBehaviour:
   m_ObjectHideFlags: 0
