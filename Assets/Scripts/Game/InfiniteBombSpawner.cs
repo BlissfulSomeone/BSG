@@ -28,7 +28,7 @@ public class InfiniteBombSpawner : MonoBehaviour
 			{
 				mSpawnTimer -= interval;
 
-				Vector2 force = new Vector2(Random.Range(-10.0f, 10.0f), 0.0f);
+				Vector2 force = new Vector2(Random.Range(0.0f, 0.0f), 0.0f);
 
 				Bomb bomb = Instantiate(BombPrefabs[Random.Range(0, BombPrefabs.Length)]);
 				bomb.transform.Reset();

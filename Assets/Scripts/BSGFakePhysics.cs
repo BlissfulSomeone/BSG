@@ -29,14 +29,14 @@ public class BSGFakePhysics : MonoBehaviour
 		[Range(0.0f, 1.0f)] public float bounciness = 0.0f;
 		public float gravityScale = 1.0f;
 		public float friction = 10.0f;
-		public float airControl = 0.0f;
+		[Range(0.0f, 1.0f)] public float airControl = 0.0f;
 	}
 
 	public delegate void OnImpactHandler();
 	public OnImpactHandler OnImpact;
 
 	[SerializeField] private Physics mPhysics;
-
+	
 	private int mCollisionMask = 0;
 	private BoxCollider mBoxCollider;
 	private bool mIsGrounded = false;
@@ -62,9 +62,9 @@ public class BSGFakePhysics : MonoBehaviour
 	private void FixedUpdate()
 	{
 		if (mVelocity.x > 0.0f)
-			mVelocity.x = Mathf.Max(mVelocity.x - (mIsGrounded == true ? mPhysics.friction : mPhysics.airControl) * Time.fixedDeltaTime, 0.0f);
+			mVelocity.x = Mathf.Max(mVelocity.x - mPhysics.friction * (mIsGrounded == true ? 1.0f : mPhysics.airControl) * Time.fixedDeltaTime, 0.0f);
 		if (mVelocity.x < 0.0f)
-			mVelocity.x = Mathf.Min(mVelocity.x + (mIsGrounded == true ? mPhysics.friction : mPhysics.airControl) * Time.fixedDeltaTime, 0.0f);
+			mVelocity.x = Mathf.Min(mVelocity.x + mPhysics.friction * (mIsGrounded == true ? 1.0f : mPhysics.airControl) * Time.fixedDeltaTime, 0.0f);
 		if (mIsGrounded == false)
 			mVelocity.y -= 20.0f * mPhysics.gravityScale * Time.fixedDeltaTime;
 		bool hit = false;

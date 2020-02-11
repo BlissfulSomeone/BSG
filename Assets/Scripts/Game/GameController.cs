@@ -24,11 +24,13 @@ public class GameController : MonoBehaviour
 	
 	[Header("Temporary stuff")]
 	public UIMenu mDepthMeterHUDPrefab;
+	public UIMenu mHealthBarHUDPrefab;
 	public UIMenu mGameOverMenuPrefab;
 	public Explosion mExplosionPrefab;
 
 	public ChunkController ChunkControllerInstance { get { return mChunkControllerInstance; } }
 	public CameraController CameraControllerInstance { get { return mCameraControllerInstance; } }
+	public Character PlayerCharacterInstance { get { return mPlayerInstance; } }
 	public InfiniteBombSpawner BombSpawnerInstance { get { return mInfiniteBombSpawnerInstance; } }
 	
 	private float mFurthestDepth = 0.0f;
@@ -65,6 +67,7 @@ public class GameController : MonoBehaviour
 		mPlayerInstance.OnKilled += OnPlayerKilled;
 		mPlayerInstance.transform.position = new Vector3(0.0f, 10.0f, 0.0f);
 		mUIControllerInstance.PushMenu(UIController.ELayer.HUD, mDepthMeterHUDPrefab);
+		mUIControllerInstance.PushMenu(UIController.ELayer.HUD, mHealthBarHUDPrefab);
 
 		mChunkControllerInstance.CreateChunk(true);
 		mChunkControllerInstance.CreateChunk(false);
@@ -95,7 +98,7 @@ public class GameController : MonoBehaviour
 	{
 		if (mPlayerInstance != null)
 		{
-			mFurthestDepth = Mathf.Max(mFurthestDepth, -mPlayerInstance.transform.position.y);
+			mFurthestDepth = Mathf.Max(mFurthestDepth, -mPlayerInstance.Renderer.bounds.min.y);
 			UpdateCamera();
 		}
 
@@ -107,8 +110,11 @@ public class GameController : MonoBehaviour
 			float distance;
 			plane.Raycast(ray, out distance);
 			Explosion explosion = Instantiate(mExplosionPrefab);
-			explosion.transform.position = ray.GetPoint(distance);	// Set explosion source.
-			explosion.transform.localScale = Vector3.one * 2.5f;	// Set explosion size. localScale = explosion radius :)
+			Vector3 explosionPosition = ray.GetPoint(distance);
+			float explosionRadius = 2.5f;
+			float explosionDamage = 0.0f;
+			bool isFriendly = true;
+			explosion.ExplosionData = new ExplosionData(explosionPosition, explosionRadius, explosionDamage, isFriendly);
 		}
 		if (Input.GetKeyDown(KeyCode.R) == true && mPlayerInstance == null)
 		{
@@ -131,26 +137,27 @@ public class GameController : MonoBehaviour
 	{
 		Vector3 cameraTargetPosition = mPlayerInstance.transform.position;
 		cameraTargetPosition.x = 0.0f;
+        cameraTargetPosition.y += mPlayerInstance.Velocity.y * mCameraControllerInstance.CameraLookAhead;
 		mCameraControllerInstance.SetTargetPosition(cameraTargetPosition);
 	}
 
-	public void Explode(Vector3 explosionSource, float explosionRadius)
+	public void Explode(ExplosionData explosionData)
 	{
-		mChunkControllerInstance.Explode(explosionSource, explosionRadius);
-		Collider[] colliders = Physics.OverlapSphere(explosionSource, explosionRadius);
+		mChunkControllerInstance.Explode(explosionData);
+		Collider[] colliders = Physics.OverlapSphere(explosionData.Position, explosionData.Radius);
 		foreach (Collider collider in colliders)
 		{
 			Triggerable triggerable = collider.gameObject.GetComponent<Triggerable>();
 			if (triggerable != null)
 			{
-				triggerable.Trigger(explosionSource, explosionRadius);
+				triggerable.Trigger(explosionData);
 				if (triggerable.HasPhysics == true)
 				{
-					Vector3 delta = collider.transform.position - explosionSource;
+					Vector3 delta = collider.transform.position - explosionData.Position;
 					float distance = delta.magnitude;
-					if (distance <= explosionRadius)
+					if (distance <= explosionData.Radius)
 					{
-						triggerable.FakePhysics.AddExplosionForce(10.0f, explosionSource, explosionRadius, 1.0f);
+						triggerable.FakePhysics.AddExplosionForce(10.0f, explosionData.Position, explosionData.Radius, 1.0f);
 					}
 				}
 			}

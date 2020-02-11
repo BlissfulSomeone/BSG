@@ -15,6 +15,7 @@ public class Bomb : MonoBehaviour
 	[SerializeField] private bool mHasTimer;
 	[SerializeField] private float mTimer;
 	[SerializeField] private float mExplosionRadius;
+	[SerializeField] private float mDamage;
 	[SerializeField] private bool mCanBeTriggeredByExplosion;
 	[SerializeField] private bool mCanBeTriggeredByImpact;
 
@@ -43,7 +44,7 @@ public class Bomb : MonoBehaviour
 		mTriggerable.OnTriggered -= Trigger;
 	}
 
-	private void Trigger(Vector2 explosionSource, float explosionRadius)
+	private void Trigger(ExplosionData explosionData)
 	{
 		if (mCanBeTriggeredByExplosion && !mIsTriggered)
 		{
@@ -98,8 +99,7 @@ public class Bomb : MonoBehaviour
 		}
 		
 		Explosion explosionInstance = Instantiate(mExplosionPrefab);
-		explosionInstance.transform.position = transform.position;
-		explosionInstance.transform.localScale = Vector3.one * mExplosionRadius;
+		explosionInstance.ExplosionData = new ExplosionData(transform.position, mExplosionRadius, mDamage, false);
 		Destroy(gameObject);
 	}
 

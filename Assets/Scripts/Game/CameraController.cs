@@ -22,13 +22,18 @@ public class CameraController : MonoBehaviour
 	}
 
 	[SerializeField] private ViewInfo mInitialViewInfo;
-	private ViewInfo mCurrentViewInfo;
+    [SerializeField] private float mCameraYOffset;
+    [SerializeField] private float mLerpSpeed;
+    [SerializeField] private float mCameraLookAhead;
+    private ViewInfo mCurrentViewInfo;
 	private ViewInfo mTargetViewInfo;
 	
 	private Camera mCamera;
 	public Camera CameraComponent { get { return mCamera; } }
+	public float CameraLookAhead { get { return mCameraLookAhead; } }
 
-	private void Awake()
+
+    private void Awake()
 	{
 		mCamera = GetComponent<Camera>();
 
@@ -42,7 +47,7 @@ public class CameraController : MonoBehaviour
 		float distance = frustumHeight * 0.5f / Mathf.Tan(CameraComponent.fieldOfView * 0.5f * Mathf.Deg2Rad);
 		mTargetViewInfo.position.z = distance * -1;
 
-		mCurrentViewInfo = ViewInfo.Lerp(mCurrentViewInfo, mTargetViewInfo, 0.05f);
+		mCurrentViewInfo = ViewInfo.Lerp(mCurrentViewInfo, mTargetViewInfo, mLerpSpeed);
 
 		transform.position = mCurrentViewInfo.position;
 		CameraComponent.fieldOfView = mCurrentViewInfo.fov;
@@ -52,7 +57,7 @@ public class CameraController : MonoBehaviour
 	{
 		Vector3 position = mTargetViewInfo.position;
 		position.x = targetPosition.x;
-		position.y = targetPosition.y;
+		position.y = targetPosition.y + mCameraYOffset;
 		mTargetViewInfo.position = position;
 	}
 }

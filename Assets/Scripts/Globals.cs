@@ -13,7 +13,7 @@ public class Globals
 			Object.Destroy(j.gameObject);
 		}
 	}
-
+	
 	public static List<T> GetAllPrefabsOfType<T>() where T : MonoBehaviour
 	{
 		List<T> result = new List<T>();

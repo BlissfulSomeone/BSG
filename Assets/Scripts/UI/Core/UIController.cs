@@ -17,45 +17,46 @@ public class UIController : MonoBehaviour
 	{
 		mLayers = new Dictionary<ELayer, UILayer>();
 
-		CreateLayer(ELayer.HUD);
+		CreateLayer(ELayer.HUD, UILayer.ELayerType.Multi);
 		CreateLayer(ELayer.Background);
 		CreateLayer(ELayer.Menus);
 	}
 
-	private UILayer CreateLayer(ELayer aLayer)
+	private UILayer CreateLayer(ELayer layerIndex, UILayer.ELayerType layerType = UILayer.ELayerType.Single)
 	{
-		if (mLayers.ContainsKey(aLayer) == true)
-			return mLayers[aLayer];
+		if (mLayers.ContainsKey(layerIndex) == true)
+			return mLayers[layerIndex];
 
-		GameObject layerObject = new GameObject("UI Layer [" + aLayer.ToString() + "]");
+		GameObject layerObject = new GameObject("UI Layer [" + layerIndex.ToString() + "]");
 		layerObject.transform.SetParent(transform);
 		layerObject.transform.Reset();
 
 		UILayer layer = layerObject.AddComponent<UILayer>();
-		mLayers.Add(aLayer, layer);
+		layer.LayerType = layerType;
+		mLayers.Add(layerIndex, layer);
 
 		return layer;
 	}
 
-	public UIMenu PushMenu(ELayer aLayer, UIMenu aMenuPrefab)
+	public UIMenu PushMenu(ELayer layerIndex, UIMenu menuPrefab)
 	{
-		if (mLayers.ContainsKey(aLayer) == false)
+		if (mLayers.ContainsKey(layerIndex) == false)
 		{
-			Debug.LogError("Attempting to create a menu for a non-existent layer [" + aLayer.ToString() + "].");
+			Debug.LogError("Attempting to create a menu for a non-existent layer [" + layerIndex.ToString() + "].");
 			return null;
 		}
 
-		return mLayers[aLayer].PushMenu(aMenuPrefab);
+		return mLayers[layerIndex].PushMenu(menuPrefab);
 	}
 
-	public void PopMenu(ELayer aLayer)
+	public void PopMenu(ELayer layerIndex)
 	{
-		if (mLayers.ContainsKey(aLayer) == false)
+		if (mLayers.ContainsKey(layerIndex) == false)
 		{
-			Debug.LogError("Attempting to pop a menu from a non-existent layer [" + aLayer.ToString() + "].");
+			Debug.LogError("Attempting to pop a menu from a non-existent layer [" + layerIndex.ToString() + "].");
 			return;
 		}
 
-		mLayers[aLayer].PopMenu();
+		mLayers[layerIndex].PopMenu();
 	}
 }
