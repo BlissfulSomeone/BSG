@@ -104,7 +104,6 @@ public class GameController : MonoBehaviour
 
 		if (Input.GetMouseButtonDown(0) == true)
 		{
-			//Vector2 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 			Plane plane = new Plane(Vector3.back, 0.0f);
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			float distance;
@@ -157,7 +156,7 @@ public class GameController : MonoBehaviour
 					float distance = delta.magnitude;
 					if (distance <= explosionData.Radius)
 					{
-						triggerable.FakePhysics.AddExplosionForce(10.0f, explosionData.Position, explosionData.Radius, 1.0f);
+						triggerable.FakePhysics.AddExplosionForce(10.0f, explosionData.Position, explosionData.Radius, triggerable.UpForceMultiplier);
 					}
 				}
 			}
