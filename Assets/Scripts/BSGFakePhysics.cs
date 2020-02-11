@@ -131,13 +131,16 @@ public class BSGFakePhysics : MonoBehaviour
 			Debug.DrawLine(rayOrigin, rayOrigin + rayDirection * rayLength, Color.red, 0.1f);
 			if (UnityEngine.Physics.Raycast(ray, out hitInfo, rayLength, mCollisionMask))
 			{
+				if (hitInfo.collider.gameObject == gameObject)
+					continue;
+
 				mIsGrounded = true;
 				return;
 			}
 		}
 		mIsGrounded = false;
 	}
-	
+
 	public void AddForce(Vector2 aForce)
 	{
 		mVelocity += aForce;
