@@ -100,6 +100,6 @@ MonoBehaviour:
     position: {x: 0, y: 0, z: 0}
     viewWidth: 21
     fov: 30
-  mCameraYOffset: 2
+  mCameraYOffset: 0
   mLerpSpeed: 0.1
   mCameraLookAhead: 0.25

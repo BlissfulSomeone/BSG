@@ -116,7 +116,7 @@ MonoBehaviour:
     vertical:
       numberOfRaycasts: 4
       raycastMargin: 0.01
-    bounciness: 0.25
+    bounciness: 0.15
     gravityScale: 1
     friction: 20
     airControl: 0
