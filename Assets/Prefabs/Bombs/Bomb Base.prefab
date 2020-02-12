@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5846369959637905557}
   - component: {fileID: -5315311812896183097}
   - component: {fileID: 1470371614573847795}
+  - component: {fileID: -1570151085563082496}
   m_Layer: 9
   m_Name: Bomb Base
   m_TagString: Untagged
@@ -154,3 +155,22 @@ MonoBehaviour:
   mExplosionPrefab: {fileID: 3506304063819049500, guid: 7e1541da5e9985d41a8846daebcb3b5b,
     type: 3}
   mToSpawnOnDestroy: []
+--- !u!95 &-1570151085563082496
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4076826606511422155}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
