@@ -8,7 +8,8 @@ public class GrabAbility : Ability
 	[SerializeField] private float mGrabRadius;
 	[SerializeField] private float mThrowAngle;
 	[SerializeField] private float mThrowForce;
-	private BSGFakePhysics mGrabbedObject;
+	[SerializeField] private bool mThrowTriggerExplosion;
+    private BSGFakePhysics mGrabbedObject;
 
 	protected override void StartAbility_Internal()
 	{
@@ -24,7 +25,18 @@ public class GrabAbility : Ability
 				mGrabbedObject = fakePhysics;
 				fakePhysics.enabled = false;
 				fakePhysics.transform.localScale = Vector3.one * 0.5f;
-				break;
+
+                Bomb bomb = fakePhysics.gameObject.GetComponent<Bomb>();
+                if(bomb !=null)
+                {
+                    if (mThrowTriggerExplosion == true)
+                    {
+                        bomb.CanBeTriggerByImpact = mThrowTriggerExplosion;
+                    }
+                    
+                }
+
+                break;
 			}
 		}
 	}

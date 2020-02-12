@@ -25,6 +25,7 @@ public class Bomb : MonoBehaviour
 
 	private BSGFakePhysics mFakePhysics;
 	public BSGFakePhysics FakePhysics { get { if (mFakePhysics == null) mFakePhysics = GetComponent<BSGFakePhysics>(); return mFakePhysics; } }
+    public bool CanBeTriggerByImpact { get { return mCanBeTriggeredByImpact; } set { mCanBeTriggeredByImpact = value; } }
 
 	private Triggerable mTriggerable;
 

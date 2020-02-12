@@ -104,7 +104,6 @@ public class GameController : MonoBehaviour
 
 		if (Input.GetMouseButtonDown(0) == true)
 		{
-			//Vector2 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 			Plane plane = new Plane(Vector3.back, 0.0f);
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			float distance;
@@ -116,7 +115,7 @@ public class GameController : MonoBehaviour
 			bool isFriendly = true;
 			explosion.ExplosionData = new ExplosionData(explosionPosition, explosionRadius, explosionDamage, isFriendly);
 		}
-		if (Input.GetKeyDown(KeyCode.R) == true && mPlayerInstance == null)
+		if (Input.GetButtonDown("Submit") == true && mPlayerInstance == null)
 		{
 			// Super naive way to reset game
 			if (mChunkControllerInstance != null) Destroy(mChunkControllerInstance.gameObject);
@@ -157,7 +156,7 @@ public class GameController : MonoBehaviour
 					float distance = delta.magnitude;
 					if (distance <= explosionData.Radius)
 					{
-						triggerable.FakePhysics.AddExplosionForce(10.0f, explosionData.Position, explosionData.Radius, 1.0f);
+						triggerable.FakePhysics.AddExplosionForce(10.0f, explosionData.Position, explosionData.Radius, triggerable.UpForceMultiplier);
 					}
 				}
 			}
