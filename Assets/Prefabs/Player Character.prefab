@@ -121,6 +121,7 @@ MonoBehaviour:
     gravityScale: 1
     friction: 60
     airControl: 1
+  mHasFalloff: 0
 --- !u!114 &515902734300222581
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -172,6 +173,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mGrabSocket: {x: 0.34, y: -0.07, z: 0}
   mGrabRadius: 0.35
-  mThrowAngle: 30
   mThrowForce: 10
+  mKnockbackForce: 12.5
   mThrowTriggerExplosion: 1
+  mThrowOnRelease: 1
