@@ -83,5 +83,46 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1532206634448762770, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: m_Name
+      value: TimedBomb Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 5407917574288415413, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 4cbe2dce2c02d9e43a0ec71db6c08a84,
+        type: 3}
+    - target: {fileID: 5407917574288415413, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 0.9190476
+      objectReference: {fileID: 0}
+    - target: {fileID: 5407917574288415413, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7276182858957119969, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: mTimer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7276182858957119969, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: mHasTimer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7276182858957119969, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: mExplosionRadius
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7276182858957119969, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: mDamage
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 09588d0ede3612c40b9f9cca721f3f34, type: 3}

@@ -27,6 +27,17 @@ PrefabInstance:
       propertyPath: mTimer
       value: 0.4
       objectReference: {fileID: 0}
+    - target: {fileID: 8955749530271637044, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 9d100b747e3ac324aa609a2ab0e7781b,
+        type: 3}
+    - target: {fileID: 8955749530271637044, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2950464157502008508, guid: 09588d0ede3612c40b9f9cca721f3f34,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -82,15 +93,40 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8955749530271637044, guid: 09588d0ede3612c40b9f9cca721f3f34,
+    - target: {fileID: 1532206634448762770, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: m_Name
+      value: BigBomb Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 5407917574288415413, guid: 09588d0ede3612c40b9f9cca721f3f34,
         type: 3}
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 9d100b747e3ac324aa609a2ab0e7781b,
         type: 3}
-    - target: {fileID: 8955749530271637044, guid: 09588d0ede3612c40b9f9cca721f3f34,
+    - target: {fileID: 5407917574288415413, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 0.941896
+      objectReference: {fileID: 0}
+    - target: {fileID: 5407917574288415413, guid: 09588d0ede3612c40b9f9cca721f3f34,
         type: 3}
       propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7276182858957119969, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: mExplosionRadius
+      value: 4.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7276182858957119969, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: mDamage
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7276182858957119969, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: mCanBeTriggeredByExplosion
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
