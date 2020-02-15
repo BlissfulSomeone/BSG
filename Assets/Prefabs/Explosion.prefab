@@ -96,6 +96,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4eda00826132ab6479de3d6b330868dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mScreenShakeMultiplier: 20
 --- !u!114 &6267974963768709179
 MonoBehaviour:
   m_ObjectHideFlags: 0

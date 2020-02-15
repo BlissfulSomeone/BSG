@@ -22,6 +22,7 @@ public struct ExplosionData
 public class Explosion : MonoBehaviour
 {
 	[SerializeField] private ExplosionData mExplosionData;
+	[Tooltip("Total added screenshake is the explosion radius times the screen shake multiplier.")] [SerializeField] private float mScreenShakeMultiplier;
 	public ExplosionData ExplosionData
 	{
 		get
@@ -39,5 +40,6 @@ public class Explosion : MonoBehaviour
 	private void Start()
 	{
 		GameController.Instance.Explode(ExplosionData);
+		GameController.Instance.CameraControllerInstance.AddScreenShake(ExplosionData.Radius * mScreenShakeMultiplier);
 	}
 }
