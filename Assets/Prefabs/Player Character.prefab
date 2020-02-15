@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 515902734300222581}
   - component: {fileID: 8377611175049075330}
   - component: {fileID: 3667301290344907094}
+  - component: {fileID: 3011729494695206931}
   m_Layer: 10
   m_Name: Player Character
   m_TagString: Untagged
@@ -159,6 +160,8 @@ MonoBehaviour:
   mAbilities:
   - InputName: Fire1
     Ability: {fileID: 3667301290344907094}
+  - InputName: Fire3
+    Ability: {fileID: 3011729494695206931}
 --- !u!114 &3667301290344907094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,3 +180,16 @@ MonoBehaviour:
   mKnockbackForce: 12.5
   mThrowTriggerExplosion: 1
   mThrowOnRelease: 1
+--- !u!114 &3011729494695206931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8377611175049075334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ec727cf1dd1a6a4d831ef8e2df4675a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mMaxBlockTime: 10

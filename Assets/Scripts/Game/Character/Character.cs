@@ -41,17 +41,25 @@ public class Character : MonoBehaviour
 	[Header("Stats")]
 	[SerializeField] private float mMaxHealth;
 	[SerializeField] private AbilitySet[] mAbilities;
-	
+
+	// Movement stuff
+	private bool mCanMove = true;
 	private Vector3 mMovementInput = Vector3.zero;
 	private bool mWantToJump = false;
 	private float mJumpTime = -1.0f;
 	private bool mIsFlipped = false;
-
-	private float mHealth;
-	public float Health { get { return mHealth; } }
-	public float MaxHealth { get { return mMaxHealth; } }
+	
     public Vector3 Velocity { get { return FakePhysics.Velocity; } }
 	public bool IsFlipped { get { return mIsFlipped; } }
+	public bool CanMove { get { return mCanMove; } set { mCanMove = value; } }
+
+	// Health stuff
+	private float mHealth;
+	private bool mIsInvulnerable = false;
+
+	public float Health { get { return mHealth; } }
+	public float MaxHealth { get { return mMaxHealth; } }
+	public bool IsInvulnerable { get { return mIsInvulnerable; } set { mIsInvulnerable = value; } }
 	
     private void Awake()
 	{
@@ -76,7 +84,7 @@ public class Character : MonoBehaviour
 
 	private void Trigger(ExplosionData explosionData)
 	{
-		if (!explosionData.Friendly)
+		if (!explosionData.Friendly && !IsInvulnerable)
 		{
 			mHealth -= explosionData.Damage;
             if (mHealth <= 0.0f)
@@ -89,8 +97,8 @@ public class Character : MonoBehaviour
 
 	private void Update()
 	{
-		mMovementInput.x = Input.GetAxisRaw(mHorizontalMovementInputName);
-		mWantToJump = Input.GetButton(mJumpInputName);
+		mMovementInput.x = CanMove ? Input.GetAxisRaw(mHorizontalMovementInputName) : 0.0f;
+		mWantToJump = CanMove ? Input.GetButton(mJumpInputName) : false;
 		if (FakePhysics.IsGrounded && mWantToJump)
 		{
 			mJumpTime = mMovement.jumpTime;
@@ -140,5 +148,15 @@ public class Character : MonoBehaviour
 		{
 			mAbilities[i].Ability.FixedUpdateAbility();
 		}
+	}
+
+	public T GetAbility<T>() where T : Ability
+	{
+		for (int i = 0; i < mAbilities.Length; ++i)
+		{
+			if (mAbilities[i].Ability is T)
+				return (T)mAbilities[i].Ability;
+		}
+		return null;
 	}
 }
