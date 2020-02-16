@@ -8,6 +8,7 @@ public class CameraController : MonoBehaviour
 	private struct ViewInfo
 	{
 		public Vector3 position;
+		public Vector3 rotation;
 		public float viewWidth;
 		public float fov;
 
@@ -15,6 +16,7 @@ public class CameraController : MonoBehaviour
 		{
 			ViewInfo result;
 			result.position = Vector3.Lerp(from.position, to.position, t);
+			result.rotation = Quaternion.Slerp(Quaternion.Euler(from.rotation), Quaternion.Euler(to.rotation), t).eulerAngles;
 			result.viewWidth = Mathf.Lerp(from.viewWidth, to.viewWidth, t);
 			result.fov = Mathf.Lerp(from.fov, to.fov, t);
 			return result;
@@ -63,6 +65,7 @@ public class CameraController : MonoBehaviour
 		mCurrentViewInfo = ViewInfo.Lerp(mCurrentViewInfo, mTargetViewInfo, mLerpSpeed);
 
 		transform.position = mCurrentViewInfo.position;
+		transform.eulerAngles = mCurrentViewInfo.rotation;
 		CameraComponent.fieldOfView = mCurrentViewInfo.fov;
 
 		if (mScreenShake > 0.0f)
