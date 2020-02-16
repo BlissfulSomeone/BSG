@@ -88,7 +88,6 @@ public class Bomb : MonoBehaviour
 			if (animationState.name == ANIMATION_IGNITE)
 			{
 				animationState.speed = 1.0f / (mIgniteTime / animationState.length);
-				Debug.Log(animationState.name + " - Ignite time: " + mIgniteTime.ToString() + ", Anim length: " + animationState.length.ToString() + ", Speed: " + animationState.speed.ToString());
 			}
 		}
 	}
