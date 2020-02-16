@@ -52,7 +52,6 @@ public class CameraController : MonoBehaviour
 		{
 			mScreenShake = Mathf.Max(mScreenShake - mScreenShakeDecay * Time.deltaTime, 0.0f);
 		}
-		Debug.Log(mScreenShake);
 	}
 
 	private void FixedUpdate()

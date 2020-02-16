@@ -5,6 +5,13 @@ using UnityEngine;
 [RequireComponent(typeof(BSGFakePhysics), typeof(Triggerable))]
 public class Bomb : MonoBehaviour
 {
+	private enum EBombState
+	{
+		Idle,
+		Timer,
+		Ignited
+	}
+
 	[System.Serializable]
 	private struct SpawnOnDestroy
 	{
@@ -12,8 +19,14 @@ public class Bomb : MonoBehaviour
 		public Vector2 spawnOffset;
 	}
 
+	private const string ANIMATION_IDLE = "Idle";
+	private const string ANIMATION_IGNITE = "Ignite";
+
+	[SerializeField] private AnimationClip mIdleAnimation;
+	[SerializeField] private AnimationClip mIgniteAnimation;
 	[SerializeField] private bool mHasTimer;
-	[SerializeField] private float mTimer;
+	[SerializeField] private float mIdleTime;
+	[SerializeField] private float mIgniteTime;
 	[SerializeField] private float mExplosionRadius;
 	[SerializeField] private float mDamage;
 	[SerializeField] private bool mCanBeTriggeredByExplosion;
@@ -29,8 +42,12 @@ public class Bomb : MonoBehaviour
 
 	private Triggerable mTriggerable;
 
+	private EBombState mState = EBombState.Idle;
+	private Animation mAnimationComponent;
+
 	private float mCurrentTimer = 0.0f;
 	private bool mIsTriggered = false;
+	private bool mHasTimerStarted = false;
 	
 	private void Awake()
 	{
@@ -38,6 +55,11 @@ public class Bomb : MonoBehaviour
 		mFakePhysics.OnImpact += OnImpact;
 		mTriggerable = GetComponent<Triggerable>();
 		mTriggerable.OnTriggered += Trigger;
+
+		mAnimationComponent = GetComponentInChildren<Animation>();
+		mAnimationComponent.AddClip(mIdleAnimation, ANIMATION_IDLE);
+		mAnimationComponent.AddClip(mIgniteAnimation, ANIMATION_IGNITE);
+		mAnimationComponent.Play(ANIMATION_IDLE);
 	}
 
 	private void OnDestroy()
@@ -47,10 +69,27 @@ public class Bomb : MonoBehaviour
 
 	private void Trigger(ExplosionData explosionData)
 	{
-		if (mCanBeTriggeredByExplosion && !mIsTriggered)
+		if (mCanBeTriggeredByExplosion)
 		{
-			mIsTriggered = true;
-			mCurrentTimer = Random.Range(0.3f, 0.6f);
+			Ignite();
+		}
+	}
+
+	private void Ignite()
+	{
+		if (mState == EBombState.Ignited)
+			return;
+
+		mCurrentTimer = mIgniteTime;
+		mState = EBombState.Ignited;
+		mAnimationComponent.Play(ANIMATION_IGNITE);
+		foreach (AnimationState animationState in mAnimationComponent)
+		{
+			if (animationState.name == ANIMATION_IGNITE)
+			{
+				animationState.speed = 1.0f / (mIgniteTime / animationState.length);
+				Debug.Log(animationState.name + " - Ignite time: " + mIgniteTime.ToString() + ", Anim length: " + animationState.length.ToString() + ", Speed: " + animationState.speed.ToString());
+			}
 		}
 	}
 
@@ -64,28 +103,29 @@ public class Bomb : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		if (mHasTimer == true)
+		if (mHasTimer && mState == EBombState.Idle)
 		{
-			if (mIsTriggered == false)
+			if (mFakePhysics.Velocity.IsZero() == true)
 			{
-				if (mFakePhysics.Velocity.IsZero() == true)
-				{
-					mIsTriggered = true;
-					mCurrentTimer = mTimer;
-				}
+				mState = EBombState.Timer;
+				mCurrentTimer = mIdleTime;
 			}
 		}
 	}
 
 	private void Update()
 	{
-		if (mIsTriggered == true)
+		if (mCurrentTimer > 0.0f)
 		{
-			if (mCurrentTimer > 0.0f)
+			mCurrentTimer -= Time.deltaTime;
+		}
+		else
+		{
+			if (mState == EBombState.Timer)
 			{
-				mCurrentTimer -= Time.deltaTime;
+				Ignite();
 			}
-			else
+			else if (mState == EBombState.Ignited)
 			{
 				Explode();
 			}
@@ -104,16 +144,16 @@ public class Bomb : MonoBehaviour
 		Destroy(gameObject);
 	}
 
-	private void OnGUI()
-	{
-		if (mHasTimer == true)
-		{
-			Vector2 screenPosition = GameController.Instance.CameraControllerInstance.CameraComponent.WorldToScreenPoint(transform.position);
-			float w = 64.0f;
-			float h = 24.0f;
-			float x = screenPosition.x - w * 0.5f;
-			float y = Screen.height - (screenPosition.y + h * 0.5f);
-			GUI.TextField(new Rect(x, y, w, h), mCurrentTimer.ToString());
-		}
-	}
+	//private void OnGUI()
+	//{
+	//	if (mHasTimer == true)
+	//	{
+	//		Vector2 screenPosition = GameController.Instance.CameraControllerInstance.CameraComponent.WorldToScreenPoint(transform.position);
+	//		float w = 64.0f;
+	//		float h = 24.0f;
+	//		float x = screenPosition.x - w * 0.5f;
+	//		float y = Screen.height - (screenPosition.y + h * 0.5f);
+	//		GUI.TextField(new Rect(x, y, w, h), mCurrentTimer.ToString());
+	//	}
+	//}
 }

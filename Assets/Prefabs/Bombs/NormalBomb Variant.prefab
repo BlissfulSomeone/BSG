@@ -7,6 +7,47 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1532206634448762770, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: m_Name
+      value: NormalBomb Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 7276182858957119969, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: mExplosionRadius
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7276182858957119969, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: mDamage
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7276182858957119969, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: mCanBeTriggeredByExplosion
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7276182858957119969, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: mIgniteTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5407917574288415413, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: b12901780236fc142a87feb59b269520,
+        type: 3}
+    - target: {fileID: 5407917574288415413, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 0.9612903
+      objectReference: {fileID: 0}
+    - target: {fileID: 5407917574288415413, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4076826606511422155, guid: 09588d0ede3612c40b9f9cca721f3f34,
         type: 3}
       propertyPath: m_Name
@@ -88,41 +129,45 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1532206634448762770, guid: 09588d0ede3612c40b9f9cca721f3f34,
+    - target: {fileID: 7312762131466165669, guid: 09588d0ede3612c40b9f9cca721f3f34,
         type: 3}
-      propertyPath: m_Name
-      value: NormalBomb Variant
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5407917574288415413, guid: 09588d0ede3612c40b9f9cca721f3f34,
+    - target: {fileID: 8122440339549153339, guid: 09588d0ede3612c40b9f9cca721f3f34,
         type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: b12901780236fc142a87feb59b269520,
-        type: 3}
-    - target: {fileID: 5407917574288415413, guid: 09588d0ede3612c40b9f9cca721f3f34,
-        type: 3}
-      propertyPath: m_Size.y
-      value: 0.9612903
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5407917574288415413, guid: 09588d0ede3612c40b9f9cca721f3f34,
+    - target: {fileID: 1287156902822119583, guid: 09588d0ede3612c40b9f9cca721f3f34,
         type: 3}
-      propertyPath: m_WasSpriteAssigned
-      value: 1
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7276182858957119969, guid: 09588d0ede3612c40b9f9cca721f3f34,
+    - target: {fileID: 1730031436650690132, guid: 09588d0ede3612c40b9f9cca721f3f34,
         type: 3}
-      propertyPath: mExplosionRadius
-      value: 2
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7276182858957119969, guid: 09588d0ede3612c40b9f9cca721f3f34,
+    - target: {fileID: 5601851846914281060, guid: 09588d0ede3612c40b9f9cca721f3f34,
         type: 3}
-      propertyPath: mDamage
-      value: 1
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7276182858957119969, guid: 09588d0ede3612c40b9f9cca721f3f34,
+    - target: {fileID: 6113759538668513350, guid: 09588d0ede3612c40b9f9cca721f3f34,
         type: 3}
-      propertyPath: mCanBeTriggeredByExplosion
-      value: 1
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7306111545404381364, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6332631880137702804, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 09588d0ede3612c40b9f9cca721f3f34, type: 3}
