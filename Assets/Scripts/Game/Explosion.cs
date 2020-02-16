@@ -18,7 +18,6 @@ public struct ExplosionData
 	}
 }
 
-[RequireComponent(typeof(SpriteRenderer))]
 public class Explosion : MonoBehaviour
 {
 	[SerializeField] private ExplosionData mExplosionData;
@@ -39,6 +38,7 @@ public class Explosion : MonoBehaviour
 
 	private void Start()
 	{
+		Destroy(gameObject, 3.0f);
 		GameController.Instance.Explode(ExplosionData);
 		GameController.Instance.CameraControllerInstance.AddScreenShake(ExplosionData.Radius * mScreenShakeMultiplier);
 	}
