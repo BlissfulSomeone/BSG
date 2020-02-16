@@ -137,7 +137,7 @@ public class GameController : MonoBehaviour
 		Vector3 cameraTargetPosition = mPlayerInstance.transform.position;
 		cameraTargetPosition.x = 0.0f;
         cameraTargetPosition.y += mPlayerInstance.Velocity.y * mCameraControllerInstance.CameraLookAhead;
-		mCameraControllerInstance.SetTargetPosition(cameraTargetPosition);
+		mCameraControllerInstance.SetRootTargetPosition(cameraTargetPosition);
 	}
 
 	public void Explode(ExplosionData explosionData)

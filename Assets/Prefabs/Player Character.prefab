@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 8377611175049075330}
   - component: {fileID: 3667301290344907094}
   - component: {fileID: 3011729494695206931}
+  - component: {fileID: 8105750265646594365}
   m_Layer: 10
   m_Name: Player Character
   m_TagString: Untagged
@@ -162,6 +163,8 @@ MonoBehaviour:
     Ability: {fileID: 3667301290344907094}
   - InputName: Fire3
     Ability: {fileID: 3011729494695206931}
+  - InputName: Fire4
+    Ability: {fileID: 8105750265646594365}
 --- !u!114 &3667301290344907094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -193,3 +196,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mMaxBlockTime: 10
+--- !u!114 &8105750265646594365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8377611175049075334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98116e937ce51bf42a5e3f430fcc024d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mAdditiveViewInfo:
+    position: {x: 0, y: -2, z: 0}
+    rotation: {x: 3, y: 0, z: 0}
+    viewWidth: 0
+    fov: 0

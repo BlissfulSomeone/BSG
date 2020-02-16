@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
 	[System.Serializable]
-	private struct ViewInfo
+	public struct ViewInfo
 	{
 		public Vector3 position;
 		public Vector3 rotation;
@@ -21,18 +21,31 @@ public class CameraController : MonoBehaviour
 			result.fov = Mathf.Lerp(from.fov, to.fov, t);
 			return result;
 		}
+
+		public static ViewInfo operator +(ViewInfo a, ViewInfo b) =>
+			new ViewInfo
+			{ 
+				position = a.position + b.position,
+				rotation = a.rotation + b.rotation,
+				viewWidth = a.viewWidth + b.viewWidth,
+				fov = a.fov + b.fov
+			};
 	}
 
+	[Header("Basics")]
 	[SerializeField] private ViewInfo mInitialViewInfo;
-    [SerializeField] private float mCameraYOffset;
-    [SerializeField] private float mLerpSpeed;
-    [SerializeField] private float mCameraLookAhead;
+    [SerializeField] [Range(0.0f, 1.0f)] private float mLerpSpeed;
+	[SerializeField] private float mCameraLookAhead;
+
+	[Header("Screen Shake")]
 	[SerializeField] private float mScreenShakeFrequency;
 	[SerializeField] private float mScreenShakeDecay;
 	[Tooltip("Max cachecd screenshake")] [SerializeField] private float mMaxScreenShake;
 	[Tooltip("Max shown screenshake")] [SerializeField] private float mCapScreenShake;
+
 	private ViewInfo mCurrentViewInfo;
 	private ViewInfo mTargetViewInfo;
+	private Dictionary<int, ViewInfo> mAdditiveViewInfos;
 	
 	private Camera mCamera;
 	public Camera CameraComponent { get { return mCamera; } }
@@ -45,7 +58,10 @@ public class CameraController : MonoBehaviour
 		mCamera = GetComponent<Camera>();
 
 		mCurrentViewInfo = mInitialViewInfo;
-		mTargetViewInfo = mInitialViewInfo;
+		mTargetViewInfo = new ViewInfo();
+
+		mAdditiveViewInfos = new Dictionary<int, ViewInfo>();
+		PushAdditiveViewInfo(mInitialViewInfo);
 	}
 
 	private void Update()
@@ -58,11 +74,17 @@ public class CameraController : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		float frustumHeight = mTargetViewInfo.viewWidth / CameraComponent.aspect;
-		float distance = frustumHeight * 0.5f / Mathf.Tan(CameraComponent.fieldOfView * 0.5f * Mathf.Deg2Rad);
-		mTargetViewInfo.position.z = distance * -1;
+		ViewInfo finalTargetViewInfo = mTargetViewInfo;
+		foreach (ViewInfo viewInfo in mAdditiveViewInfos.Values)
+		{
+			finalTargetViewInfo += viewInfo;
+		}
 
-		mCurrentViewInfo = ViewInfo.Lerp(mCurrentViewInfo, mTargetViewInfo, mLerpSpeed);
+		float frustumHeight = finalTargetViewInfo.viewWidth / CameraComponent.aspect;
+		float distance = frustumHeight * 0.5f / Mathf.Tan(CameraComponent.fieldOfView * 0.5f * Mathf.Deg2Rad);
+		finalTargetViewInfo.position.z = distance * -1;
+
+		mCurrentViewInfo = ViewInfo.Lerp(mCurrentViewInfo, finalTargetViewInfo, mLerpSpeed);
 
 		transform.position = mCurrentViewInfo.position;
 		transform.eulerAngles = mCurrentViewInfo.rotation;
@@ -78,12 +100,70 @@ public class CameraController : MonoBehaviour
 		}
 	}
 
-	public void SetTargetPosition(Vector2 targetPosition)
+	public void SetRootTargetPosition(Vector2 targetPosition)
 	{
 		Vector3 position = mTargetViewInfo.position;
 		position.x = targetPosition.x;
-		position.y = targetPosition.y + mCameraYOffset;
+		position.y = targetPosition.y;
 		mTargetViewInfo.position = position;
+	}
+
+	public int PushAdditivePosition(Vector2 additivePosition)
+	{
+		int guid = System.Guid.NewGuid().GetHashCode();
+
+		ViewInfo additiveViewInfo = new ViewInfo();
+		additiveViewInfo.position = additivePosition;
+
+		mAdditiveViewInfos.Add(guid, additiveViewInfo);
+		return guid;
+	}
+
+	public void RemoveAdditivePosition(int key)
+	{
+		if (mAdditiveViewInfos.ContainsKey(key))
+		{
+			mAdditiveViewInfos.Remove(key);
+		}
+	}
+
+	public void SetRootTargetRotation(Vector3 targetRotation)
+	{
+		mTargetViewInfo.rotation = targetRotation;
+	}
+
+	public int PushAdditiveRotation(Vector3 additiveRotation)
+	{
+		int guid = System.Guid.NewGuid().GetHashCode();
+
+		ViewInfo additiveViewInfo = new ViewInfo();
+		additiveViewInfo.rotation = additiveRotation;
+
+		mAdditiveViewInfos.Add(guid, additiveViewInfo);
+		return guid;
+	}
+
+	public void RemoveAdditiveRotation(int key)
+	{
+		if (mAdditiveViewInfos.ContainsKey(key))
+		{
+			mAdditiveViewInfos.Remove(key);
+		}
+	}
+
+	public int PushAdditiveViewInfo(ViewInfo additiveViewInfo)
+	{
+		int guid = System.Guid.NewGuid().GetHashCode();
+		mAdditiveViewInfos.Add(guid, additiveViewInfo);
+		return guid;
+	}
+
+	public void RemoveAdditiveViewInfo(int key)
+	{
+		if (mAdditiveViewInfos.ContainsKey(key))
+		{
+			mAdditiveViewInfos.Remove(key);
+		}
 	}
 
 	public void AddScreenShake(float amount)
