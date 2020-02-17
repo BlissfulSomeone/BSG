@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -45,7 +46,7 @@ public class CameraController : MonoBehaviour
 
 	private ViewInfo mCurrentViewInfo;
 	private ViewInfo mTargetViewInfo;
-	private Dictionary<int, ViewInfo> mAdditiveViewInfos;
+	private Dictionary<Guid, ViewInfo> mAdditiveViewInfos;
 	
 	private Camera mCamera;
 	public Camera CameraComponent { get { return mCamera; } }
@@ -60,7 +61,7 @@ public class CameraController : MonoBehaviour
 		mCurrentViewInfo = mInitialViewInfo;
 		mTargetViewInfo = new ViewInfo();
 
-		mAdditiveViewInfos = new Dictionary<int, ViewInfo>();
+		mAdditiveViewInfos = new Dictionary<Guid, ViewInfo>();
 		PushAdditiveViewInfo(mInitialViewInfo);
 	}
 
@@ -100,7 +101,7 @@ public class CameraController : MonoBehaviour
 		}
 	}
 
-	public void SetRootTargetPosition(Vector2 targetPosition)
+	public void SetTargetPosition(Vector2 targetPosition)
 	{
 		Vector3 position = mTargetViewInfo.position;
 		position.x = targetPosition.x;
@@ -108,61 +109,73 @@ public class CameraController : MonoBehaviour
 		mTargetViewInfo.position = position;
 	}
 
-	public int PushAdditivePosition(Vector2 additivePosition)
-	{
-		int guid = System.Guid.NewGuid().GetHashCode();
+	//public Guid PushAdditivePosition(Vector2 additivePosition)
+	//{
+	//	Guid guid = Guid.NewGuid();
+	//
+	//	ViewInfo additiveViewInfo = new ViewInfo();
+	//	additiveViewInfo.position = additivePosition;
+	//
+	//	mAdditiveViewInfos.Add(guid, additiveViewInfo);
+	//	return guid;
+	//}
+	//
+	//public void RemoveAdditivePosition(Guid guid)
+	//{
+	//	if (mAdditiveViewInfos.ContainsKey(guid))
+	//	{
+	//		mAdditiveViewInfos.Remove(guid);
+	//	}
+	//}
 
-		ViewInfo additiveViewInfo = new ViewInfo();
-		additiveViewInfo.position = additivePosition;
-
-		mAdditiveViewInfos.Add(guid, additiveViewInfo);
-		return guid;
-	}
-
-	public void RemoveAdditivePosition(int key)
-	{
-		if (mAdditiveViewInfos.ContainsKey(key))
-		{
-			mAdditiveViewInfos.Remove(key);
-		}
-	}
-
-	public void SetRootTargetRotation(Vector3 targetRotation)
+	public void SetTargetRotation(Vector3 targetRotation)
 	{
 		mTargetViewInfo.rotation = targetRotation;
 	}
 
-	public int PushAdditiveRotation(Vector3 additiveRotation)
+	//public int PushAdditiveRotation(Vector3 additiveRotation)
+	//{
+	//	int guid = System.Guid.NewGuid().GetHashCode();
+	//
+	//	ViewInfo additiveViewInfo = new ViewInfo();
+	//	additiveViewInfo.rotation = additiveRotation;
+	//
+	//	mAdditiveViewInfos.Add(guid, additiveViewInfo);
+	//	return guid;
+	//}
+	//
+	//public void RemoveAdditiveRotation(int key)
+	//{
+	//	if (mAdditiveViewInfos.ContainsKey(key))
+	//	{
+	//		mAdditiveViewInfos.Remove(key);
+	//	}
+	//}
+
+	public Guid PushAdditiveViewInfo(ViewInfo additiveViewInfo)
 	{
-		int guid = System.Guid.NewGuid().GetHashCode();
-
-		ViewInfo additiveViewInfo = new ViewInfo();
-		additiveViewInfo.rotation = additiveRotation;
-
-		mAdditiveViewInfos.Add(guid, additiveViewInfo);
-		return guid;
+		Guid guid = Guid.NewGuid();
+		return PushAdditiveViewInfo(additiveViewInfo, guid);
 	}
 
-	public void RemoveAdditiveRotation(int key)
+	public Guid PushAdditiveViewInfo(ViewInfo additiveViewInfo, Guid guid)
 	{
-		if (mAdditiveViewInfos.ContainsKey(key))
+		if (mAdditiveViewInfos.ContainsKey(guid))
 		{
-			mAdditiveViewInfos.Remove(key);
+			mAdditiveViewInfos[guid] = additiveViewInfo;
 		}
-	}
-
-	public int PushAdditiveViewInfo(ViewInfo additiveViewInfo)
-	{
-		int guid = System.Guid.NewGuid().GetHashCode();
-		mAdditiveViewInfos.Add(guid, additiveViewInfo);
+		else
+		{
+			mAdditiveViewInfos.Add(guid, additiveViewInfo);
+		}
 		return guid;
 	}
 
-	public void RemoveAdditiveViewInfo(int key)
+	public void RemoveAdditiveViewInfo(Guid guid)
 	{
-		if (mAdditiveViewInfos.ContainsKey(key))
+		if (mAdditiveViewInfos.ContainsKey(guid))
 		{
-			mAdditiveViewInfos.Remove(key);
+			mAdditiveViewInfos.Remove(guid);
 		}
 	}
 

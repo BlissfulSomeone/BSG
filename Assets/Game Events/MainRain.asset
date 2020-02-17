@@ -20,12 +20,13 @@ MonoBehaviour:
     TriggerDelayTime: 0
     TriggerAtTime: 0
     EventType: 1
-    BombsPerSecond: 0.25
+    BombsPerSecond: 0.2
     RampPerDepth: 0
     MaxBombsPerSecond: 0
     BombType: 3
     BombPrefab: {fileID: 0}
     BombPrefabs: []
+    Objects: []
     Position: {x: 0, y: 0}
     Rotation: 0
     Spread: 0
@@ -49,6 +50,8 @@ MonoBehaviour:
     BombPrefab: {fileID: 0}
     BombPrefabs:
     - {fileID: 5646725043449563930, guid: 1efcee2da2b40f14ab6ee0f3c8867385, type: 3}
+    Objects:
+    - {fileID: 7742966609721983005, guid: 1efcee2da2b40f14ab6ee0f3c8867385, type: 3}
     Position: {x: 0, y: 0}
     Rotation: 0
     Spread: 0
@@ -72,6 +75,7 @@ MonoBehaviour:
     BombPrefab: {fileID: 0}
     BombPrefabs:
     - {fileID: 4521838813421243912, guid: 1efcee2da2b40f14ab6ee0f3c8867385, type: 3}
+    Objects: []
     Position: {x: 0, y: 0}
     Rotation: 0
     Spread: 0
@@ -96,6 +100,9 @@ MonoBehaviour:
     BombPrefabs:
     - {fileID: 5646725043449563930, guid: 1efcee2da2b40f14ab6ee0f3c8867385, type: 3}
     - {fileID: 2143849611871938927, guid: a3527ebca6e5bbd408a6cc7e8009b16b, type: 3}
+    Objects:
+    - {fileID: 4101022536908792424, guid: a3527ebca6e5bbd408a6cc7e8009b16b, type: 3}
+    - {fileID: 7742966609721983005, guid: 1efcee2da2b40f14ab6ee0f3c8867385, type: 3}
     Position: {x: 0, y: 0}
     Rotation: 0
     Spread: 0
@@ -122,6 +129,7 @@ MonoBehaviour:
     - {fileID: 7880601355816889469, guid: a3527ebca6e5bbd408a6cc7e8009b16b, type: 3}
     - {fileID: 1253800694974450686, guid: fca91b45f7e79554ca92b5faeaacdb55, type: 3}
     - {fileID: 551826394380437524, guid: a51fea408f270594c86db97c6aca166d, type: 3}
+    Objects: []
     Position: {x: 0, y: 0}
     Rotation: 0
     Spread: 0
@@ -147,6 +155,10 @@ MonoBehaviour:
     - {fileID: 5646725043449563930, guid: 1efcee2da2b40f14ab6ee0f3c8867385, type: 3}
     - {fileID: 2143849611871938927, guid: a3527ebca6e5bbd408a6cc7e8009b16b, type: 3}
     - {fileID: 7060408252332642028, guid: fca91b45f7e79554ca92b5faeaacdb55, type: 3}
+    Objects:
+    - {fileID: 4101022536908792424, guid: a3527ebca6e5bbd408a6cc7e8009b16b, type: 3}
+    - {fileID: 7742966609721983005, guid: 1efcee2da2b40f14ab6ee0f3c8867385, type: 3}
+    - {fileID: 4959064056576837099, guid: fca91b45f7e79554ca92b5faeaacdb55, type: 3}
     Position: {x: 0, y: 0}
     Rotation: 0
     Spread: 0
@@ -173,6 +185,11 @@ MonoBehaviour:
     - {fileID: 2143849611871938927, guid: a3527ebca6e5bbd408a6cc7e8009b16b, type: 3}
     - {fileID: 7060408252332642028, guid: fca91b45f7e79554ca92b5faeaacdb55, type: 3}
     - {fileID: 8589919051133357318, guid: a51fea408f270594c86db97c6aca166d, type: 3}
+    Objects:
+    - {fileID: 4101022536908792424, guid: a3527ebca6e5bbd408a6cc7e8009b16b, type: 3}
+    - {fileID: 7742966609721983005, guid: 1efcee2da2b40f14ab6ee0f3c8867385, type: 3}
+    - {fileID: 4959064056576837099, guid: fca91b45f7e79554ca92b5faeaacdb55, type: 3}
+    - {fileID: 5916670275143304705, guid: a51fea408f270594c86db97c6aca166d, type: 3}
     Position: {x: 0, y: 0}
     Rotation: 0
     Spread: 0

@@ -182,7 +182,8 @@ MonoBehaviour:
   mThrowForce: 10
   mKnockbackForce: 17
   mThrowTriggerExplosion: 1
-  mThrowOnRelease: 1
+  mLookAheadDistance: 2
+  mThrowArrowTexture: {fileID: 2800000, guid: 5469c6089864dfa40928f7d0193b1dbe, type: 3}
 --- !u!114 &3011729494695206931
 MonoBehaviour:
   m_ObjectHideFlags: 0

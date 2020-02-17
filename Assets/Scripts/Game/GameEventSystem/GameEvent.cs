@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [System.Serializable]
 public struct GameEventData
@@ -23,6 +24,8 @@ public struct GameEventData
 	[SerializeField] [EnumFlags] public GameEventCore.EBombType BombType;
 	[SerializeField] public Bomb BombPrefab;
 	[SerializeField] public Bomb[] BombPrefabs;
+	[SerializeField] public MonoBehaviour Object;
+	[SerializeField] public MonoBehaviour[] Objects;
 	[SerializeField] public Vector2 Position;
 	[SerializeField] [Range(0.0f, 360.0f)] public float Rotation;
 	[SerializeField] [Range(0.0f, 180.0f)] public float Spread;

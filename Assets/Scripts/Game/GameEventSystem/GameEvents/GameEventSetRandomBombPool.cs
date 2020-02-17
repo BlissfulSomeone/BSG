@@ -6,12 +6,12 @@ public struct GameEventSetRandomBombPool : IGameEventActions
 {
 	public string[] OnGetProperties()
 	{
-		return new string[] { "BombPrefabs" };
+		return new string[] { "Objects" };
 	}
 
 	public void OnAction(GameEventData gameEventData)
 	{
-		GameController.Instance.BombSpawnerInstance.SetAllowedBombs(gameEventData.BombPrefabs);
+		GameController.Instance.BombSpawnerInstance.SetAllowedBombs(gameEventData.Objects);
 	}
 
 	public void OnGizmos(GameEventData gameEventData)

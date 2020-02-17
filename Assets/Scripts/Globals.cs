@@ -40,6 +40,20 @@ public class Globals
 			}
 		}
 	}
+
+	public static int GetCollisionMask(GameObject gameObject)
+	{
+		int collisionMask = 0;
+		int layer = gameObject.layer;
+		for (int i = 0; i < 16; ++i)
+		{
+			if (!Physics.GetIgnoreLayerCollision(layer, i))
+			{
+				collisionMask = collisionMask | (1 << i);
+			}
+		}
+		return collisionMask;
+	}
 }
 
 public class GUIGlobals

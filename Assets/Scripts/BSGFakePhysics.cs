@@ -15,14 +15,14 @@ public class BSGFakePhysics : MonoBehaviour
 	}
 
 	[System.Serializable]
-	private class RaycastSettings
+	public class RaycastSettings
 	{
 		public int numberOfRaycasts = 4;
 		public float raycastMargin = 0.01f;
 	}
 
 	[System.Serializable]
-	private class Physics
+	public class Physics
 	{
 		public RaycastSettings horizontal;
 		public RaycastSettings vertical;
@@ -43,19 +43,13 @@ public class BSGFakePhysics : MonoBehaviour
 	private bool mIsGrounded = false;
 	private Vector2 mVelocity = Vector2.zero;
 
+	public Physics PhysicsSettings { get { return mPhysics; } }
 	public bool IsGrounded { get { return mIsGrounded; } }
 	public Vector2 Velocity { get { return mVelocity; } set { mVelocity = value; } }
 
 	private void Awake()
 	{
-		int layer = gameObject.layer;
-		for (int i = 0; i < 16; ++i)
-		{
-			if (UnityEngine.Physics.GetIgnoreLayerCollision(layer, i) == false)
-			{
-				mCollisionMask = mCollisionMask | (1 << i);
-			}
-		}
+		mCollisionMask = Globals.GetCollisionMask(gameObject);
 
 		mBoxCollider = GetComponent<BoxCollider>();
 	}
@@ -140,6 +134,12 @@ public class BSGFakePhysics : MonoBehaviour
 			}
 		}
 		mIsGrounded = false;
+	}
+
+	// Note: airControl will be clamped internally to 0-1;
+	public void SetAirControl(float airControl)
+	{
+		mPhysics.airControl = Mathf.Clamp(airControl, 0.0f, 1.0f);
 	}
 
 	public void AddForce(Vector2 aForce)

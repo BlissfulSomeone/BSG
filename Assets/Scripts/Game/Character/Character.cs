@@ -143,6 +143,7 @@ public class Character : MonoBehaviour
 		if (velocity.x < 0.0f)
 			mIsFlipped = true;
 		FakePhysics.Velocity = velocity;
+		GetComponent<SpriteRenderer>().flipX = mIsFlipped;
 		
 		for (int i = 0; i < mAbilities.Length; ++i)
 		{

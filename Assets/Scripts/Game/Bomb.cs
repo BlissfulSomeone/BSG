@@ -142,17 +142,4 @@ public class Bomb : MonoBehaviour
 		explosionInstance.ExplosionData = new ExplosionData(transform.position, mExplosionRadius, mDamage, false);
 		Destroy(gameObject);
 	}
-
-	//private void OnGUI()
-	//{
-	//	if (mHasTimer == true)
-	//	{
-	//		Vector2 screenPosition = GameController.Instance.CameraControllerInstance.CameraComponent.WorldToScreenPoint(transform.position);
-	//		float w = 64.0f;
-	//		float h = 24.0f;
-	//		float x = screenPosition.x - w * 0.5f;
-	//		float y = Screen.height - (screenPosition.y + h * 0.5f);
-	//		GUI.TextField(new Rect(x, y, w, h), mCurrentTimer.ToString());
-	//	}
-	//}
 }

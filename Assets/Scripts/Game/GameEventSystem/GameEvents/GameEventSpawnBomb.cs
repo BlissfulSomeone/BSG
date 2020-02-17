@@ -6,7 +6,7 @@ public struct GameEventSpawnBomb : IGameEventActions
 {
 	public string[] OnGetProperties()
 	{
-		return new string[] { "BombPrefab", "Position", "Rotation", "Spread", "Speed", "Offset", "Number" };
+		return new string[] { "Object", "Position", "Rotation", "Spread", "Speed", "Offset", "Number" };
 	}
 
 	public void OnAction(GameEventData gameEventData)
@@ -30,10 +30,14 @@ public struct GameEventSpawnBomb : IGameEventActions
 			float sin = Mathf.Sin(radians);
 			Vector2 force = new Vector3(cos, sin) * gameEventData.Speed.Get();
 		
-			Bomb bomb = Object.Instantiate(gameEventData.BombPrefab);
+			MonoBehaviour bomb = Object.Instantiate(gameEventData.Object);
 			bomb.transform.Reset();
 			bomb.transform.position = spawnPosition + offset;
-			bomb.FakePhysics.AddForce(force);
+			BSGFakePhysics fakePhysics = bomb.GetComponent<BSGFakePhysics>();
+			if (fakePhysics != null)
+			{
+				fakePhysics.AddForce(force);
+			}
 		}
 	}
 

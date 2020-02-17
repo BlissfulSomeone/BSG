@@ -127,6 +127,7 @@ public class GameController : MonoBehaviour
 			Globals.DestroyAllOfType<Triggerable>();
 			Globals.DestroyAllOfType<Explosion>();
 			Globals.DestroyAllOfType<GameEventController>();
+			Globals.DestroyAllOfType<Missile>();
 
 			Setup();
 		}
@@ -137,7 +138,7 @@ public class GameController : MonoBehaviour
 		Vector3 cameraTargetPosition = mPlayerInstance.transform.position;
 		cameraTargetPosition.x = 0.0f;
         cameraTargetPosition.y += mPlayerInstance.Velocity.y * mCameraControllerInstance.CameraLookAhead;
-		mCameraControllerInstance.SetRootTargetPosition(cameraTargetPosition);
+		mCameraControllerInstance.SetTargetPosition(cameraTargetPosition);
 	}
 
 	public void Explode(ExplosionData explosionData)

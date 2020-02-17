@@ -6,7 +6,7 @@ public class LookDownAbility : Ability
 {
 	[SerializeField] private CameraController.ViewInfo mAdditiveViewInfo;
 
-	private int mCurrentAdditiveGuid;
+	private System.Guid mCurrentAdditiveGuid;
 
 	protected override void StartAbility_Internal()
 	{

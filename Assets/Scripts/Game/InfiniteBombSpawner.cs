@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class InfiniteBombSpawner : MonoBehaviour
 {
-	private Bomb[] mBombPrefabs;
+	private MonoBehaviour[] mBombPrefabs;
 	private float mBombsPerSecond;
 	private float mRampPerDepth;
 	private float mMaxBombsPerSecond;
 	private float mSpawnTimer;
 
-	private Bomb[] BombPrefabs { get { if (mBombPrefabs == null) mBombPrefabs = new Bomb[0]; return mBombPrefabs; } set { mBombPrefabs = value; } }
+	private MonoBehaviour[] BombPrefabs { get { if (mBombPrefabs == null) mBombPrefabs = new MonoBehaviour[0]; return mBombPrefabs; } set { mBombPrefabs = value; } }
 
 	private void Awake()
 	{
@@ -30,10 +30,14 @@ public class InfiniteBombSpawner : MonoBehaviour
 
 				Vector2 force = new Vector2(Random.Range(0.0f, 0.0f), 0.0f);
 
-				Bomb bomb = Instantiate(BombPrefabs[Random.Range(0, BombPrefabs.Length)]);
+				MonoBehaviour bomb = Instantiate(BombPrefabs[Random.Range(0, BombPrefabs.Length)]);
 				bomb.transform.Reset();
 				bomb.transform.position = new Vector2(Random.Range(-8.0f, 8.0f), 10.0f);
-				bomb.FakePhysics.AddForce(force);
+				BSGFakePhysics fakePhysics = bomb.GetComponent<BSGFakePhysics>();
+				if (fakePhysics != null)
+				{
+					fakePhysics.AddForce(force);
+				}
 			}
 		}
 	}
@@ -45,7 +49,7 @@ public class InfiniteBombSpawner : MonoBehaviour
 		mMaxBombsPerSecond = maxBps;
 	}
 
-	public void SetAllowedBombs(Bomb[] bombPrefabs)
+	public void SetAllowedBombs(MonoBehaviour[] bombPrefabs)
 	{
 		BombPrefabs = bombPrefabs;
 	}
