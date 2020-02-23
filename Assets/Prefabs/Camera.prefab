@@ -102,8 +102,11 @@ MonoBehaviour:
     viewWidth: 20
     fov: 30
   mLerpSpeed: 0.1
-  mCameraLookAhead: 0.25
+  mCameraLookAhead: 0
+  mDeadZone: 0.3
+  mDeadZoneOffset: 0
   mScreenShakeFrequency: 15
   mScreenShakeDecay: 175
   mMaxScreenShake: 100
   mCapScreenShake: 50
+  mDrawDebug: 1

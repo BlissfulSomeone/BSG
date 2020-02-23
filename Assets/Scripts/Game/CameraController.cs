@@ -2,6 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class CameraController : MonoBehaviour
 {
@@ -38,15 +41,25 @@ public class CameraController : MonoBehaviour
     [SerializeField] [Range(0.0f, 1.0f)] private float mLerpSpeed;
 	[SerializeField] private float mCameraLookAhead;
 
+	[Header("Dead Zone")]
+	[Tooltip("The dead zone is in screen space. Put to 0 to disable.")] [SerializeField] [Range(0.0f, 1.0f)] private float mDeadZone;
+	[Tooltip("The dead zone is in screen space.")] [SerializeField] [Range(-0.5f, 0.5f)] private float mDeadZoneOffset;
+
 	[Header("Screen Shake")]
 	[SerializeField] private float mScreenShakeFrequency;
 	[SerializeField] private float mScreenShakeDecay;
 	[Tooltip("Max cachecd screenshake")] [SerializeField] private float mMaxScreenShake;
 	[Tooltip("Max shown screenshake")] [SerializeField] private float mCapScreenShake;
 
+	[Header("Debug")]
+	[SerializeField] private bool mDrawDebug;
+
 	private ViewInfo mCurrentViewInfo;
 	private ViewInfo mTargetViewInfo;
 	private Dictionary<Guid, ViewInfo> mAdditiveViewInfos;
+#if UNITY_EDITOR
+	private Vector3 mCachedTargetPosition;
+#endif
 	
 	private Camera mCamera;
 	public Camera CameraComponent { get { return mCamera; } }
@@ -103,55 +116,37 @@ public class CameraController : MonoBehaviour
 
 	public void SetTargetPosition(Vector2 targetPosition)
 	{
+#if UNITY_EDITOR
+		mCachedTargetPosition = targetPosition.ToVec3();
+#endif
+
+		if (IsInDeadZone(targetPosition))
+			return;
+
 		Vector3 position = mTargetViewInfo.position;
 		position.x = targetPosition.x;
 		position.y = targetPosition.y;
 		mTargetViewInfo.position = position;
 	}
 
-	//public Guid PushAdditivePosition(Vector2 additivePosition)
-	//{
-	//	Guid guid = Guid.NewGuid();
-	//
-	//	ViewInfo additiveViewInfo = new ViewInfo();
-	//	additiveViewInfo.position = additivePosition;
-	//
-	//	mAdditiveViewInfos.Add(guid, additiveViewInfo);
-	//	return guid;
-	//}
-	//
-	//public void RemoveAdditivePosition(Guid guid)
-	//{
-	//	if (mAdditiveViewInfos.ContainsKey(guid))
-	//	{
-	//		mAdditiveViewInfos.Remove(guid);
-	//	}
-	//}
+	private bool IsInDeadZone(Vector2 point)
+	{
+		float deadZoneSize = mDeadZone * Screen.height;
+		float offset = mDeadZoneOffset * Screen.height;
+		float top = (Screen.height / 2 - deadZoneSize) + offset;
+		float bottom = (Screen.height / 2 + deadZoneSize) + offset;
+		Vector2 target = mCamera.WorldToScreenPoint(point).ToVec2();
+		target.y = Screen.height - target.y;
+		bool isInDeadZone = target.y > top && target.y < bottom;
+		
+		return target.y > top && target.y < bottom;
+	}
 
 	public void SetTargetRotation(Vector3 targetRotation)
 	{
 		mTargetViewInfo.rotation = targetRotation;
 	}
-
-	//public int PushAdditiveRotation(Vector3 additiveRotation)
-	//{
-	//	int guid = System.Guid.NewGuid().GetHashCode();
-	//
-	//	ViewInfo additiveViewInfo = new ViewInfo();
-	//	additiveViewInfo.rotation = additiveRotation;
-	//
-	//	mAdditiveViewInfos.Add(guid, additiveViewInfo);
-	//	return guid;
-	//}
-	//
-	//public void RemoveAdditiveRotation(int key)
-	//{
-	//	if (mAdditiveViewInfos.ContainsKey(key))
-	//	{
-	//		mAdditiveViewInfos.Remove(key);
-	//	}
-	//}
-
+	
 	public Guid PushAdditiveViewInfo(ViewInfo additiveViewInfo)
 	{
 		Guid guid = Guid.NewGuid();
@@ -183,4 +178,41 @@ public class CameraController : MonoBehaviour
 	{
 		mScreenShake = Mathf.Min(mScreenShake + amount, mMaxScreenShake);
 	}
+
+#if UNITY_EDITOR
+	private void OnGUI()
+	{
+		if (!mDrawDebug)
+			return;
+
+		float deadZoneSize = mDeadZone * Screen.height;
+		float offset = mDeadZoneOffset * Screen.height;
+
+		float top = (Screen.height / 2 - deadZoneSize) + offset;
+		float bottom = (Screen.height / 2 + deadZoneSize) + offset;
+		float cachedTarget = Screen.height - mCamera.WorldToScreenPoint(mCachedTargetPosition.ToVec2()).y;
+		float target = Screen.height - mCamera.WorldToScreenPoint(mTargetViewInfo.position.ToVec2()).y;
+		float current = Screen.height - mCamera.WorldToScreenPoint(transform.position.ToVec2()).y;
+			
+		Handles.BeginGUI();
+		DrawLine(top, 3, Color.red);
+		DrawLine(bottom, 3, Color.red);
+		DrawLine(cachedTarget, 3, new Color(0.0f, 1.0f, 0.0f, 0.33f));
+		DrawLine(target, 3, Color.green);
+		DrawLine(current, 3, Color.magenta);
+		Handles.EndGUI();
+	}
+
+	private void DrawLine(float y, int width, Color color)
+	{
+		Color c = Handles.color;
+		Handles.color = color;
+		for (int i = 0; i < width; ++i)
+		{
+			Handles.DrawLine(new Vector3(0.0f, y - width / 2, 0.0f), new Vector3(Screen.width, y - width / 2));
+			Handles.DrawLine(new Vector3(0.0f, y + width / 2, 0.0f), new Vector3(Screen.width, y + width / 2));
+		}
+		Handles.color = c;
+	}
+#endif
 }
