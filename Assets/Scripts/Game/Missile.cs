@@ -35,6 +35,7 @@ public class Missile : MonoBehaviour
 	[Header("Bomb")]
 	[SerializeField] private float mExplosionRadius;
 	[SerializeField] private float mDamage;
+	[SerializeField] private ExplosionData mExplosionData;
 	[SerializeField] private Explosion mExplosionPrefab;
 
 	private TrailRenderer mTrailRenderer;
@@ -147,8 +148,8 @@ public class Missile : MonoBehaviour
 					mFakePhysics.enabled = false;
 					mFakePhysics.Velocity = Vector2.zero;
 
-					Explosion explosion = Instantiate(mExplosionPrefab);
-					explosion.ExplosionData = new ExplosionData { Position = transform.position, Damage = mDamage, Radius = mExplosionRadius, Friendly = false };
+					Explosion explosion = Instantiate(mExplosionPrefab, transform.position, Quaternion.identity);
+					explosion.ExplosionData = mExplosionData;
 					Destroy(gameObject, mTrailRenderer.time);
 					break;
 			}

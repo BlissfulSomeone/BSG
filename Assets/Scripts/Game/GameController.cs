@@ -108,12 +108,12 @@ public class GameController : MonoBehaviour
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			float distance;
 			plane.Raycast(ray, out distance);
-			Explosion explosion = Instantiate(mExplosionPrefab);
 			Vector3 explosionPosition = ray.GetPoint(distance);
 			float explosionRadius = 2.5f;
 			float explosionDamage = 0.0f;
 			bool isFriendly = true;
-			explosion.ExplosionData = new ExplosionData(explosionPosition, explosionRadius, explosionDamage, isFriendly);
+			Explosion explosion = Instantiate(mExplosionPrefab, explosionPosition, Quaternion.identity);
+			explosion.ExplosionData = new ExplosionData(explosionRadius, explosionDamage, 10.0f, isFriendly);
 		}
 		if (Input.GetButtonDown("Submit") == true && mPlayerInstance == null)
 		{
@@ -141,23 +141,24 @@ public class GameController : MonoBehaviour
 		mCameraControllerInstance.SetTargetPosition(cameraTargetPosition);
 	}
 
-	public void Explode(ExplosionData explosionData)
+	public void Explode(ExplosionInstance explosionInstance)
 	{
-		mChunkControllerInstance.Explode(explosionData);
-		Collider[] colliders = Physics.OverlapSphere(explosionData.Position, explosionData.Radius);
+		mChunkControllerInstance.Explode(explosionInstance);
+		Collider[] colliders = Physics.OverlapSphere(explosionInstance.Position, explosionInstance.ExplosionData.Radius);
 		foreach (Collider collider in colliders)
 		{
 			Triggerable triggerable = collider.gameObject.GetComponent<Triggerable>();
 			if (triggerable != null)
 			{
-				triggerable.Trigger(explosionData);
+				triggerable.Trigger(explosionInstance);
 				if (triggerable.HasPhysics == true)
 				{
-					Vector3 delta = collider.transform.position - explosionData.Position;
+					Vector3 delta = collider.transform.position - explosionInstance.Position;
 					float distance = delta.magnitude;
-					if (distance <= explosionData.Radius)
+					if (distance <= explosionInstance.ExplosionData.Radius)
 					{
-						triggerable.FakePhysics.AddExplosionForce(10.0f, explosionData.Position, explosionData.Radius, triggerable.UpForceMultiplier);
+						triggerable.ApplyConstantVelocityOverTime(explosionInstance.ExplosionData.Knockback, delta.normalized);
+						//triggerable.FakePhysics.AddExplosionForce(10.0f, explosionData.Position, explosionData.Radius, triggerable.UpForceMultiplier);
 					}
 				}
 			}

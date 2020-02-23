@@ -122,7 +122,10 @@ MonoBehaviour:
     bounciness: 0
     gravityScale: 1
     friction: 60
-    airControl: 1
+    airControl: 0.495
+  mIsKinetic: 0
+  mIsAffectedByGravity: 1
+  mIsAffectedByFriction: 1
   mHasFalloff: 0
 --- !u!114 &515902734300222581
 MonoBehaviour:

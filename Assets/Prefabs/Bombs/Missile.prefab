@@ -131,6 +131,11 @@ MonoBehaviour:
   mSpeed: 25
   mExplosionRadius: 3
   mDamage: 1
+  mExplosionData:
+    Radius: 3
+    Damage: 1
+    Knockback: 10
+    Friendly: 0
   mExplosionPrefab: {fileID: 3506304063819049500, guid: 7e1541da5e9985d41a8846daebcb3b5b,
     type: 3}
 --- !u!96 &1916676254681340918
@@ -274,4 +279,7 @@ MonoBehaviour:
     gravityScale: 0
     friction: 10
     airControl: 0
+  mIsKinetic: 0
+  mIsAffectedByGravity: 1
+  mIsAffectedByFriction: 1
   mHasFalloff: 0

@@ -32,6 +32,7 @@ public class Bomb : MonoBehaviour
 	[SerializeField] private bool mCanBeTriggeredByExplosion;
 	[SerializeField] private bool mCanBeTriggeredByImpact;
 
+	[SerializeField] private ExplosionData mExplosionData;
 	[SerializeField] private Explosion mExplosionPrefab;
 
 	[SerializeField] private SpawnOnDestroy[] mToSpawnOnDestroy;
@@ -67,7 +68,7 @@ public class Bomb : MonoBehaviour
 		mTriggerable.OnTriggered -= Trigger;
 	}
 
-	private void Trigger(ExplosionData explosionData)
+	private void Trigger(ExplosionInstance explosionInstance)
 	{
 		if (mCanBeTriggeredByExplosion)
 		{
@@ -138,8 +139,8 @@ public class Bomb : MonoBehaviour
 			Instantiate(i.objectToSpawn, transform.position + i.spawnOffset.ToVec3(), Quaternion.identity);
 		}
 		
-		Explosion explosionInstance = Instantiate(mExplosionPrefab);
-		explosionInstance.ExplosionData = new ExplosionData(transform.position, mExplosionRadius, mDamage, false);
+		Explosion explosionInstance = Instantiate(mExplosionPrefab, transform.position, Quaternion.identity);
+		explosionInstance.ExplosionData = mExplosionData;
 		Destroy(gameObject);
 	}
 }

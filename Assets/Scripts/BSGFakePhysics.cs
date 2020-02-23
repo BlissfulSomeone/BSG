@@ -7,7 +7,7 @@ public class BSGFakePhysics : MonoBehaviour
 {
 	private const float GROUND_CHECK_DISTANCE = 0.01f;
 	private const float STATIONARY_VELOCITY_EPSILON = 0.1f;
-
+	
 	private enum EAxisIndex
 	{
 		Horizontal = 0,
@@ -36,6 +36,9 @@ public class BSGFakePhysics : MonoBehaviour
 	public OnImpactHandler OnImpact;
 
 	[SerializeField] private Physics mPhysics;
+	[SerializeField] private bool mIsKinetic;
+	[SerializeField] private bool mIsAffectedByGravity = true;
+	[SerializeField] private bool mIsAffectedByFriction = true;
 	[SerializeField] private bool mHasFalloff;
 
     private int mCollisionMask = 0;
@@ -44,6 +47,9 @@ public class BSGFakePhysics : MonoBehaviour
 	private Vector2 mVelocity = Vector2.zero;
 
 	public Physics PhysicsSettings { get { return mPhysics; } }
+	public bool IsKinetic { get { return mIsKinetic; } set { mIsKinetic = value; } }
+	public bool IsAffectedByGravity { get { return mIsAffectedByGravity; } set { mIsAffectedByGravity = value; } }
+	public bool IsAffectedByFriction { get { return mIsAffectedByFriction; } set { mIsAffectedByFriction = value; } }
 	public bool IsGrounded { get { return mIsGrounded; } }
 	public Vector2 Velocity { get { return mVelocity; } set { mVelocity = value; } }
 
@@ -56,12 +62,19 @@ public class BSGFakePhysics : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		if (mVelocity.x > 0.0f)
-			mVelocity.x = Mathf.Max(mVelocity.x - mPhysics.friction * (mIsGrounded == true ? 1.0f : mPhysics.airControl) * Time.fixedDeltaTime, 0.0f);
-		if (mVelocity.x < 0.0f)
-			mVelocity.x = Mathf.Min(mVelocity.x + mPhysics.friction * (mIsGrounded == true ? 1.0f : mPhysics.airControl) * Time.fixedDeltaTime, 0.0f);
-		if (mIsGrounded == false)
+		if (IsKinetic)
+			return;
+
+		if (IsAffectedByFriction)
+		{
+			if (mVelocity.x > 0.0f)
+				mVelocity.x = Mathf.Max(mVelocity.x - mPhysics.friction * (mIsGrounded == true ? 1.0f : mPhysics.airControl) * Time.fixedDeltaTime, 0.0f);
+			if (mVelocity.x < 0.0f)
+				mVelocity.x = Mathf.Min(mVelocity.x + mPhysics.friction * (mIsGrounded == true ? 1.0f : mPhysics.airControl) * Time.fixedDeltaTime, 0.0f);
+		}
+		if (IsAffectedByGravity && mIsGrounded == false)
 			mVelocity.y -= 20.0f * mPhysics.gravityScale * Time.fixedDeltaTime;
+
 		bool hit = false;
 		if (DoRaycasts(Vector2.right, mPhysics.horizontal, EAxisIndex.Horizontal))
 			hit = true;
@@ -69,6 +82,7 @@ public class BSGFakePhysics : MonoBehaviour
 			hit = true;
 		if (hit)
 			OnImpact?.Invoke();
+
 		DoGroundCheck();
 	}
 

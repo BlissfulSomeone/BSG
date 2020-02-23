@@ -42,6 +42,21 @@ PrefabInstance:
       propertyPath: mIgniteTime
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 7276182858957119969, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: mExplosionData.Radius
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7276182858957119969, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: mExplosionData.Damage
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7276182858957119969, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: mExplosionData.Knockback
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 5407917574288415413, guid: 09588d0ede3612c40b9f9cca721f3f34,
         type: 3}
       propertyPath: m_Sprite

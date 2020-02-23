@@ -2,26 +2,39 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public struct ExplosionData
 {
-	public Vector3 Position;
 	public float Radius;
 	public float Damage;
+	public float Knockback;
 	public bool Friendly;
 
-	public ExplosionData(Vector3 position, float radius, float damage, bool friendly)
+	public ExplosionData(float radius, float damage, float knockback, bool friendly)
 	{
-		Position = position;
 		Radius = radius;
 		Damage = damage;
+		Knockback = knockback;
 		Friendly = friendly;
+	}
+}
+
+public struct ExplosionInstance
+{
+	public Vector3 Position;
+	public ExplosionData ExplosionData;
+
+	public ExplosionInstance(Vector3 position, ExplosionData explosionData)
+	{
+		Position = position;
+		ExplosionData = explosionData;
 	}
 }
 
 public class Explosion : MonoBehaviour
 {
-	[SerializeField] private ExplosionData mExplosionData;
 	[Tooltip("Total added screenshake is the explosion radius times the screen shake multiplier.")] [SerializeField] private float mScreenShakeMultiplier;
+	[SerializeField] private ExplosionData mExplosionData;
 	public ExplosionData ExplosionData
 	{
 		get
@@ -31,15 +44,14 @@ public class Explosion : MonoBehaviour
 		set
 		{
 			mExplosionData = value;
-			transform.position = mExplosionData.Position;
-			transform.localScale = Vector3.one * mExplosionData.Radius;
 		}
 	}
 
 	private void Start()
 	{
 		Destroy(gameObject, 3.0f);
-		GameController.Instance.Explode(ExplosionData);
+		transform.localScale = Vector3.one * mExplosionData.Radius;
+		GameController.Instance.Explode(new ExplosionInstance(transform.position, mExplosionData));
 		GameController.Instance.CameraControllerInstance.AddScreenShake(ExplosionData.Radius * mScreenShakeMultiplier);
 	}
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(BSGFakePhysics), typeof(BoxCollider), typeof(Triggerable))]
 public class Character : MonoBehaviour
 {
 	[System.Serializable]
@@ -67,7 +68,9 @@ public class Character : MonoBehaviour
 		mFakePhysics = GetComponent<BSGFakePhysics>();
 		mBoxCollider = GetComponent<BoxCollider>();
 		mTriggerable = GetComponent<Triggerable>();
-		mTriggerable.OnTriggered += Trigger;
+		mTriggerable.OnTriggered += OnTriggered;
+		mTriggerable.OnPreTimedEvent += OnPreTimedEvent;
+		mTriggerable.OnPostTimedEvent += OnPostTimedEvent;
 
 		mHealth = mMaxHealth;
 
@@ -79,20 +82,30 @@ public class Character : MonoBehaviour
 	
 	private void OnDestroy()
 	{
-		mTriggerable.OnTriggered -= Trigger;
+		mTriggerable.OnTriggered -= OnTriggered;
 	}
 
-	private void Trigger(ExplosionData explosionData)
+	private void OnTriggered(ExplosionInstance explosionInstance)
 	{
-		if (!explosionData.Friendly && !IsInvulnerable)
+		if (!explosionInstance.ExplosionData.Friendly && !IsInvulnerable)
 		{
-			mHealth -= explosionData.Damage;
+			mHealth -= explosionInstance.ExplosionData.Damage;
             if (mHealth <= 0.0f)
 			{
 				OnKilled?.Invoke(this);
 				Destroy(gameObject);
 			}
 		}
+	}
+
+	private void OnPreTimedEvent()
+	{
+		CanMove = false;
+	}
+
+	private void OnPostTimedEvent()
+	{
+		CanMove = true;
 	}
 
 	private void Update()
@@ -137,7 +150,7 @@ public class Character : MonoBehaviour
 		}
 
 		velocity.x += mMovementInput.x * mMovement.acceleration * Time.fixedDeltaTime;
-		velocity.x = Mathf.Clamp(velocity.x, -mMovement.maxSpeed, mMovement.maxSpeed);
+		velocity.x = FakePhysics.IsAffectedByFriction ? Mathf.Clamp(velocity.x, -mMovement.maxSpeed, mMovement.maxSpeed) : velocity.x;
 		if (velocity.x > 0.0f)
 			mIsFlipped = false;
 		if (velocity.x < 0.0f)
