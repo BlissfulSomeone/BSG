@@ -109,4 +109,4 @@ MonoBehaviour:
   mScreenShakeDecay: 175
   mMaxScreenShake: 100
   mCapScreenShake: 50
-  mDrawDebug: 1
+  mDrawDebug: 0
