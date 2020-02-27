@@ -110,7 +110,7 @@ public class GameController : MonoBehaviour
 			plane.Raycast(ray, out distance);
 			Vector3 explosionPosition = ray.GetPoint(distance);
 			float explosionRadius = 2.5f;
-			float explosionDamage = 0.0f;
+			float explosionDamage = 1.0f;
 			bool isFriendly = true;
 			Explosion explosion = Instantiate(mExplosionPrefab, explosionPosition, Quaternion.identity);
 			explosion.ExplosionData = new ExplosionData(explosionRadius, explosionDamage, 10.0f, isFriendly);

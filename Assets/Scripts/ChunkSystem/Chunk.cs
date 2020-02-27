@@ -115,6 +115,7 @@ public class Chunk : MonoBehaviour
 	private MeshGenerationData mColliderGenerationData;
 
 	private int[] mTiles;
+	private float[] mTileHealths;
 
 	public void Generate(ChunkController.ChunkSettings chunkSettings, bool empty)
 	{
@@ -149,6 +150,7 @@ public class Chunk : MonoBehaviour
 	private void GenerateTiles(bool empty)
 	{
 		mTiles = new int[mChunkSettings.NumberOfTiles];
+		mTileHealths = new float[mChunkSettings.NumberOfTiles];
 		for (int y = 0; y < mChunkSettings.NumberOfRows; ++y)
 		{
 			for (int x = 0; x < mChunkSettings.NumberOfColumns; ++x)
@@ -158,10 +160,24 @@ public class Chunk : MonoBehaviour
 					if (x == 0 || x == mChunkSettings.NumberOfColumns - 1)
 						SetTile(x, y, z, 1);
 					else
-						SetTile(x, y, z, empty ? 0 : 2);
+						SetTile(x, y, z, empty ? 0 : GetGroundType(x, y, z));
 				}
 			}
 		}
+	}
+
+	private int GetGroundType(int x, int y, int z)
+	{
+		float actualY = y - transform.position.y;
+		float perlin = Mathf.PerlinNoise(x / mChunkSettings.GenerationPerlinSize, actualY / mChunkSettings.GenerationPerlinSize);
+		float height = actualY * Mathf.Max(mChunkSettings.GenerationRampSpeed / 10000.0f, 0.000001f);
+		float threshold = 0.5f;
+		float value = perlin * height;
+
+		if (x == 1)
+			Debug.Log(value);
+
+		return value < threshold ? 2 : 3;
 	}
 
 	private void ResetData()
@@ -333,14 +349,17 @@ public class Chunk : MonoBehaviour
 	{
 		if (x < 0 || x >= mChunkSettings.NumberOfColumns || y < 0 || y >= mChunkSettings.NumberOfRows || z < 0 || z >= mChunkSettings.NumberOfLayers)
 			return 0;
-		return mTiles[x + y * mChunkSettings.NumberOfColumns + z * mChunkSettings.NumberOfColumns * mChunkSettings.NumberOfRows];
+		int index = x + y * mChunkSettings.NumberOfColumns + z * mChunkSettings.NumberOfColumns * mChunkSettings.NumberOfRows;
+		return mTiles[index];
 	}
 
 	private void SetTile(int x, int y, int z, int tileId)
 	{
 		if (x < 0 || x >= mChunkSettings.NumberOfColumns || y < 0 || y >= mChunkSettings.NumberOfRows || z < 0 || z >= mChunkSettings.NumberOfLayers)
 			return;
-		mTiles[x + y * mChunkSettings.NumberOfColumns + z * mChunkSettings.NumberOfColumns * mChunkSettings.NumberOfRows] = tileId;
+		int index = x + y * mChunkSettings.NumberOfColumns + z * mChunkSettings.NumberOfColumns * mChunkSettings.NumberOfRows;
+		mTiles[index] = tileId;
+		mTileHealths[index] = mChunkSettings.TileData[tileId].Health;
 	}
 
 	private void Build()
@@ -380,9 +399,14 @@ public class Chunk : MonoBehaviour
 
 					if (distance <= explosionInstance.ExplosionData.Radius)
 					{
-						SetTile(x, y, z, 0);
-						OnTileDestroyed(tilePosition, tileId, explosionInstance);
-						dirty = true;
+						int index = x + y * mChunkSettings.NumberOfColumns + z * mChunkSettings.NumberOfColumns * mChunkSettings.NumberOfRows;
+						mTileHealths[index] -= explosionInstance.ExplosionData.Damage;
+						if (mTileHealths[index] <= 0)
+						{
+							SetTile(x, y, z, 0);
+							OnTileDestroyed(tilePosition, tileId, explosionInstance);
+							dirty = true;
+						}
 					}
 				}
 			}

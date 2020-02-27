@@ -12,6 +12,8 @@ public class ChunkController : MonoBehaviour
 		[SerializeField] public int NumberOfRows;
 		[SerializeField] public int NumberOfLayers;
 		[SerializeField] public TileData[] TileData;
+		[Tooltip("Lower value will create bigger, smoother veins of rocks. Higher value will create a more chaotic, noisy distribution of rocks.")] [SerializeField] public float GenerationPerlinSize;
+		[Tooltip("The higher the value, the sooner the rocks will spawn.")] [SerializeField] public float GenerationRampSpeed;
 		[SerializeField] public Color BackLayerTint;
 
 		public float TileSize { get { return ChunkWidth / NumberOfColumns; } }

@@ -8,4 +8,5 @@ public class TileData : ScriptableObject
 	public Material Material;
 	public bool IsIndestructible;
 	public bool IsCollision;
+	public float Health;
 }
