@@ -173,10 +173,7 @@ public class Chunk : MonoBehaviour
 		float height = actualY * Mathf.Max(mChunkSettings.GenerationRampSpeed / 10000.0f, 0.000001f);
 		float threshold = 0.5f;
 		float value = perlin * height;
-
-		if (x == 1)
-			Debug.Log(value);
-
+		
 		return value < threshold ? 2 : 3;
 	}
 

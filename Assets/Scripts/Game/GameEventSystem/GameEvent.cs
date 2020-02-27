@@ -26,6 +26,7 @@ public struct GameEventData
 	[SerializeField] public Bomb[] BombPrefabs;
 	[SerializeField] public MonoBehaviour Object;
 	[SerializeField] public MonoBehaviour[] Objects;
+	[SerializeField] public WeightedObject[] WeightedObjects;
 	[SerializeField] public Vector2 Position;
 	[SerializeField] [Range(0.0f, 360.0f)] public float Rotation;
 	[SerializeField] [Range(0.0f, 180.0f)] public float Spread;

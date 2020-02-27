@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class InfiniteBombSpawner : MonoBehaviour
 {
-	private MonoBehaviour[] mBombPrefabs;
+	private WeightedObject[] mBombPrefabs;
 	private float mBombsPerSecond;
 	private float mRampPerDepth;
 	private float mMaxBombsPerSecond;
 	private float mSpawnTimer;
 
-	private MonoBehaviour[] BombPrefabs { get { if (mBombPrefabs == null) mBombPrefabs = new MonoBehaviour[0]; return mBombPrefabs; } set { mBombPrefabs = value; } }
+	private WeightedObject[] BombPrefabs { get { if (mBombPrefabs == null) mBombPrefabs = new WeightedObject[0]; return mBombPrefabs; } set { mBombPrefabs = value; } }
 
 	private void Awake()
 	{
@@ -30,7 +30,7 @@ public class InfiniteBombSpawner : MonoBehaviour
 
 				Vector2 force = new Vector2(Random.Range(0.0f, 0.0f), 0.0f);
 
-				MonoBehaviour bomb = Instantiate(BombPrefabs[Random.Range(0, BombPrefabs.Length)]);
+				MonoBehaviour bomb = Instantiate(BombPrefabs.GetRandom());
 				bomb.transform.Reset();
 				bomb.transform.position = new Vector2(Random.Range(-8.0f, 8.0f), 10.0f);
 				BSGFakePhysics fakePhysics = bomb.GetComponent<BSGFakePhysics>();
@@ -51,6 +51,16 @@ public class InfiniteBombSpawner : MonoBehaviour
 
 	public void SetAllowedBombs(MonoBehaviour[] bombPrefabs)
 	{
-		BombPrefabs = bombPrefabs;
+		BombPrefabs = new WeightedObject[bombPrefabs.Length];
+		for (int i = 0; i < bombPrefabs.Length; ++i)
+		{
+			BombPrefabs[i].Weight = 1;
+			BombPrefabs[i].Object = bombPrefabs[i];
+		}
+	}
+
+	public void SetAllowedBombs(WeightedObject[] weightedBombPrefabs)
+	{
+		BombPrefabs = weightedBombPrefabs;
 	}
 }
