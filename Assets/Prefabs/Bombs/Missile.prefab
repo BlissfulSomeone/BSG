@@ -127,8 +127,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mTrackingTime: 3
   mLockOnTexture: {fileID: 2800000, guid: 5952b3863b12f154f8d17ef303767fc4, type: 3}
-  mSpawnHeight: 25
-  mSpeed: 25
+  mSpawnHeight: 75
+  mSpeed: 75
   mExplosionRadius: 3
   mDamage: 1
   mExplosionData:
