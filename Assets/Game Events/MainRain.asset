@@ -20,7 +20,7 @@ MonoBehaviour:
     TriggerDelayTime: 0
     TriggerAtTime: 0
     EventType: 1
-    BombsPerSecond: 2
+    BombsPerSecond: 0.5
     RampPerDepth: 0
     MaxBombsPerSecond: 0
     BombType: 3
@@ -56,7 +56,7 @@ MonoBehaviour:
     Objects: []
     WeightedObjects:
     - Weight: 1
-      Object: {fileID: 1916676254681340916, guid: 4338578a687c5fa4e8a90a42df86e31b,
+      Object: {fileID: 7742966609721983005, guid: 1efcee2da2b40f14ab6ee0f3c8867385,
         type: 3}
     Position: {x: 0, y: 0}
     Rotation: 0

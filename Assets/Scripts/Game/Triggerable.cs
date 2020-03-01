@@ -16,7 +16,7 @@ public class Triggerable : MonoBehaviour
 	public OnPostTimedEventHandler OnPostTimedEvent;
 
 	[SerializeField] private bool mHasPhysics = true;
-	public bool HasPhysics { get { return mHasPhysics; } }
+	public bool HasPhysics { get { return mHasPhysics; } set { mHasPhysics = value; } }
 
 	[SerializeField] private float mUpForceMultiplier = 1.25f;
 	public float UpForceMultiplier { get { return mUpForceMultiplier; } }

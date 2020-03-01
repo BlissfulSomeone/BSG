@@ -57,6 +57,8 @@ MonoBehaviour:
     type: 2}
   mDepthMeterHUDPrefab: {fileID: -2616936896492422397, guid: 2bc8f66df5182b248aad6ebab6f30a21,
     type: 3}
+  mHealthBarHUDPrefab: {fileID: 6853005891242465470, guid: fcb35dfe9287cfc4f8c1ba16e24a52c8,
+    type: 3}
   mGameOverMenuPrefab: {fileID: 8775968926283235515, guid: fde1e7666e168bf4da60d87a2226579c,
     type: 3}
   mExplosionPrefab: {fileID: 3506304063819049500, guid: 7e1541da5e9985d41a8846daebcb3b5b,

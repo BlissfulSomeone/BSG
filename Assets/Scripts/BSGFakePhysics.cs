@@ -45,6 +45,7 @@ public class BSGFakePhysics : MonoBehaviour
 	private BoxCollider mBoxCollider;
 	private bool mIsGrounded = false;
 	private Vector2 mVelocity = Vector2.zero;
+	private float mDefaultAirControl;
 
 	public Physics PhysicsSettings { get { return mPhysics; } }
 	public bool IsKinetic { get { return mIsKinetic; } set { mIsKinetic = value; } }
@@ -58,6 +59,8 @@ public class BSGFakePhysics : MonoBehaviour
 		mCollisionMask = Globals.GetCollisionMask(gameObject);
 
 		mBoxCollider = GetComponent<BoxCollider>();
+
+		mDefaultAirControl = mPhysics.airControl;
 	}
 
 	private void FixedUpdate()
@@ -154,6 +157,11 @@ public class BSGFakePhysics : MonoBehaviour
 	public void SetAirControl(float airControl)
 	{
 		mPhysics.airControl = Mathf.Clamp(airControl, 0.0f, 1.0f);
+	}
+
+	public void ResetAirControl()
+	{
+		mPhysics.airControl = mDefaultAirControl;
 	}
 
 	public void AddForce(Vector2 aForce)

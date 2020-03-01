@@ -4,14 +4,16 @@ using UnityEngine;
 
 public class GrabAbility : Ability
 {
-	[SerializeField] private Vector3 mGrabSocket;
-	[SerializeField] private float mGrabRadius;
-	[SerializeField] private float mThrowForce;
-	[SerializeField] private float mKnockbackForce;
-	[SerializeField] private bool mThrowTriggerExplosion;
-	[SerializeField] private float mLookAheadDistance;
-	[SerializeField] private Texture2D mThrowArrowTexture;
-    private BSGFakePhysics mGrabbedObject;
+	[SerializeField] [DisplayAs("Grab Socket")] private Vector3 mGrabSocket;
+	[SerializeField] [DisplayAs("Grab Radius")] private float mGrabRadius;
+	[SerializeField] [DisplayAs("Throw Force")] private float mThrowForce;
+	[SerializeField] [DisplayAs("Knockback Force")] private float mKnockbackForce;
+	[SerializeField] [DisplayAs("Throw Trigger Explosion")] private bool mThrowTriggerExplosion;
+	[SerializeField] [DisplayAs("Look-Ahead Distance")] private float mLookAheadDistance;
+	[SerializeField] [DisplayAs("Throw Arrow Texture")] private Texture2D mThrowArrowTexture;
+	[SerializeField] [DisplayAs("Character Post Throw State")] private CharacterOverrides mCharacterPostThrowState;
+	[SerializeField] [DisplayAs("Character Post Throw State Duration")] private float mCharacterPostThrowStateDuration;
+	private BSGFakePhysics mGrabbedObject;
 	private bool mIsThrowing;
 	private Vector2 mThrowDirection;
 	private float mDefaultAirControl;
@@ -143,6 +145,7 @@ public class GrabAbility : Ability
 		mGrabbedObject = null;
 
 		Owner.FakePhysics.Velocity = -mThrowDirection * mKnockbackForce;
+		Owner.ApplyCharacterOverridesOverTime(mCharacterPostThrowState, mCharacterPostThrowStateDuration);
 
 		return true;
 	}
