@@ -12,6 +12,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: TimedBomb Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 4743284759319374566, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: mPhysics.friction
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7276182858957119969, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: mToSpawnOnDestroy.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7276182858957119969, guid: 09588d0ede3612c40b9f9cca721f3f34,
         type: 3}
       propertyPath: mTimer
@@ -25,7 +35,7 @@ PrefabInstance:
     - target: {fileID: 7276182858957119969, guid: 09588d0ede3612c40b9f9cca721f3f34,
         type: 3}
       propertyPath: mExplosionRadius
-      value: 2
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 7276182858957119969, guid: 09588d0ede3612c40b9f9cca721f3f34,
         type: 3}
@@ -45,7 +55,7 @@ PrefabInstance:
     - target: {fileID: 7276182858957119969, guid: 09588d0ede3612c40b9f9cca721f3f34,
         type: 3}
       propertyPath: mExplosionData.Radius
-      value: 2
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 7276182858957119969, guid: 09588d0ede3612c40b9f9cca721f3f34,
         type: 3}
@@ -56,6 +66,16 @@ PrefabInstance:
         type: 3}
       propertyPath: mExplosionData.Knockback
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7276182858957119969, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: mToSpawnOnDestroy.Array.data[0].objectToSpawn
+      value: 
+      objectReference: {fileID: 4603943879964712297}
+    - target: {fileID: 6715118691806541823, guid: 09588d0ede3612c40b9f9cca721f3f34,
+        type: 3}
+      propertyPath: mUpForceMultiplier
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5407917574288415413, guid: 09588d0ede3612c40b9f9cca721f3f34,
         type: 3}
@@ -151,3 +171,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 09588d0ede3612c40b9f9cca721f3f34, type: 3}
+--- !u!1 &4603943879964712297 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1532206634448762770, guid: 09588d0ede3612c40b9f9cca721f3f34,
+    type: 3}
+  m_PrefabInstance: {fileID: 3073428844182629115}
+  m_PrefabAsset: {fileID: 0}
