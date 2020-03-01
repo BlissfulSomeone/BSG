@@ -17,299 +17,79 @@ MonoBehaviour:
     IsFoldOut: 1
     Name: 
     TriggerAtDepth: 0
+    TriggerDelayTime: 2
+    TriggerAtTime: 0
     EventType: 3
     BombsPerSecond: 0
+    RampPerDepth: 0
+    MaxBombsPerSecond: 0
     BombType: 0
     BombPrefab: {fileID: 7880601355816889469, guid: a3527ebca6e5bbd408a6cc7e8009b16b,
       type: 3}
     BombPrefabs: []
-    Position: {x: -9, y: 0}
-    Rotation: 0
-    Spread: 0
-    Speed: 0
-    NestedEvent: {fileID: 0}
-  - HasBeenTriggered: 0
-    IsFoldOut: 1
-    Name: 
-    TriggerAtDepth: 0
-    EventType: 3
-    BombsPerSecond: 0
-    BombType: 0
-    BombPrefab: {fileID: 7880601355816889469, guid: a3527ebca6e5bbd408a6cc7e8009b16b,
+    Object: {fileID: 4101022536908792424, guid: a3527ebca6e5bbd408a6cc7e8009b16b,
       type: 3}
-    BombPrefabs: []
-    Position: {x: -8, y: 0}
-    Rotation: 0
-    Spread: 0
-    Speed: 0
-    NestedEvent: {fileID: 0}
-  - HasBeenTriggered: 0
-    IsFoldOut: 1
-    Name: 
-    TriggerAtDepth: 0
-    EventType: 3
-    BombsPerSecond: 0
-    BombType: 0
-    BombPrefab: {fileID: 7880601355816889469, guid: a3527ebca6e5bbd408a6cc7e8009b16b,
-      type: 3}
-    BombPrefabs: []
-    Position: {x: -7, y: 0}
-    Rotation: 0
-    Spread: 0
-    Speed: 0
-    NestedEvent: {fileID: 0}
-  - HasBeenTriggered: 0
-    IsFoldOut: 1
-    Name: 
-    TriggerAtDepth: 0
-    EventType: 3
-    BombsPerSecond: 0
-    BombType: 0
-    BombPrefab: {fileID: 7880601355816889469, guid: a3527ebca6e5bbd408a6cc7e8009b16b,
-      type: 3}
-    BombPrefabs: []
-    Position: {x: -6, y: 0}
-    Rotation: 0
-    Spread: 0
-    Speed: 0
-    NestedEvent: {fileID: 0}
-  - HasBeenTriggered: 0
-    IsFoldOut: 1
-    Name: 
-    TriggerAtDepth: 0
-    EventType: 3
-    BombsPerSecond: 0
-    BombType: 0
-    BombPrefab: {fileID: 7880601355816889469, guid: a3527ebca6e5bbd408a6cc7e8009b16b,
-      type: 3}
-    BombPrefabs: []
-    Position: {x: -5, y: 0}
-    Rotation: 0
-    Spread: 0
-    Speed: 0
-    NestedEvent: {fileID: 0}
-  - HasBeenTriggered: 0
-    IsFoldOut: 1
-    Name: 
-    TriggerAtDepth: 0
-    EventType: 3
-    BombsPerSecond: 0
-    BombType: 0
-    BombPrefab: {fileID: 7880601355816889469, guid: a3527ebca6e5bbd408a6cc7e8009b16b,
-      type: 3}
-    BombPrefabs: []
-    Position: {x: -4, y: 0}
-    Rotation: 0
-    Spread: 0
-    Speed: 0
-    NestedEvent: {fileID: 0}
-  - HasBeenTriggered: 0
-    IsFoldOut: 1
-    Name: 
-    TriggerAtDepth: 0
-    EventType: 3
-    BombsPerSecond: 0
-    BombType: 0
-    BombPrefab: {fileID: 7880601355816889469, guid: a3527ebca6e5bbd408a6cc7e8009b16b,
-      type: 3}
-    BombPrefabs: []
-    Position: {x: -3, y: 0}
-    Rotation: 0
-    Spread: 0
-    Speed: 0
-    NestedEvent: {fileID: 0}
-  - HasBeenTriggered: 0
-    IsFoldOut: 1
-    Name: 
-    TriggerAtDepth: 0
-    EventType: 3
-    BombsPerSecond: 0
-    BombType: 0
-    BombPrefab: {fileID: 7880601355816889469, guid: a3527ebca6e5bbd408a6cc7e8009b16b,
-      type: 3}
-    BombPrefabs: []
-    Position: {x: -2, y: 0}
-    Rotation: 0
-    Spread: 0
-    Speed: 0
-    NestedEvent: {fileID: 0}
-  - HasBeenTriggered: 0
-    IsFoldOut: 1
-    Name: 
-    TriggerAtDepth: 0
-    EventType: 3
-    BombsPerSecond: 0
-    BombType: 0
-    BombPrefab: {fileID: 7880601355816889469, guid: a3527ebca6e5bbd408a6cc7e8009b16b,
-      type: 3}
-    BombPrefabs: []
+    Objects: []
+    WeightedObjects: []
     Position: {x: -1, y: 0}
     Rotation: 0
     Spread: 0
-    Speed: 0
+    Speed:
+      Min: 0
+      Max: 0
+    Offset: {x: 0, y: 0}
+    Number: 1
     NestedEvent: {fileID: 0}
   - HasBeenTriggered: 0
     IsFoldOut: 1
     Name: 
     TriggerAtDepth: 0
+    TriggerDelayTime: 0
+    TriggerAtTime: 0
     EventType: 3
     BombsPerSecond: 0
+    RampPerDepth: 0
+    MaxBombsPerSecond: 0
     BombType: 0
     BombPrefab: {fileID: 7880601355816889469, guid: a3527ebca6e5bbd408a6cc7e8009b16b,
       type: 3}
     BombPrefabs: []
+    Object: {fileID: 8520174523318119668, guid: 6f6e21adc1da7274ba571b938ffd1579,
+      type: 3}
+    Objects: []
+    WeightedObjects: []
     Position: {x: 0, y: 0}
     Rotation: 0
     Spread: 0
-    Speed: 0
+    Speed:
+      Min: 0
+      Max: 0
+    Offset: {x: 0, y: 0}
+    Number: 1
     NestedEvent: {fileID: 0}
   - HasBeenTriggered: 0
     IsFoldOut: 1
     Name: 
     TriggerAtDepth: 0
+    TriggerDelayTime: 2
+    TriggerAtTime: 0
     EventType: 3
     BombsPerSecond: 0
+    RampPerDepth: 0
+    MaxBombsPerSecond: 0
     BombType: 0
     BombPrefab: {fileID: 7880601355816889469, guid: a3527ebca6e5bbd408a6cc7e8009b16b,
       type: 3}
     BombPrefabs: []
-    Position: {x: -4, y: 0}
-    Rotation: 0
-    Spread: 0
-    Speed: 0
-    NestedEvent: {fileID: 0}
-  - HasBeenTriggered: 0
-    IsFoldOut: 1
-    Name: 
-    TriggerAtDepth: 0
-    EventType: 3
-    BombsPerSecond: 0
-    BombType: 0
-    BombPrefab: {fileID: 7880601355816889469, guid: a3527ebca6e5bbd408a6cc7e8009b16b,
-      type: 3}
-    BombPrefabs: []
+    Object: {fileID: 67178394246389956, guid: 23ecb9db4d933fb44a50086fcbf867b8, type: 3}
+    Objects: []
+    WeightedObjects: []
     Position: {x: 1, y: 0}
     Rotation: 0
     Spread: 0
-    Speed: 0
-    NestedEvent: {fileID: 0}
-  - HasBeenTriggered: 0
-    IsFoldOut: 1
-    Name: 
-    TriggerAtDepth: 0
-    EventType: 3
-    BombsPerSecond: 0
-    BombType: 0
-    BombPrefab: {fileID: 7880601355816889469, guid: a3527ebca6e5bbd408a6cc7e8009b16b,
-      type: 3}
-    BombPrefabs: []
-    Position: {x: 2, y: 0}
-    Rotation: 0
-    Spread: 0
-    Speed: 0
-    NestedEvent: {fileID: 0}
-  - HasBeenTriggered: 0
-    IsFoldOut: 1
-    Name: 
-    TriggerAtDepth: 0
-    EventType: 3
-    BombsPerSecond: 0
-    BombType: 0
-    BombPrefab: {fileID: 7880601355816889469, guid: a3527ebca6e5bbd408a6cc7e8009b16b,
-      type: 3}
-    BombPrefabs: []
-    Position: {x: 3, y: 0}
-    Rotation: 0
-    Spread: 0
-    Speed: 0
-    NestedEvent: {fileID: 0}
-  - HasBeenTriggered: 0
-    IsFoldOut: 1
-    Name: 
-    TriggerAtDepth: 0
-    EventType: 3
-    BombsPerSecond: 0
-    BombType: 0
-    BombPrefab: {fileID: 7880601355816889469, guid: a3527ebca6e5bbd408a6cc7e8009b16b,
-      type: 3}
-    BombPrefabs: []
-    Position: {x: 4, y: 0}
-    Rotation: 0
-    Spread: 0
-    Speed: 0
-    NestedEvent: {fileID: 0}
-  - HasBeenTriggered: 0
-    IsFoldOut: 1
-    Name: 
-    TriggerAtDepth: 0
-    EventType: 3
-    BombsPerSecond: 0
-    BombType: 0
-    BombPrefab: {fileID: 7880601355816889469, guid: a3527ebca6e5bbd408a6cc7e8009b16b,
-      type: 3}
-    BombPrefabs: []
-    Position: {x: 5, y: 0}
-    Rotation: 0
-    Spread: 0
-    Speed: 0
-    NestedEvent: {fileID: 0}
-  - HasBeenTriggered: 0
-    IsFoldOut: 1
-    Name: 
-    TriggerAtDepth: 0
-    EventType: 3
-    BombsPerSecond: 0
-    BombType: 0
-    BombPrefab: {fileID: 7880601355816889469, guid: a3527ebca6e5bbd408a6cc7e8009b16b,
-      type: 3}
-    BombPrefabs: []
-    Position: {x: 6, y: 0}
-    Rotation: 0
-    Spread: 0
-    Speed: 0
-    NestedEvent: {fileID: 0}
-  - HasBeenTriggered: 0
-    IsFoldOut: 1
-    Name: 
-    TriggerAtDepth: 0
-    EventType: 3
-    BombsPerSecond: 0
-    BombType: 0
-    BombPrefab: {fileID: 7880601355816889469, guid: a3527ebca6e5bbd408a6cc7e8009b16b,
-      type: 3}
-    BombPrefabs: []
-    Position: {x: 7, y: 0}
-    Rotation: 0
-    Spread: 0
-    Speed: 0
-    NestedEvent: {fileID: 0}
-  - HasBeenTriggered: 0
-    IsFoldOut: 1
-    Name: 
-    TriggerAtDepth: 0
-    EventType: 3
-    BombsPerSecond: 0
-    BombType: 0
-    BombPrefab: {fileID: 7880601355816889469, guid: a3527ebca6e5bbd408a6cc7e8009b16b,
-      type: 3}
-    BombPrefabs: []
-    Position: {x: 8, y: 0}
-    Rotation: 0
-    Spread: 0
-    Speed: 0
-    NestedEvent: {fileID: 0}
-  - HasBeenTriggered: 0
-    IsFoldOut: 1
-    Name: 
-    TriggerAtDepth: 0
-    EventType: 3
-    BombsPerSecond: 0
-    BombType: 0
-    BombPrefab: {fileID: 7880601355816889469, guid: a3527ebca6e5bbd408a6cc7e8009b16b,
-      type: 3}
-    BombPrefabs: []
-    Position: {x: 9, y: 0}
-    Rotation: 0
-    Spread: 0
-    Speed: 0
+    Speed:
+      Min: 0
+      Max: 0
+    Offset: {x: 0, y: 0}
+    Number: 1
     NestedEvent: {fileID: 0}
