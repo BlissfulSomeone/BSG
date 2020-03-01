@@ -27,8 +27,6 @@ public class Bomb : MonoBehaviour
 	[SerializeField] private bool mHasTimer;
 	[SerializeField] private float mIdleTime;
 	[SerializeField] private float mIgniteTime;
-	[SerializeField] private float mExplosionRadius;
-	[SerializeField] private float mDamage;
 	[SerializeField] private bool mCanBeTriggeredByExplosion;
 	[SerializeField] private bool mCanBeTriggeredByImpact;
 

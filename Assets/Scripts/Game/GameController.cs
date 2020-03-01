@@ -157,8 +157,7 @@ public class GameController : MonoBehaviour
 					float distance = delta.magnitude;
 					if (distance <= explosionInstance.ExplosionData.Radius)
 					{
-						triggerable.ApplyConstantVelocityOverTime(explosionInstance.ExplosionData.Knockback, delta.normalized);
-						//triggerable.FakePhysics.AddExplosionForce(10.0f, explosionData.Position, explosionData.Radius, triggerable.UpForceMultiplier);
+						triggerable.ApplyConstantVelocityOverTime(explosionInstance.ExplosionData.Knockback, delta.normalized, 0.5f);
 					}
 				}
 			}

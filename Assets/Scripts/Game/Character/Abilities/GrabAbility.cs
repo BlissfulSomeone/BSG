@@ -29,26 +29,17 @@ public class GrabAbility : Ability
 
 	protected override void StartAbility_Internal()
 	{
-		if (mGrabbedObject == null)
-		{
-			TryPickupObject();
-		}
-		else
+		if (TryPickupObject())
 		{
 			mIsThrowing = true;
-			Owner.CanMove = false;
-			Owner.FakePhysics.SetAirControl(0.0f);
 		}
 	}
 
 	protected override void StopAbility_Internal()
 	{
-		if (mIsThrowing)
+		if (TryThrowObject())
 		{
 			mIsThrowing = false;
-			ThrowObject();
-			Owner.CanMove = true;
-			Owner.FakePhysics.SetAirControl(mDefaultAirControl);
 			GameController.Instance.CameraControllerInstance.RemoveAdditiveViewInfo(mCameraOffsetGuid);
 		}
 	}
@@ -74,6 +65,11 @@ public class GrabAbility : Ability
 		{
 			mGrabbedObject.transform.position = GetCurrentGrabSocketPosition(Space.World);
 		}
+		else
+		{
+			mIsThrowing = false;
+			GameController.Instance.CameraControllerInstance.RemoveAdditiveViewInfo(mCameraOffsetGuid);
+		}
 	}
 
 	private Vector3 GetCurrentGrabSocketPosition(Space space)
@@ -87,7 +83,7 @@ public class GrabAbility : Ability
 		return offset;
 	}
 
-	private void TryPickupObject()
+	private bool TryPickupObject()
 	{
 		Collider[] colliders = Physics.OverlapSphere(GetCurrentGrabSocketPosition(Space.World), mGrabRadius);
 		for (int i = 0; i < colliders.Length; ++i)
@@ -118,11 +114,13 @@ public class GrabAbility : Ability
 				missile.SetState(Missile.EMissileState.Grabbed);
 			}
 
-			break;
+			return true;
 		}
+
+		return false;
 	}
 
-	private void ThrowObject()
+	private bool TryThrowObject()
 	{
 		if (mGrabbedObject != null)
 		{
@@ -135,7 +133,7 @@ public class GrabAbility : Ability
 		}
 
 		if (mGrabbedObject == null)
-			return;
+			return false;
 			
 		Vector2 force = mThrowDirection * mThrowForce;
 
@@ -144,7 +142,9 @@ public class GrabAbility : Ability
 		mGrabbedObject.transform.localScale = Vector3.one;
 		mGrabbedObject = null;
 
-		Owner.FakePhysics.AddForce(-mThrowDirection * mKnockbackForce);
+		Owner.FakePhysics.Velocity = -mThrowDirection * mKnockbackForce;
+
+		return true;
 	}
 
 	private void OnGUI()

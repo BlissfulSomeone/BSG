@@ -55,17 +55,17 @@ public class Triggerable : MonoBehaviour
 		OnTriggered?.Invoke(explosionInstance);
 	}
 
-	public void ApplyConstantVelocityOverTime(float speed, Vector2 direction)
+	public void ApplyConstantVelocityOverTime(float speed, Vector2 direction, float time)
 	{
 		StopConstantVelocityOverTime();
 		mCurrentVelocity = direction * speed;
-		mCurrentCoroutine = StartCoroutine(Coroutine_ApplyConstantVelocityOverTime(speed, direction));
+		mCurrentCoroutine = StartCoroutine(Coroutine_ApplyConstantVelocityOverTime(speed, direction, time));
 	}
 
-	private IEnumerator Coroutine_ApplyConstantVelocityOverTime(float speed, Vector2 direction)
+	private IEnumerator Coroutine_ApplyConstantVelocityOverTime(float speed, Vector2 direction, float time)
 	{
 		DisablePhysics();
-		yield return new WaitForSeconds(0.5f);
+		yield return new WaitForSeconds(time);
 		StopConstantVelocityOverTime();
 	}
 
