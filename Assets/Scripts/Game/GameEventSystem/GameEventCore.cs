@@ -27,6 +27,7 @@ public class GameEventCore
 		RandomBombEnabled,
 		SpawnBomb,
 		NestedEvent,
+		GenerationSettings
 	}
 
 	public static IGameEventActions[] GameEventActions = new IGameEventActions[]
@@ -36,5 +37,6 @@ public class GameEventCore
 		new GameEventSetRandomBombPool(),
 		new GameEventSpawnBomb(),
 		new GameEventNested(),
+		new GameEventChunkGeneration()
 	};
 }

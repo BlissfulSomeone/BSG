@@ -53,8 +53,8 @@ MonoBehaviour:
     - {fileID: 11400000, guid: e269a62cde533bf47a035ec094ad8278, type: 2}
     - {fileID: 11400000, guid: af87bbe266897da46ad736f285fe8a0f, type: 2}
     - {fileID: 11400000, guid: badedc4446759444c8c48cc5f6d70721, type: 2}
-    GenerationPerlinSize: 10
-    GenerationRampSpeed: 50
+    GenerationPerlinSize: 20
+    GenerationAmount: 0
     BackLayerTint: {r: 0.3137255, g: 0.3137255, b: 0.3764706, a: 1}
   mGenerateChunksAhead: 3
   mDebrisPrefab: {fileID: 8398154527657335140, guid: e167eb3289464cc458abec852a19852f,

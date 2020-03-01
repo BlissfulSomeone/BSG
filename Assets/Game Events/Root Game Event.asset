@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f6fee7dfa5aaa44b8a143b503c0069f, type: 3}
+  m_Name: Root Game Event
+  m_EditorClassIdentifier: 
+  mGameEventData:
+  - HasBeenTriggered: 0
+    IsFoldOut: 1
+    Name: 
+    TriggerAtDepth: 0
+    TriggerDelayTime: 0
+    TriggerAtTime: 0
+    EventType: 4
+    BombsPerSecond: 0
+    RampPerDepth: 0
+    MaxBombsPerSecond: 0
+    BombType: 0
+    BombPrefab: {fileID: 0}
+    BombPrefabs: []
+    Object: {fileID: 0}
+    Objects: []
+    WeightedObjects: []
+    Position: {x: 0, y: 0}
+    Rotation: 0
+    Spread: 0
+    Speed:
+      Min: 0
+      Max: 0
+    Offset: {x: 0, y: 0}
+    Number: 0
+    NestedEvent: {fileID: 11400000, guid: 0a6f0a8e750c2f143b905ce04fd90fe5, type: 2}
+  - HasBeenTriggered: 0
+    IsFoldOut: 1
+    Name: 
+    TriggerAtDepth: 0
+    TriggerDelayTime: 0
+    TriggerAtTime: 0
+    EventType: 4
+    BombsPerSecond: 0
+    RampPerDepth: 0
+    MaxBombsPerSecond: 0
+    BombType: 0
+    BombPrefab: {fileID: 0}
+    BombPrefabs: []
+    Object: {fileID: 0}
+    Objects: []
+    WeightedObjects: []
+    Position: {x: 0, y: 0}
+    Rotation: 0
+    Spread: 0
+    Speed:
+      Min: 0
+      Max: 0
+    Offset: {x: 0, y: 0}
+    Number: 0
+    NestedEvent: {fileID: 11400000, guid: a1bfd4c2cece357418688a7f5f75afb4, type: 2}
