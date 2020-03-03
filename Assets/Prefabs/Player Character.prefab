@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 515902734300222581}
   - component: {fileID: 8377611175049075330}
   - component: {fileID: 3667301290344907094}
-  - component: {fileID: 3011729494695206931}
+  - component: {fileID: -57922643487940570}
   - component: {fileID: 8105750265646594365}
   m_Layer: 10
   m_Name: Player Character
@@ -120,9 +120,9 @@ MonoBehaviour:
       numberOfRaycasts: 4
       raycastMargin: 0.01
     bounciness: 0
-    gravityScale: 1
+    gravityScale: 2
     friction: 60
-    airControl: 0.326
+    airControl: 0.56
   mIsKinetic: 0
   mIsAffectedByGravity: 1
   mIsAffectedByFriction: 1
@@ -140,7 +140,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mHasPhysics: 1
-  mUpForceMultiplier: 2
+  mUpForceMultiplier: 1
 --- !u!114 &8377611175049075330
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -156,16 +156,22 @@ MonoBehaviour:
   mHorizontalMovementInputName: Horizontal
   mJumpInputName: Jump
   mMovement:
-    acceleration: 500
+    acceleration: 100
     maxSpeed: 5
-    jumpForce: 7
-    jumpTime: 0.275
+    jumpForce: 9
+    jumpTime: 0.15
+  mStunnedCharacterState:
+    CanRecieveInput: 2
+    ReceiveKnockbackFromExplosions: 0
+    AirControl:
+      State: 1
+      Value: 0
   mMaxHealth: 3
   mAbilities:
   - InputName: Fire1
     Ability: {fileID: 3667301290344907094}
   - InputName: Fire3
-    Ability: {fileID: 3011729494695206931}
+    Ability: {fileID: -57922643487940570}
   - InputName: Fire4
     Ability: {fileID: 8105750265646594365}
 --- !u!114 &3667301290344907094
@@ -183,11 +189,19 @@ MonoBehaviour:
   mGrabSocket: {x: 0.34, y: -0.07, z: 0}
   mGrabRadius: 0.35
   mThrowForce: 12
-  mKnockbackForce: 17
-  mThrowTriggerExplosion: 1
-  mLookAheadDistance: 2
+  mKnockbackForce: 20
+  mHasKnockbackOnGround: 1
+  mThrowTriggerExplosion: 0
+  mLookAheadDistance: 0
   mThrowArrowTexture: {fileID: 2800000, guid: 5469c6089864dfa40928f7d0193b1dbe, type: 3}
---- !u!114 &3011729494695206931
+  mCharacterPostThrowState:
+    CanRecieveInput: 2
+    ReceiveKnockbackFromExplosions: 0
+    AirControl:
+      State: 1
+      Value: 0
+  mCharacterPostThrowStateDuration: 0.35
+--- !u!114 &-57922643487940570
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -200,6 +214,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mMaxBlockTime: 10
+  mCharacterBlockState:
+    CanRecieveInput: 2
+    ReceiveKnockbackFromExplosions: 2
+    AirControl:
+      State: 1
+      Value: 0
 --- !u!114 &8105750265646594365
 MonoBehaviour:
   m_ObjectHideFlags: 0

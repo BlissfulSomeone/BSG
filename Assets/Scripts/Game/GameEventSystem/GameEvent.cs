@@ -34,6 +34,8 @@ public struct GameEventData
 	[SerializeField] public Vector2 Offset;
 	[SerializeField] public int Number;
 	[SerializeField] public GameEvent NestedEvent;
+	[SerializeField] public float RockGenerationChaos;
+	[SerializeField] [Range(0.0f, 1.0f)] public float RockGenerationAmount;
 }
 
 [CreateAssetMenu(fileName = "Game Event", menuName = "Bomb Survival Game/Game Event", order = 1)]

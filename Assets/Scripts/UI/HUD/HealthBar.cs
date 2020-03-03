@@ -1,13 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class HealthBar : MonoBehaviour
 {
-	[SerializeField] private TMPro.TextMeshProUGUI mHealthText;
-	[SerializeField] private Image mHealthBar;
-	[SerializeField] private Gradient mHealthBarColor;
+	[SerializeField] [DisplayAs("Health Text Object")] private TextMeshProUGUI mHealthText;
+	[SerializeField] [DisplayAs("Health Bar Image Object")] private Image mHealthBar;
+	[SerializeField] [DisplayAs("Health Bar Color")] private Gradient mHealthBarColor;
 
 	private void Update()
 	{

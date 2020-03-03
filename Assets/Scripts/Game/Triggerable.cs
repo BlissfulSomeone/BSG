@@ -16,7 +16,7 @@ public class Triggerable : MonoBehaviour
 	public OnPostTimedEventHandler OnPostTimedEvent;
 
 	[SerializeField] private bool mHasPhysics = true;
-	public bool HasPhysics { get { return mHasPhysics; } }
+	public bool HasPhysics { get { return mHasPhysics; } set { mHasPhysics = value; } }
 
 	[SerializeField] private float mUpForceMultiplier = 1.25f;
 	public float UpForceMultiplier { get { return mUpForceMultiplier; } }
@@ -55,17 +55,17 @@ public class Triggerable : MonoBehaviour
 		OnTriggered?.Invoke(explosionInstance);
 	}
 
-	public void ApplyConstantVelocityOverTime(float speed, Vector2 direction)
+	public void ApplyConstantVelocityOverTime(float speed, Vector2 direction, float time)
 	{
 		StopConstantVelocityOverTime();
 		mCurrentVelocity = direction * speed;
-		mCurrentCoroutine = StartCoroutine(Coroutine_ApplyConstantVelocityOverTime(speed, direction));
+		mCurrentCoroutine = StartCoroutine(Coroutine_ApplyConstantVelocityOverTime(speed, direction, time));
 	}
 
-	private IEnumerator Coroutine_ApplyConstantVelocityOverTime(float speed, Vector2 direction)
+	private IEnumerator Coroutine_ApplyConstantVelocityOverTime(float speed, Vector2 direction, float time)
 	{
 		DisablePhysics();
-		yield return new WaitForSeconds(0.5f);
+		yield return new WaitForSeconds(time);
 		StopConstantVelocityOverTime();
 	}
 
@@ -84,15 +84,15 @@ public class Triggerable : MonoBehaviour
 	{
 		FakePhysics.IsAffectedByGravity = false;
 		FakePhysics.IsAffectedByFriction = false;
-		FakePhysics.Velocity = mCurrentVelocity;
 		OnPreTimedEvent?.Invoke();
+		FakePhysics.Velocity = mCurrentVelocity;
 	}
 
 	private void EnablePhysics()
 	{
 		FakePhysics.IsAffectedByGravity = true;
 		FakePhysics.IsAffectedByFriction = true;
-		FakePhysics.Velocity = mCurrentVelocity / 2;
 		OnPostTimedEvent?.Invoke();
+		FakePhysics.Velocity = mCurrentVelocity / 2;
 	}
 }

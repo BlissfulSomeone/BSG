@@ -4,22 +4,21 @@ using UnityEngine;
 
 public class BlockAbility : Ability
 {
-	[SerializeField] private float mMaxBlockTime;
+	[SerializeField] [DisplayAs("Max Block Time")] private float mMaxBlockTime;
+	[SerializeField] [DisplayAs("Character Block State")] private CharacterOverrides mCharacterBlockState;
 
 	private float mCurrentBlockTime;
 
 	protected override void StartAbility_Internal()
 	{
-		Owner.CanMove = false;
-		Owner.IsInvulnerable = true;
+		Owner.ApplyCharacterOverrides(mCharacterBlockState);
 
 		mCurrentBlockTime = mMaxBlockTime;
 	}
 
 	protected override void StopAbility_Internal()
 	{
-		Owner.CanMove = true;
-		Owner.IsInvulnerable = false;
+		Owner.RemoveCharacterOverrides(mCharacterBlockState);
 
 		mCurrentBlockTime = 0.0f;
 	}

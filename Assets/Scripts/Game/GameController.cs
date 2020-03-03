@@ -109,8 +109,8 @@ public class GameController : MonoBehaviour
 			float distance;
 			plane.Raycast(ray, out distance);
 			Vector3 explosionPosition = ray.GetPoint(distance);
-			float explosionRadius = 2.5f;
-			float explosionDamage = 1.0f;
+			float explosionRadius = 3.0f;
+			float explosionDamage = 10.0f;
 			bool isFriendly = true;
 			Explosion explosion = Instantiate(mExplosionPrefab, explosionPosition, Quaternion.identity);
 			explosion.ExplosionData = new ExplosionData(explosionRadius, explosionDamage, 10.0f, isFriendly);
@@ -157,8 +157,7 @@ public class GameController : MonoBehaviour
 					float distance = delta.magnitude;
 					if (distance <= explosionInstance.ExplosionData.Radius)
 					{
-						triggerable.ApplyConstantVelocityOverTime(explosionInstance.ExplosionData.Knockback, delta.normalized);
-						//triggerable.FakePhysics.AddExplosionForce(10.0f, explosionData.Position, explosionData.Radius, triggerable.UpForceMultiplier);
+						triggerable.ApplyConstantVelocityOverTime(explosionInstance.ExplosionData.Knockback, delta.normalized, 0.5f);
 					}
 				}
 			}

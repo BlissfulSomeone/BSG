@@ -13,7 +13,7 @@ public class ChunkController : MonoBehaviour
 		[SerializeField] public int NumberOfLayers;
 		[SerializeField] public TileData[] TileData;
 		[Tooltip("Lower value will create bigger, smoother veins of rocks. Higher value will create a more chaotic, noisy distribution of rocks.")] [SerializeField] public float GenerationPerlinSize;
-		[Tooltip("The higher the value, the sooner the rocks will spawn.")] [SerializeField] public float GenerationRampSpeed;
+		[Tooltip("The higher the value, the sooner the rocks will spawn.")] [SerializeField] public float GenerationAmount;
 		[SerializeField] public Color BackLayerTint;
 
 		public float TileSize { get { return ChunkWidth / NumberOfColumns; } }
@@ -101,5 +101,11 @@ public class ChunkController : MonoBehaviour
 		{
 			chunk.Explode(explosionInstance);
 		}
+	}
+
+	public void SetGenerationSettings(float chaos, float amount)
+	{
+		mChunkSettings.GenerationPerlinSize = chaos;
+		mChunkSettings.GenerationAmount = amount;
 	}
 }

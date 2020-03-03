@@ -33,34 +33,34 @@ public class Character : MonoBehaviour
 	public BSGFakePhysics FakePhysics { get { if (mFakePhysics == null) mFakePhysics = GetComponent<BSGFakePhysics>(); return mFakePhysics; } }
 
 	[Header("Generic Input Names")]
-	[SerializeField] private string mHorizontalMovementInputName;
-	[SerializeField] private string mJumpInputName;
+	[SerializeField] [DisplayAs("Horizontal Movement Input Name")] private string mHorizontalMovementInputName;
+	[SerializeField] [DisplayAs("Jump Input Name")] private string mJumpInputName;
 
 	[Header("Movement")]
-	[SerializeField] private Movement mMovement;
+	[SerializeField] [DisplayAs("Movement Settings")] private Movement mMovement;
+	[SerializeField] [DisplayAs("Stunned Character State")] private CharacterOverrides mStunnedCharacterState;
 
 	[Header("Stats")]
-	[SerializeField] private float mMaxHealth;
-	[SerializeField] private AbilitySet[] mAbilities;
+	[SerializeField] [DisplayAs("Max Health")] private float mMaxHealth;
+	[SerializeField] [DisplayAs("Abilities")] private AbilitySet[] mAbilities;
 
 	// Movement stuff
-	private bool mCanMove = true;
 	private Vector3 mMovementInput = Vector3.zero;
 	private bool mWantToJump = false;
 	private float mJumpTime = -1.0f;
 	private bool mIsFlipped = false;
+	private CharacterOverrides mCurrentOverrides = new CharacterOverrides();
+	private List<CharacterOverrides> mOverridesStack = new List<CharacterOverrides>();
 	
     public Vector3 Velocity { get { return FakePhysics.Velocity; } }
 	public bool IsFlipped { get { return mIsFlipped; } }
-	public bool CanMove { get { return mCanMove; } set { mCanMove = value; } }
+	public CharacterOverrides CurrentOverrides { get { return mCurrentOverrides; } }
 
 	// Health stuff
 	private float mHealth;
-	private bool mIsInvulnerable = false;
 
 	public float Health { get { return mHealth; } }
 	public float MaxHealth { get { return mMaxHealth; } }
-	public bool IsInvulnerable { get { return mIsInvulnerable; } set { mIsInvulnerable = value; } }
 	
     private void Awake()
 	{
@@ -87,7 +87,7 @@ public class Character : MonoBehaviour
 
 	private void OnTriggered(ExplosionInstance explosionInstance)
 	{
-		if (!explosionInstance.ExplosionData.Friendly && !IsInvulnerable)
+		if (!explosionInstance.ExplosionData.Friendly && IsOverrideEnabled(CurrentOverrides.CanBeHurt))
 		{
 			mHealth -= explosionInstance.ExplosionData.Damage;
             if (mHealth <= 0.0f)
@@ -100,18 +100,29 @@ public class Character : MonoBehaviour
 
 	private void OnPreTimedEvent()
 	{
-		CanMove = false;
+		ApplyCharacterOverrides(mStunnedCharacterState);
 	}
 
 	private void OnPostTimedEvent()
 	{
-		CanMove = true;
+		RemoveCharacterOverrides(mStunnedCharacterState);
 	}
 
 	private void Update()
 	{
-		mMovementInput.x = CanMove ? Input.GetAxisRaw(mHorizontalMovementInputName) : 0.0f;
-		mWantToJump = CanMove ? Input.GetButton(mJumpInputName) : false;
+		UpdateInput();
+		UpdateJump();
+		UpdateAbilities();
+	}
+
+	private void UpdateInput()
+	{
+		mMovementInput.x = Input.GetAxisRaw(mHorizontalMovementInputName);
+		mWantToJump = Input.GetButton(mJumpInputName);
+	}
+
+	private void UpdateJump()
+	{
 		if (FakePhysics.IsGrounded && mWantToJump)
 		{
 			mJumpTime = mMovement.jumpTime;
@@ -120,6 +131,10 @@ public class Character : MonoBehaviour
 		{
 			mJumpTime = -1.0f;
 		}
+	}
+
+	private void UpdateAbilities()
+	{
 		for (int i = 0; i < mAbilities.Length; ++i)
 		{
 			if (Input.GetButtonDown(mAbilities[i].InputName))
@@ -134,34 +149,81 @@ public class Character : MonoBehaviour
 		}
 	}
 
-	private float Damp(float aSource, float aSmoothing, float aDeltaTime)
-	{
-		return aSource * Mathf.Pow(aSmoothing, aDeltaTime);
-	}
-
 	private void FixedUpdate()
 	{
-		Vector3 velocity = FakePhysics.Velocity;
+		FixedUpdateOverrides();
+		FixedUpdateJump();
+		FixedUpdateMovement();
+		FixedUpdateFlipping();
+		FixedUpdateAbilities();
+	}
 
-		if (mWantToJump && mJumpTime >= 0.0f)
+	private void FixedUpdateOverrides()
+	{
+		mCurrentOverrides.Reset(ECharacterOverrideState.Enable);
+		foreach (CharacterOverrides overrides in mOverridesStack)
 		{
-			velocity.y = mMovement.jumpForce;
-			mJumpTime -= Time.fixedDeltaTime;
+			mCurrentOverrides = CharacterOverrides.TransferOverrides(mCurrentOverrides, overrides);
 		}
 
-		velocity.x += mMovementInput.x * mMovement.acceleration * Time.fixedDeltaTime;
-		velocity.x = FakePhysics.IsAffectedByFriction ? Mathf.Clamp(velocity.x, -mMovement.maxSpeed, mMovement.maxSpeed) : velocity.x;
-		if (velocity.x > 0.0f)
-			mIsFlipped = false;
-		if (velocity.x < 0.0f)
-			mIsFlipped = true;
+		mTriggerable.HasPhysics = IsOverrideEnabled(CurrentOverrides.ReceiveKnockbackFromExplosions);
+		if (IsOverrideEnabled(CurrentOverrides.AirControl))
+		{
+			mFakePhysics.SetAirControl(CurrentOverrides.AirControl.Value);
+		}
+		else
+		{
+			mFakePhysics.ResetAirControl();
+		}
+	}
+
+	private void FixedUpdateJump()
+	{
+		Vector3 velocity = FakePhysics.Velocity;
+		if (IsOverrideEnabled(CurrentOverrides.CanRecieveInput))
+		{
+			if (mWantToJump && mJumpTime >= 0.0f)
+			{
+				velocity.y = mMovement.jumpForce;
+				mJumpTime -= Time.fixedDeltaTime;
+			}
+			velocity.x += mMovementInput.x * mMovement.acceleration * Time.fixedDeltaTime;
+		}
 		FakePhysics.Velocity = velocity;
+	}
+
+	private void FixedUpdateMovement()
+	{
+		Vector3 velocity = FakePhysics.Velocity;
+		velocity.x = IsOverrideEnabled(CurrentOverrides.ClampMaxSpeed) ? Mathf.Clamp(velocity.x, -mMovement.maxSpeed, mMovement.maxSpeed) : velocity.x;
+		FakePhysics.Velocity = velocity;
+	}
+
+	private void FixedUpdateFlipping()
+	{
+		if (FakePhysics.Velocity.x > 0.0f)
+			mIsFlipped = false;
+		if (FakePhysics.Velocity.x < 0.0f)
+			mIsFlipped = true;
 		GetComponent<SpriteRenderer>().flipX = mIsFlipped;
-		
+	}
+
+	private void FixedUpdateAbilities()
+	{
 		for (int i = 0; i < mAbilities.Length; ++i)
 		{
 			mAbilities[i].Ability.FixedUpdateAbility();
 		}
+	}
+
+	public bool IsOverrideEnabled(ECharacterOverrideState overrideState)
+	{
+		return overrideState == ECharacterOverrideState.Enable;
+	}
+
+	public bool IsOverrideEnabled(FloatOverride floatOverride)
+	{
+		return floatOverride.State == ECharacterOverrideState.Enable;
 	}
 
 	public T GetAbility<T>() where T : Ability
@@ -172,5 +234,32 @@ public class Character : MonoBehaviour
 				return (T)mAbilities[i].Ability;
 		}
 		return null;
+	}
+
+	public void ApplyCharacterOverrides(CharacterOverrides characterOverrides)
+	{
+		if (mOverridesStack.Contains(characterOverrides))
+		{
+			Debug.LogError("The same instance of character overrides cannot be applied twice.");
+			return;
+		}
+		mOverridesStack.Add(characterOverrides);
+	}
+
+	public void RemoveCharacterOverrides(CharacterOverrides characterOverrides)
+	{
+		mOverridesStack.Remove(characterOverrides);
+	}
+
+	public void ApplyCharacterOverridesOverTime(CharacterOverrides characterOverrides, float duration)
+	{
+		StartCoroutine(Coroutine_ApplyCharacterOverrideOverTime(characterOverrides, duration));
+	}
+
+	private IEnumerator Coroutine_ApplyCharacterOverrideOverTime(CharacterOverrides characterOverrides, float duration)
+	{
+		ApplyCharacterOverrides(characterOverrides);
+		yield return new WaitForSeconds(duration);
+		RemoveCharacterOverrides(characterOverrides);
 	}
 }

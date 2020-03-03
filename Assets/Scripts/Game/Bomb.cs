@@ -27,8 +27,6 @@ public class Bomb : MonoBehaviour
 	[SerializeField] private bool mHasTimer;
 	[SerializeField] private float mIdleTime;
 	[SerializeField] private float mIgniteTime;
-	[SerializeField] private float mExplosionRadius;
-	[SerializeField] private float mDamage;
 	[SerializeField] private bool mCanBeTriggeredByExplosion;
 	[SerializeField] private bool mCanBeTriggeredByImpact;
 
@@ -88,7 +86,7 @@ public class Bomb : MonoBehaviour
 		{
 			if (animationState.name == ANIMATION_IGNITE)
 			{
-				animationState.speed = 1.0f / (mIgniteTime / animationState.length);
+				animationState.speed = 1.0f / Mathf.Max(mIgniteTime / animationState.length, 0.0001f);
 			}
 		}
 	}

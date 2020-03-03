@@ -168,13 +168,10 @@ public class Chunk : MonoBehaviour
 
 	private int GetGroundType(int x, int y, int z)
 	{
+		const float THRESHOLD = 0.5f;
 		float actualY = y - transform.position.y;
-		float perlin = Mathf.PerlinNoise(x / mChunkSettings.GenerationPerlinSize, actualY / mChunkSettings.GenerationPerlinSize);
-		float height = actualY * Mathf.Max(mChunkSettings.GenerationRampSpeed / 10000.0f, 0.000001f);
-		float threshold = 0.5f;
-		float value = perlin * height;
-		
-		return value < threshold ? 2 : 3;
+		float perlin = Mathf.PerlinNoise(x * mChunkSettings.GenerationPerlinSize, actualY * mChunkSettings.GenerationPerlinSize);
+		return (perlin + Mathf.Max(mChunkSettings.GenerationAmount - 0.5f, 0.0f)) < THRESHOLD ? 2 : 3;
 	}
 
 	private void ResetData()

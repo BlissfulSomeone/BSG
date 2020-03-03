@@ -4,14 +4,18 @@ using UnityEngine;
 
 public class GrabAbility : Ability
 {
-	[SerializeField] private Vector3 mGrabSocket;
-	[SerializeField] private float mGrabRadius;
-	[SerializeField] private float mThrowForce;
-	[SerializeField] private float mKnockbackForce;
-	[SerializeField] private bool mThrowTriggerExplosion;
-	[SerializeField] private float mLookAheadDistance;
-	[SerializeField] private Texture2D mThrowArrowTexture;
-    private BSGFakePhysics mGrabbedObject;
+	[SerializeField] [DisplayAs("Grab Socket")] private Vector3 mGrabSocket;
+	[SerializeField] [DisplayAs("Grab Radius")] private float mGrabRadius;
+	[SerializeField] [DisplayAs("Throw Force")] private float mThrowForce;
+	[SerializeField] [DisplayAs("Knockback Force")] private float mKnockbackForce;
+	[SerializeField] [DisplayAs("Has Knockback On Ground")] private bool mHasKnockbackOnGround;
+	[SerializeField] [DisplayAs("Has Knockback On Ground")] private bool mHasStunOnGround;
+	[SerializeField] [DisplayAs("Throw Trigger Explosion")] private bool mThrowTriggerExplosion;
+	[SerializeField] [DisplayAs("Look-Ahead Distance")] private float mLookAheadDistance;
+	[SerializeField] [DisplayAs("Throw Arrow Texture")] private Texture2D mThrowArrowTexture;
+	[SerializeField] [DisplayAs("Character Post Throw State")] private CharacterOverrides mCharacterPostThrowState;
+	[SerializeField] [DisplayAs("Character Post Throw State Duration")] private float mCharacterPostThrowStateDuration;
+	private BSGFakePhysics mGrabbedObject;
 	private bool mIsThrowing;
 	private Vector2 mThrowDirection;
 	private float mDefaultAirControl;
@@ -29,26 +33,17 @@ public class GrabAbility : Ability
 
 	protected override void StartAbility_Internal()
 	{
-		if (mGrabbedObject == null)
-		{
-			TryPickupObject();
-		}
-		else
+		if (TryPickupObject())
 		{
 			mIsThrowing = true;
-			Owner.CanMove = false;
-			Owner.FakePhysics.SetAirControl(0.0f);
 		}
 	}
 
 	protected override void StopAbility_Internal()
 	{
-		if (mIsThrowing)
+		if (TryThrowObject())
 		{
 			mIsThrowing = false;
-			ThrowObject();
-			Owner.CanMove = true;
-			Owner.FakePhysics.SetAirControl(mDefaultAirControl);
 			GameController.Instance.CameraControllerInstance.RemoveAdditiveViewInfo(mCameraOffsetGuid);
 		}
 	}
@@ -64,7 +59,9 @@ public class GrabAbility : Ability
 				horizontalAxis = Owner.IsFlipped ? -1.0f : 1.0f;
 			}
 			mThrowDirection = new Vector2(horizontalAxis, verticalAxis).normalized;
-			GameController.Instance.CameraControllerInstance.PushAdditiveViewInfo(new CameraController.ViewInfo { position = mThrowDirection * mLookAheadDistance }, mCameraOffsetGuid);
+			Vector3 cameraOffset = mThrowDirection * mLookAheadDistance;
+			cameraOffset.x = 0.0f;
+			GameController.Instance.CameraControllerInstance.PushAdditiveViewInfo(new CameraController.ViewInfo { position = cameraOffset }, mCameraOffsetGuid);
 		}
 	}
 
@@ -73,6 +70,11 @@ public class GrabAbility : Ability
 		if (mGrabbedObject != null)
 		{
 			mGrabbedObject.transform.position = GetCurrentGrabSocketPosition(Space.World);
+		}
+		else
+		{
+			mIsThrowing = false;
+			GameController.Instance.CameraControllerInstance.RemoveAdditiveViewInfo(mCameraOffsetGuid);
 		}
 	}
 
@@ -87,7 +89,7 @@ public class GrabAbility : Ability
 		return offset;
 	}
 
-	private void TryPickupObject()
+	private bool TryPickupObject()
 	{
 		Collider[] colliders = Physics.OverlapSphere(GetCurrentGrabSocketPosition(Space.World), mGrabRadius);
 		for (int i = 0; i < colliders.Length; ++i)
@@ -118,11 +120,13 @@ public class GrabAbility : Ability
 				missile.SetState(Missile.EMissileState.Grabbed);
 			}
 
-			break;
+			return true;
 		}
+
+		return false;
 	}
 
-	private void ThrowObject()
+	private bool TryThrowObject()
 	{
 		if (mGrabbedObject != null)
 		{
@@ -135,7 +139,7 @@ public class GrabAbility : Ability
 		}
 
 		if (mGrabbedObject == null)
-			return;
+			return false;
 			
 		Vector2 force = mThrowDirection * mThrowForce;
 
@@ -144,7 +148,16 @@ public class GrabAbility : Ability
 		mGrabbedObject.transform.localScale = Vector3.one;
 		mGrabbedObject = null;
 
-		Owner.FakePhysics.AddForce(-mThrowDirection * mKnockbackForce);
+		if (!Owner.FakePhysics.IsGrounded || mHasKnockbackOnGround)
+		{
+			Owner.FakePhysics.Velocity = -mThrowDirection * mKnockbackForce;
+		}
+		if (!Owner.FakePhysics.IsGrounded || mHasStunOnGround)
+		{
+			Owner.ApplyCharacterOverridesOverTime(mCharacterPostThrowState, mCharacterPostThrowStateDuration);
+		}
+
+		return true;
 	}
 
 	private void OnGUI()

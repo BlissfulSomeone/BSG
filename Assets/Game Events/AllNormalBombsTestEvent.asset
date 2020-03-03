@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9f6fee7dfa5aaa44b8a143b503c0069f, type: 3}
-  m_Name: FullStageNormalLine
+  m_Name: AllNormalBombsTestEvent
   m_EditorClassIdentifier: 
   mGameEventData:
   - HasBeenTriggered: 0
     IsFoldOut: 1
     Name: 
     TriggerAtDepth: 0
-    TriggerDelayTime: 2
+    TriggerDelayTime: 0
     TriggerAtTime: 0
-    EventType: 3
-    BombsPerSecond: 0
+    EventType: 1
+    BombsPerSecond: 1
     RampPerDepth: 0
     MaxBombsPerSecond: 0
     BombType: 0
@@ -31,33 +31,6 @@ MonoBehaviour:
       type: 3}
     Objects: []
     WeightedObjects: []
-    Position: {x: -1, y: 0}
-    Rotation: 0
-    Spread: 0
-    Speed:
-      Min: 0
-      Max: 0
-    Offset: {x: 0, y: 0}
-    Number: 1
-    NestedEvent: {fileID: 0}
-  - HasBeenTriggered: 0
-    IsFoldOut: 1
-    Name: 
-    TriggerAtDepth: 0
-    TriggerDelayTime: 0
-    TriggerAtTime: 0
-    EventType: 3
-    BombsPerSecond: 0
-    RampPerDepth: 0
-    MaxBombsPerSecond: 0
-    BombType: 0
-    BombPrefab: {fileID: 7880601355816889469, guid: a3527ebca6e5bbd408a6cc7e8009b16b,
-      type: 3}
-    BombPrefabs: []
-    Object: {fileID: 8520174523318119668, guid: 6f6e21adc1da7274ba571b938ffd1579,
-      type: 3}
-    Objects: []
-    WeightedObjects: []
     Position: {x: 0, y: 0}
     Rotation: 0
     Spread: 0
@@ -65,15 +38,17 @@ MonoBehaviour:
       Min: 0
       Max: 0
     Offset: {x: 0, y: 0}
-    Number: 1
+    Number: 10
     NestedEvent: {fileID: 0}
+    RockGenerationChaos: 0
+    RockGenerationAmount: 0
   - HasBeenTriggered: 0
     IsFoldOut: 1
     Name: 
     TriggerAtDepth: 0
-    TriggerDelayTime: 2
+    TriggerDelayTime: 0
     TriggerAtTime: 0
-    EventType: 3
+    EventType: 2
     BombsPerSecond: 0
     RampPerDepth: 0
     MaxBombsPerSecond: 0
@@ -81,15 +56,33 @@ MonoBehaviour:
     BombPrefab: {fileID: 7880601355816889469, guid: a3527ebca6e5bbd408a6cc7e8009b16b,
       type: 3}
     BombPrefabs: []
-    Object: {fileID: 67178394246389956, guid: 23ecb9db4d933fb44a50086fcbf867b8, type: 3}
+    Object: {fileID: 4101022536908792424, guid: a3527ebca6e5bbd408a6cc7e8009b16b,
+      type: 3}
     Objects: []
-    WeightedObjects: []
-    Position: {x: 1, y: 0}
+    WeightedObjects:
+    - Weight: 1
+      Object: {fileID: 7742966609721983005, guid: 1efcee2da2b40f14ab6ee0f3c8867385,
+        type: 3}
+    - Weight: 1
+      Object: {fileID: 67178394246389956, guid: 23ecb9db4d933fb44a50086fcbf867b8,
+        type: 3}
+    - Weight: 1
+      Object: {fileID: 6195932670078854754, guid: 4d6aa7ba54a4c3343a5fcf63780d57c9,
+        type: 3}
+    - Weight: 1
+      Object: {fileID: 4101022536908792424, guid: a3527ebca6e5bbd408a6cc7e8009b16b,
+        type: 3}
+    - Weight: 1
+      Object: {fileID: 7383259966135719176, guid: 7d8f08e3d563e3649b5846dbd98d05dc,
+        type: 3}
+    Position: {x: 0, y: 0}
     Rotation: 0
     Spread: 0
     Speed:
       Min: 0
       Max: 0
     Offset: {x: 0, y: 0}
-    Number: 1
+    Number: 10
     NestedEvent: {fileID: 0}
+    RockGenerationChaos: 0
+    RockGenerationAmount: 0

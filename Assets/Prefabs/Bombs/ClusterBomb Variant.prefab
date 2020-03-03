@@ -99,7 +99,7 @@ PrefabInstance:
     - target: {fileID: 7276182858957119969, guid: 09588d0ede3612c40b9f9cca721f3f34,
         type: 3}
       propertyPath: mIgniteTime
-      value: 1
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 7276182858957119969, guid: 09588d0ede3612c40b9f9cca721f3f34,
         type: 3}
