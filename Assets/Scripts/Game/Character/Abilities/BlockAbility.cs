@@ -12,7 +12,6 @@ public class BlockAbility : Ability
 	protected override void StartAbility_Internal()
 	{
 		Owner.ApplyCharacterOverrides(mCharacterBlockState);
-		Owner.IsInvulnerable = true;
 
 		mCurrentBlockTime = mMaxBlockTime;
 	}
@@ -20,7 +19,6 @@ public class BlockAbility : Ability
 	protected override void StopAbility_Internal()
 	{
 		Owner.RemoveCharacterOverrides(mCharacterBlockState);
-		Owner.IsInvulnerable = false;
 
 		mCurrentBlockTime = 0.0f;
 	}

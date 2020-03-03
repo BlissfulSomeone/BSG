@@ -9,6 +9,7 @@ public class GrabAbility : Ability
 	[SerializeField] [DisplayAs("Throw Force")] private float mThrowForce;
 	[SerializeField] [DisplayAs("Knockback Force")] private float mKnockbackForce;
 	[SerializeField] [DisplayAs("Has Knockback On Ground")] private bool mHasKnockbackOnGround;
+	[SerializeField] [DisplayAs("Has Knockback On Ground")] private bool mHasStunOnGround;
 	[SerializeField] [DisplayAs("Throw Trigger Explosion")] private bool mThrowTriggerExplosion;
 	[SerializeField] [DisplayAs("Look-Ahead Distance")] private float mLookAheadDistance;
 	[SerializeField] [DisplayAs("Throw Arrow Texture")] private Texture2D mThrowArrowTexture;
@@ -58,7 +59,9 @@ public class GrabAbility : Ability
 				horizontalAxis = Owner.IsFlipped ? -1.0f : 1.0f;
 			}
 			mThrowDirection = new Vector2(horizontalAxis, verticalAxis).normalized;
-			GameController.Instance.CameraControllerInstance.PushAdditiveViewInfo(new CameraController.ViewInfo { position = mThrowDirection * mLookAheadDistance }, mCameraOffsetGuid);
+			Vector3 cameraOffset = mThrowDirection * mLookAheadDistance;
+			cameraOffset.x = 0.0f;
+			GameController.Instance.CameraControllerInstance.PushAdditiveViewInfo(new CameraController.ViewInfo { position = cameraOffset }, mCameraOffsetGuid);
 		}
 	}
 
@@ -148,6 +151,9 @@ public class GrabAbility : Ability
 		if (!Owner.FakePhysics.IsGrounded || mHasKnockbackOnGround)
 		{
 			Owner.FakePhysics.Velocity = -mThrowDirection * mKnockbackForce;
+		}
+		if (!Owner.FakePhysics.IsGrounded || mHasStunOnGround)
+		{
 			Owner.ApplyCharacterOverridesOverTime(mCharacterPostThrowState, mCharacterPostThrowStateDuration);
 		}
 

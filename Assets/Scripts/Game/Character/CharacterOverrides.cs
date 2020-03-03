@@ -21,12 +21,16 @@ public class CharacterOverrides
 {
 	[SerializeField] public ECharacterOverrideState CanRecieveInput;
 	[SerializeField] public ECharacterOverrideState ReceiveKnockbackFromExplosions;
+	[SerializeField] public ECharacterOverrideState ClampMaxSpeed;
+	[SerializeField] public ECharacterOverrideState CanBeHurt;
 	[SerializeField] public FloatOverride AirControl;
 	
 	public void Reset(ECharacterOverrideState resetToState = ECharacterOverrideState.Unchanged)
 	{
 		CanRecieveInput = resetToState;
 		ReceiveKnockbackFromExplosions = resetToState;
+		ClampMaxSpeed = resetToState;
+		CanBeHurt = resetToState;
 		AirControl.State = ECharacterOverrideState.Unchanged;
 	}
 
