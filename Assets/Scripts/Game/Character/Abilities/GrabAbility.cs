@@ -9,6 +9,7 @@ public class GrabAbility : Ability
 	[SerializeField] [DisplayAs("Throw Force")] private float mThrowForce;
 	[SerializeField] [DisplayAs("Knockback Force")] private float mKnockbackForce;
 	[SerializeField] [DisplayAs("Has Knockback On Ground")] private bool mHasKnockbackOnGround;
+	[SerializeField] [DisplayAs("Has Knockback On Ground")] private bool mHasStunOnGround;
 	[SerializeField] [DisplayAs("Throw Trigger Explosion")] private bool mThrowTriggerExplosion;
 	[SerializeField] [DisplayAs("Look-Ahead Distance")] private float mLookAheadDistance;
 	[SerializeField] [DisplayAs("Throw Arrow Texture")] private Texture2D mThrowArrowTexture;
@@ -150,6 +151,9 @@ public class GrabAbility : Ability
 		if (!Owner.FakePhysics.IsGrounded || mHasKnockbackOnGround)
 		{
 			Owner.FakePhysics.Velocity = -mThrowDirection * mKnockbackForce;
+		}
+		if (!Owner.FakePhysics.IsGrounded || mHasStunOnGround)
+		{
 			Owner.ApplyCharacterOverridesOverTime(mCharacterPostThrowState, mCharacterPostThrowStateDuration);
 		}
 
