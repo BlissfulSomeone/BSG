@@ -160,6 +160,12 @@ MonoBehaviour:
     maxSpeed: 5
     jumpForce: 7
     jumpTime: 0.275
+  mStunnedCharacterState:
+    CanRecieveInput: 2
+    ReceiveKnockbackFromExplosions: 0
+    AirControl:
+      State: 1
+      Value: 0
   mMaxHealth: 3
   mAbilities:
   - InputName: Fire1

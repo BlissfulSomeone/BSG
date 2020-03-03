@@ -84,15 +84,15 @@ public class Triggerable : MonoBehaviour
 	{
 		FakePhysics.IsAffectedByGravity = false;
 		FakePhysics.IsAffectedByFriction = false;
-		FakePhysics.Velocity = mCurrentVelocity;
 		OnPreTimedEvent?.Invoke();
+		FakePhysics.Velocity = mCurrentVelocity;
 	}
 
 	private void EnablePhysics()
 	{
 		FakePhysics.IsAffectedByGravity = true;
 		FakePhysics.IsAffectedByFriction = true;
-		FakePhysics.Velocity = mCurrentVelocity / 2;
 		OnPostTimedEvent?.Invoke();
+		FakePhysics.Velocity = mCurrentVelocity / 2;
 	}
 }

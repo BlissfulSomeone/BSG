@@ -27,7 +27,7 @@ public class CharacterOverrides
 	{
 		CanRecieveInput = resetToState;
 		ReceiveKnockbackFromExplosions = resetToState;
-		AirControl.State = resetToState;
+		AirControl.State = ECharacterOverrideState.Unchanged;
 	}
 
 	public static CharacterOverrides TransferOverrides(CharacterOverrides to, CharacterOverrides from)

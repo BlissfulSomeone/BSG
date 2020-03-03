@@ -33,15 +33,16 @@ public class Character : MonoBehaviour
 	public BSGFakePhysics FakePhysics { get { if (mFakePhysics == null) mFakePhysics = GetComponent<BSGFakePhysics>(); return mFakePhysics; } }
 
 	[Header("Generic Input Names")]
-	[SerializeField] private string mHorizontalMovementInputName;
-	[SerializeField] private string mJumpInputName;
+	[SerializeField] [DisplayAs("Horizontal Movement Input Name")] private string mHorizontalMovementInputName;
+	[SerializeField] [DisplayAs("Jump Input Name")] private string mJumpInputName;
 
 	[Header("Movement")]
-	[SerializeField] private Movement mMovement;
+	[SerializeField] [DisplayAs("Movement Settings")] private Movement mMovement;
+	[SerializeField] [DisplayAs("Stunned Character State")] private CharacterOverrides mStunnedCharacterState;
 
 	[Header("Stats")]
-	[SerializeField] private float mMaxHealth;
-	[SerializeField] private AbilitySet[] mAbilities;
+	[SerializeField] [DisplayAs("Max Health")] private float mMaxHealth;
+	[SerializeField] [DisplayAs("Abilities")] private AbilitySet[] mAbilities;
 
 	// Movement stuff
 	private Vector3 mMovementInput = Vector3.zero;
@@ -101,12 +102,12 @@ public class Character : MonoBehaviour
 
 	private void OnPreTimedEvent()
 	{
-		//CanMove = false;
+		ApplyCharacterOverrides(mStunnedCharacterState);
 	}
 
 	private void OnPostTimedEvent()
 	{
-		//CanMove = true;
+		RemoveCharacterOverrides(mStunnedCharacterState);
 	}
 
 	private void Update()
