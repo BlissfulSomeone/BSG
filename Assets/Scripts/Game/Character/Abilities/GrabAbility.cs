@@ -58,7 +58,9 @@ public class GrabAbility : Ability
 				horizontalAxis = Owner.IsFlipped ? -1.0f : 1.0f;
 			}
 			mThrowDirection = new Vector2(horizontalAxis, verticalAxis).normalized;
-			GameController.Instance.CameraControllerInstance.PushAdditiveViewInfo(new CameraController.ViewInfo { position = mThrowDirection * mLookAheadDistance }, mCameraOffsetGuid);
+			Vector3 cameraOffset = mThrowDirection * mLookAheadDistance;
+			cameraOffset.x = 0.0f;
+			GameController.Instance.CameraControllerInstance.PushAdditiveViewInfo(new CameraController.ViewInfo { position = cameraOffset }, mCameraOffsetGuid);
 		}
 	}
 
