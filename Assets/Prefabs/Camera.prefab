@@ -97,13 +97,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mInitialViewInfo:
-    position: {x: 0, y: 3.5, z: 0}
+    position: {x: 0, y: 2, z: 0}
     rotation: {x: 3.5, y: 0, z: 0}
     viewWidth: 20
     fov: 30
-  mLerpSpeed: 0.2
+  mLerpSpeed: 0.1
   mCameraLookAhead: 0
-  mDeadZone: 0.2
+  mDeadZone: 0
   mDeadZoneOffset: 0
   mScreenShakeFrequency: 15
   mScreenShakeDecay: 175
