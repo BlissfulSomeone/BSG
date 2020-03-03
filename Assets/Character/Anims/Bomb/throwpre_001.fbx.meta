@@ -1,8 +1,11 @@
 fileFormatVersion: 2
-guid: 4408d105c5e32b846a5bb4280230120c
+guid: 3b4d5a32de99db64f940fb1cdecf1dc1
 ModelImporter:
   serializedVersion: 26
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      74: 8924050803576034498
+    second: throwpre_001
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -68,8 +71,8 @@ ModelImporter:
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
   referencedClips: []
-  importAnimation: 0
-  copyAvatar: 0
+  importAnimation: 1
+  copyAvatar: 1
   humanDescription:
     serializedVersion: 3
     human: []
@@ -81,12 +84,13 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.01
+    globalScale: 1
     rootMotionBoneName: Char_Rig_Final:ROOT_bn
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 4408d105c5e32b846a5bb4280230120c,
+    type: 3}
   animationType: 2
   humanoidOversampling: 1
   additionalBone: 0
