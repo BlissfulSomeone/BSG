@@ -16,7 +16,7 @@ MonoBehaviour:
   - HasBeenTriggered: 0
     IsFoldOut: 1
     Name: 
-    TriggerAtDepth: 10
+    TriggerAtDepth: 0
     TriggerDelayTime: 0
     TriggerAtTime: 0
     EventType: 5
@@ -39,7 +39,7 @@ MonoBehaviour:
     Number: 0
     NestedEvent: {fileID: 0}
     RockGenerationChaos: 0.15
-    RockGenerationAmount: 0.2
+    RockGenerationAmount: 0.25
   - HasBeenTriggered: 0
     IsFoldOut: 1
     Name: 

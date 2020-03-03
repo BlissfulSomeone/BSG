@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f6fee7dfa5aaa44b8a143b503c0069f, type: 3}
+  m_Name: TestEvent
+  m_EditorClassIdentifier: 
+  mGameEventData:
+  - HasBeenTriggered: 0
+    IsFoldOut: 1
+    Name: 
+    TriggerAtDepth: 0
+    TriggerDelayTime: 0
+    TriggerAtTime: 0
+    EventType: 3
+    BombsPerSecond: 0
+    RampPerDepth: 0
+    MaxBombsPerSecond: 0
+    BombType: 0
+    BombPrefab: {fileID: 7880601355816889469, guid: a3527ebca6e5bbd408a6cc7e8009b16b,
+      type: 3}
+    BombPrefabs: []
+    Object: {fileID: 4101022536908792424, guid: a3527ebca6e5bbd408a6cc7e8009b16b,
+      type: 3}
+    Objects: []
+    WeightedObjects: []
+    Position: {x: 0, y: 0}
+    Rotation: 0
+    Spread: 0
+    Speed:
+      Min: 0
+      Max: 0
+    Offset: {x: 0, y: 0}
+    Number: 10
+    NestedEvent: {fileID: 0}
+    RockGenerationChaos: 0
+    RockGenerationAmount: 0

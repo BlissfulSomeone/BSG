@@ -122,7 +122,7 @@ MonoBehaviour:
     bounciness: 0
     gravityScale: 1
     friction: 60
-    airControl: 0.326
+    airControl: 0.56
   mIsKinetic: 0
   mIsAffectedByGravity: 1
   mIsAffectedByFriction: 1
@@ -191,7 +191,7 @@ MonoBehaviour:
   mThrowForce: 12
   mKnockbackForce: 17
   mThrowTriggerExplosion: 1
-  mLookAheadDistance: 2
+  mLookAheadDistance: 0
   mThrowArrowTexture: {fileID: 2800000, guid: 5469c6089864dfa40928f7d0193b1dbe, type: 3}
   mCharacterPostThrowState:
     CanRecieveInput: 2
@@ -199,7 +199,7 @@ MonoBehaviour:
     AirControl:
       State: 1
       Value: 0
-  mCharacterPostThrowStateDuration: 0.5
+  mCharacterPostThrowStateDuration: 0.35
 --- !u!114 &-57922643487940570
 MonoBehaviour:
   m_ObjectHideFlags: 0

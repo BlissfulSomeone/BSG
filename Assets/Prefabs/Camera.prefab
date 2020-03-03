@@ -101,9 +101,9 @@ MonoBehaviour:
     rotation: {x: 3.5, y: 0, z: 0}
     viewWidth: 20
     fov: 30
-  mLerpSpeed: 0.1
+  mLerpSpeed: 0.2
   mCameraLookAhead: 0
-  mDeadZone: 0.3
+  mDeadZone: 0.2
   mDeadZoneOffset: 0
   mScreenShakeFrequency: 15
   mScreenShakeDecay: 175

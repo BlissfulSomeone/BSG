@@ -38,6 +38,8 @@ MonoBehaviour:
     Offset: {x: 0, y: 0}
     Number: 0
     NestedEvent: {fileID: 0}
+    RockGenerationChaos: 0
+    RockGenerationAmount: 0
   - HasBeenTriggered: 0
     IsFoldOut: 1
     Name: Set Default Bombs
@@ -67,6 +69,8 @@ MonoBehaviour:
     Offset: {x: 0, y: 0}
     Number: 0
     NestedEvent: {fileID: 0}
+    RockGenerationChaos: 0
+    RockGenerationAmount: 0
   - HasBeenTriggered: 0
     IsFoldOut: 1
     Name: Set Default Bombs
@@ -93,6 +97,8 @@ MonoBehaviour:
     Offset: {x: 0, y: 0}
     Number: 0
     NestedEvent: {fileID: 0}
+    RockGenerationChaos: 0
+    RockGenerationAmount: 0
   - HasBeenTriggered: 0
     IsFoldOut: 1
     Name: Set Default Bombs
@@ -126,6 +132,8 @@ MonoBehaviour:
     Offset: {x: 0, y: 0}
     Number: 0
     NestedEvent: {fileID: 0}
+    RockGenerationChaos: 0
+    RockGenerationAmount: 0
   - HasBeenTriggered: 0
     IsFoldOut: 1
     Name: Set Default Bombs
@@ -155,6 +163,8 @@ MonoBehaviour:
     Offset: {x: 0, y: 0}
     Number: 0
     NestedEvent: {fileID: 0}
+    RockGenerationChaos: 0
+    RockGenerationAmount: 0
   - HasBeenTriggered: 0
     IsFoldOut: 1
     Name: Set Default Bombs
@@ -192,6 +202,8 @@ MonoBehaviour:
     Offset: {x: 0, y: 0}
     Number: 0
     NestedEvent: {fileID: 0}
+    RockGenerationChaos: 0
+    RockGenerationAmount: 0
   - HasBeenTriggered: 0
     IsFoldOut: 1
     Name: Set Default Bombs
@@ -233,6 +245,8 @@ MonoBehaviour:
     Offset: {x: 0, y: 0}
     Number: 0
     NestedEvent: {fileID: 0}
+    RockGenerationChaos: 0
+    RockGenerationAmount: 0
   - HasBeenTriggered: 0
     IsFoldOut: 1
     Name: Set Default Bombs
@@ -277,3 +291,51 @@ MonoBehaviour:
     Offset: {x: 0, y: 0}
     Number: 0
     NestedEvent: {fileID: 0}
+    RockGenerationChaos: 0
+    RockGenerationAmount: 0
+  - HasBeenTriggered: 0
+    IsFoldOut: 1
+    Name: Set Default Bombs
+    TriggerAtDepth: 999
+    TriggerDelayTime: 0
+    TriggerAtTime: 0
+    EventType: 4
+    BombsPerSecond: 0.5
+    RampPerDepth: 0
+    MaxBombsPerSecond: 0
+    BombType: 3
+    BombPrefab: {fileID: 0}
+    BombPrefabs:
+    - {fileID: 5646725043449563930, guid: 1efcee2da2b40f14ab6ee0f3c8867385, type: 3}
+    - {fileID: 2143849611871938927, guid: a3527ebca6e5bbd408a6cc7e8009b16b, type: 3}
+    - {fileID: 7060408252332642028, guid: fca91b45f7e79554ca92b5faeaacdb55, type: 3}
+    - {fileID: 8589919051133357318, guid: a51fea408f270594c86db97c6aca166d, type: 3}
+    Object: {fileID: 0}
+    Objects: []
+    WeightedObjects:
+    - Weight: 100
+      Object: {fileID: 7742966609721983005, guid: 1efcee2da2b40f14ab6ee0f3c8867385,
+        type: 3}
+    - Weight: 100
+      Object: {fileID: 4101022536908792424, guid: a3527ebca6e5bbd408a6cc7e8009b16b,
+        type: 3}
+    - Weight: 100
+      Object: {fileID: 4959064056576837099, guid: fca91b45f7e79554ca92b5faeaacdb55,
+        type: 3}
+    - Weight: 100
+      Object: {fileID: 5916670275143304705, guid: a51fea408f270594c86db97c6aca166d,
+        type: 3}
+    - Weight: 10
+      Object: {fileID: 1916676254681340916, guid: 4338578a687c5fa4e8a90a42df86e31b,
+        type: 3}
+    Position: {x: 0, y: 0}
+    Rotation: 0
+    Spread: 0
+    Speed:
+      Min: 0
+      Max: 0
+    Offset: {x: 0, y: 0}
+    Number: 0
+    NestedEvent: {fileID: 11400000, guid: d79499a4b1559a643af377ce2b478e86, type: 2}
+    RockGenerationChaos: 0
+    RockGenerationAmount: 0
