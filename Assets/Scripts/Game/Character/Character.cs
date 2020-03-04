@@ -9,7 +9,8 @@ public class Character : MonoBehaviour
 	private struct Movement
 	{
 		public float acceleration;
-		public float maxSpeed;
+		public float maxMoveSpeed;
+		public float maxFallSpeed;
 		public float jumpForce;
 		public float jumpTime;
 		public int maxJumps;
@@ -164,7 +165,7 @@ public class Character : MonoBehaviour
 	{
 		FixedUpdateOverrides();
 		FixedUpdateJump();
-		FixedUpdateMovement();
+		FixedUpdateClampSpeed();
 		FixedUpdateFlipping();
 		FixedUpdateAbilities();
 		FixedUpdateAnimator();
@@ -204,10 +205,11 @@ public class Character : MonoBehaviour
 		FakePhysics.Velocity = velocity;
 	}
 
-	private void FixedUpdateMovement()
+	private void FixedUpdateClampSpeed()
 	{
 		Vector3 velocity = FakePhysics.Velocity;
-		velocity.x = IsOverrideEnabled(CurrentOverrides.ClampMaxSpeed) ? Mathf.Clamp(velocity.x, -mMovement.maxSpeed, mMovement.maxSpeed) : velocity.x;
+		velocity.x = IsOverrideEnabled(CurrentOverrides.ClampMaxSpeed) ? Mathf.Clamp(velocity.x, -mMovement.maxMoveSpeed, mMovement.maxMoveSpeed) : velocity.x;
+		velocity.y = IsOverrideEnabled(CurrentOverrides.ClampMaxSpeed) ? Mathf.Clamp(velocity.y, -mMovement.maxFallSpeed, mMovement.maxFallSpeed) : velocity.y;
 		FakePhysics.Velocity = velocity;
 	}
 
