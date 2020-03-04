@@ -157,7 +157,8 @@ MonoBehaviour:
   mJumpInputName: Jump
   mMovement:
     acceleration: 100
-    maxSpeed: 5
+    maxMoveSpeed: 5
+    maxFallSpeed: 20
     jumpForce: 9
     jumpTime: 0.15
     maxJumps: 2
