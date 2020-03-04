@@ -29,6 +29,7 @@ public class Character : MonoBehaviour
 	private BSGFakePhysics mFakePhysics;
 	private BoxCollider mBoxCollider;
 	private Triggerable mTriggerable;
+	private Animator mAnimator;
 
 	public Renderer Renderer { get { if (mRenderer == null) mRenderer = GetComponent<Renderer>(); return mRenderer; } }
 	public BSGFakePhysics FakePhysics { get { if (mFakePhysics == null) mFakePhysics = GetComponent<BSGFakePhysics>(); return mFakePhysics; } }
@@ -70,6 +71,8 @@ public class Character : MonoBehaviour
 		mFakePhysics = GetComponent<BSGFakePhysics>();
 		mBoxCollider = GetComponent<BoxCollider>();
 		mTriggerable = GetComponent<Triggerable>();
+		mAnimator = GetComponent<Animator>();
+
 		mTriggerable.OnTriggered += OnTriggered;
 		mTriggerable.OnPreTimedEvent += OnPreTimedEvent;
 		mTriggerable.OnPostTimedEvent += OnPostTimedEvent;
@@ -164,6 +167,7 @@ public class Character : MonoBehaviour
 		FixedUpdateMovement();
 		FixedUpdateFlipping();
 		FixedUpdateAbilities();
+		FixedUpdateAnimator();
 	}
 
 	private void FixedUpdateOverrides()
@@ -222,6 +226,24 @@ public class Character : MonoBehaviour
 		{
 			mAbilities[i].Ability.FixedUpdateAbility();
 		}
+	}
+
+	private void FixedUpdateAnimator()
+	{
+		if (mAnimator == null)
+			return;
+
+		mAnimator.SetFloat("Player_XVel", FakePhysics.Velocity.x);
+		mAnimator.SetFloat("Player_YVel", FakePhysics.Velocity.y);
+		mAnimator.SetBool("Grounded", FakePhysics.IsGrounded);
+		mAnimator.SetBool("Throw", false);
+		mAnimator.SetBool("Hurt", false);
+		mAnimator.SetBool("Block", false);
+		mAnimator.SetBool("Parry", false);
+		mAnimator.SetBool("PickUp", false);
+		mAnimator.SetBool("Bomb", false);
+		mAnimator.SetBool("Idle", false);
+		mAnimator.SetBool("Landed", false);
 	}
 
 	public bool IsOverrideEnabled(ECharacterOverrideState overrideState)
