@@ -39,7 +39,7 @@ MonoBehaviour:
     Number: 0
     NestedEvent: {fileID: 0}
     RockGenerationChaos: 0.15
-    RockGenerationAmount: 0.25
+    RockGenerationAmount: 0.15
   - HasBeenTriggered: 0
     IsFoldOut: 1
     Name: 

@@ -31,12 +31,12 @@ public class ChunkController : MonoBehaviour
 	private List<Chunk> mChunks;
 	private List<Chunk> Chunks { get { if (mChunks == null) mChunks = new List<Chunk>(); return mChunks; } }
 
-	private void Update()
+	private void LateUpdate()
 	{
 		float depth = GameController.Instance.FurthestDepth;
 		if (depth + mChunkSettings.ChunkHeight * mGenerateChunksAhead >= mChunksSpawned * mChunkSettings.ChunkHeight)
 		{
-			CreateChunk(false);
+			CreateChunk(mChunksSpawned == 0);
 		}
 	}
 

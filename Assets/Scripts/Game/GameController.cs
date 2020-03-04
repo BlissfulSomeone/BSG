@@ -68,9 +68,6 @@ public class GameController : MonoBehaviour
 		mPlayerInstance.transform.position = new Vector3(0.0f, 10.0f, 0.0f);
 		mUIControllerInstance.PushMenu(UIController.ELayer.HUD, mDepthMeterHUDPrefab);
 		mUIControllerInstance.PushMenu(UIController.ELayer.HUD, mHealthBarHUDPrefab);
-
-		mChunkControllerInstance.CreateChunk(true);
-		mChunkControllerInstance.CreateChunk(false);
 	}
 
 	private T SpawnControllerPrefab<T>(T aControllerPrefab) where T : MonoBehaviour
