@@ -274,13 +274,13 @@ public class Chunk : MonoBehaviour
 		{
 			for (int x = 0; x < mChunkSettings.NumberOfColumns; ++x)
 			{
-				bool hasCollision = mChunkSettings.TileData[GetTile(x, y, 0)].IsCollision;
+				bool hasCollision = mChunkSettings.TileData[GetTile(x, y, mChunkSettings.ClampedPlayableLayer)].IsCollision;
 				if (!hasCollision)
 					continue;
 				
-				Vector3 tilePosition = GetTileLocalPosition(x, y, 0);
+				Vector3 tilePosition = GetTileLocalPosition(x, y, mChunkSettings.ClampedPlayableLayer);
 
-				if (hasCollision != mChunkSettings.TileData[GetTile(x + 1, y, 0)].IsCollision)
+				if (hasCollision != mChunkSettings.TileData[GetTile(x + 1, y, mChunkSettings.ClampedPlayableLayer)].IsCollision)
 					mColliderGenerationData.AddQuad(
 						0,
 						tilePosition - Vector3.one / 2 + new Vector3(1, 1, 0) * mChunkSettings.TileSize,
@@ -294,7 +294,7 @@ public class Chunk : MonoBehaviour
 						new Vector2(0, 1),
 						Color.white);
 
-				if (hasCollision != mChunkSettings.TileData[GetTile(x - 1, y, 0)].IsCollision)
+				if (hasCollision != mChunkSettings.TileData[GetTile(x - 1, y, mChunkSettings.ClampedPlayableLayer)].IsCollision)
 					mColliderGenerationData.AddQuad(
 						0,
 						tilePosition - Vector3.one / 2 + new Vector3(0, 1, 1) * mChunkSettings.TileSize,
@@ -308,7 +308,7 @@ public class Chunk : MonoBehaviour
 						new Vector2(0, 1),
 						Color.white);
 
-				if (hasCollision != mChunkSettings.TileData[GetTile(x, y + 1, 0)].IsCollision)
+				if (hasCollision != mChunkSettings.TileData[GetTile(x, y + 1, mChunkSettings.ClampedPlayableLayer)].IsCollision)
 					mColliderGenerationData.AddQuad(
 						0,
 						tilePosition - Vector3.one / 2 + new Vector3(1, 0, 1) * mChunkSettings.TileSize,
@@ -322,7 +322,7 @@ public class Chunk : MonoBehaviour
 						new Vector2(0, 1),
 						Color.white);
 
-				if (hasCollision != mChunkSettings.TileData[GetTile(x, y - 1, 0)].IsCollision)
+				if (hasCollision != mChunkSettings.TileData[GetTile(x, y - 1, mChunkSettings.ClampedPlayableLayer)].IsCollision)
 					mColliderGenerationData.AddQuad(
 						0,
 						tilePosition - Vector3.one / 2 + new Vector3(1, 1, 0) * mChunkSettings.TileSize,

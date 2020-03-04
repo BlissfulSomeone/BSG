@@ -15,10 +15,12 @@ public class ChunkController : MonoBehaviour
 		[Tooltip("Lower value will create bigger, smoother veins of rocks. Higher value will create a more chaotic, noisy distribution of rocks.")] [SerializeField] public float GenerationPerlinSize;
 		[Tooltip("The higher the value, the sooner the rocks will spawn.")] [SerializeField] public float GenerationAmount;
 		[SerializeField] public Color BackLayerTint;
+		[SerializeField] [Tooltip("Which layer the gameplay will take place on, 0 being the layer closest to the camera. This will be internally clamped between [0] and [NumberOfLayers].")] public int PlayableLayer;
 
 		public float TileSize { get { return ChunkWidth / NumberOfColumns; } }
 		public float ChunkHeight { get { return TileSize * NumberOfRows; } }
 		public int NumberOfTiles { get { return NumberOfColumns * NumberOfRows * NumberOfLayers; } }
+		public int ClampedPlayableLayer { get { return Mathf.Clamp(PlayableLayer, 0, NumberOfLayers); } }
 	}
 
 	[SerializeField] private ChunkSettings mChunkSettings;
@@ -42,11 +44,11 @@ public class ChunkController : MonoBehaviour
 
 	public void CreateChunk(bool empty)
 	{
-		GameObject chunkObject = new GameObject("Chunk");
+		GameObject chunkObject = new GameObject("Chunk " + mChunksSpawned.ToString());
 
 		chunkObject.transform.SetParent(transform);
 		chunkObject.transform.Reset();
-		chunkObject.transform.position = new Vector2(0.0f, (mChunksSpawned * mChunkSettings.ChunkHeight) * -1).ToVec3();
+		chunkObject.transform.position = new Vector3(0.0f, (mChunksSpawned * mChunkSettings.ChunkHeight) * -1, (mChunkSettings.ClampedPlayableLayer * mChunkSettings.TileSize) * -1);
 
 		Chunk chunk = chunkObject.AddComponent<Chunk>();
 		chunk.Generate(mChunkSettings, empty);
