@@ -12,6 +12,7 @@ public class Character : MonoBehaviour
 		public float maxSpeed;
 		public float jumpForce;
 		public float jumpTime;
+		public int maxJumps;
 	}
 
 	[System.Serializable]
@@ -48,6 +49,7 @@ public class Character : MonoBehaviour
 	private Vector3 mMovementInput = Vector3.zero;
 	private bool mWantToJump = false;
 	private float mJumpTime = -1.0f;
+	private int mJumpsRemaining = 0;
 	private bool mIsFlipped = false;
 	private CharacterOverrides mCurrentOverrides = new CharacterOverrides();
 	private List<CharacterOverrides> mOverridesStack = new List<CharacterOverrides>();
@@ -73,6 +75,7 @@ public class Character : MonoBehaviour
 		mTriggerable.OnPostTimedEvent += OnPostTimedEvent;
 
 		mHealth = mMaxHealth;
+		mJumpsRemaining = mMovement.maxJumps;
 
 		for (int i = 0; i < mAbilities.Length; ++i)
 		{
@@ -118,14 +121,19 @@ public class Character : MonoBehaviour
 	private void UpdateInput()
 	{
 		mMovementInput.x = Input.GetAxisRaw(mHorizontalMovementInputName);
-		mWantToJump = Input.GetButton(mJumpInputName);
+		mWantToJump = Input.GetButtonDown(mJumpInputName);
 	}
 
 	private void UpdateJump()
 	{
-		if (FakePhysics.IsGrounded && mWantToJump)
+		if (FakePhysics.IsGrounded && !FakePhysics.WasGrounded)
+		{
+			mJumpsRemaining = mMovement.maxJumps;
+		}
+		if (mWantToJump && mJumpsRemaining > 0)
 		{
 			mJumpTime = mMovement.jumpTime;
+			--mJumpsRemaining;
 		}
 		else if (Input.GetButtonUp(mJumpInputName))
 		{
@@ -182,7 +190,7 @@ public class Character : MonoBehaviour
 		Vector3 velocity = FakePhysics.Velocity;
 		if (IsOverrideEnabled(CurrentOverrides.CanRecieveInput))
 		{
-			if (mWantToJump && mJumpTime >= 0.0f)
+			if (mJumpTime >= 0.0f)
 			{
 				velocity.y = mMovement.jumpForce;
 				mJumpTime -= Time.fixedDeltaTime;

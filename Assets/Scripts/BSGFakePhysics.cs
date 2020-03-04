@@ -44,6 +44,7 @@ public class BSGFakePhysics : MonoBehaviour
     private int mCollisionMask = 0;
 	private BoxCollider mBoxCollider;
 	private bool mIsGrounded = false;
+	private bool mWasGrounded = false;
 	private Vector2 mVelocity = Vector2.zero;
 	private float mDefaultAirControl;
 
@@ -52,6 +53,7 @@ public class BSGFakePhysics : MonoBehaviour
 	public bool IsAffectedByGravity { get { return mIsAffectedByGravity; } set { mIsAffectedByGravity = value; } }
 	public bool IsAffectedByFriction { get { return mIsAffectedByFriction; } set { mIsAffectedByFriction = value; } }
 	public bool IsGrounded { get { return mIsGrounded; } }
+	public bool WasGrounded { get { return mWasGrounded; } }
 	public Vector2 Velocity { get { return mVelocity; } set { mVelocity = value; } }
 
 	private void Awake()
@@ -131,6 +133,7 @@ public class BSGFakePhysics : MonoBehaviour
 
 	private void DoGroundCheck()
 	{
+		mWasGrounded = mIsGrounded;
 		Vector3 start = transform.position + new Vector3(-mBoxCollider.size.x * 0.5f + mPhysics.vertical.raycastMargin, 0.0f, 0.0f);
 		Vector3 end = transform.position + new Vector3(mBoxCollider.size.x * 0.5f - mPhysics.vertical.raycastMargin, 0.0f, 0.0f);
 		float rayLength = mBoxCollider.size.y * 0.5f + GROUND_CHECK_DISTANCE;
