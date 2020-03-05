@@ -59,4 +59,15 @@ public class UIController : MonoBehaviour
 
 		mLayers[layerIndex].PopMenu();
 	}
+
+	public void PopAllMenus(ELayer layerIndex)
+	{
+		if (mLayers.ContainsKey(layerIndex) == false)
+		{
+			Debug.LogError("Attempting to pop a menu from a non-existent layer [" + layerIndex.ToString() + "].");
+			return;
+		}
+		
+		mLayers[layerIndex].PopAllMenus();
+	}
 }

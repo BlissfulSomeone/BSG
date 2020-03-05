@@ -64,7 +64,7 @@ public class GameController : MonoBehaviour
 		mGameEventControllerInstance = go.AddComponent<GameEventController>();
 		mGameEventControllerInstance.GameEventRoot = Instantiate(mGameEventRootPrefab);
 	
-		mPlayerInstance.OnKilled += OnPlayerKilled;
+		mPlayerInstance.HealthController.OnKilled += OnPlayerKilled;
 		mPlayerInstance.transform.position = new Vector3(0.0f, 10.0f, 0.0f);
 		mUIControllerInstance.PushMenu(UIController.ELayer.HUD, mDepthMeterHUDPrefab);
 		mUIControllerInstance.PushMenu(UIController.ELayer.HUD, mHealthBarHUDPrefab);
@@ -86,8 +86,8 @@ public class GameController : MonoBehaviour
 			return;
 		}
 
-		aKilledCharacter.OnKilled -= OnPlayerKilled;
-
+		aKilledCharacter.HealthController.OnKilled -= OnPlayerKilled;
+		mUIControllerInstance.PopMenu(UIController.ELayer.HUD);
 		mUIControllerInstance.PushMenu(UIController.ELayer.Menus, mGameOverMenuPrefab);
 	}
 	
@@ -134,7 +134,7 @@ public class GameController : MonoBehaviour
 	{
 		Vector3 cameraTargetPosition = mPlayerInstance.transform.position;
 		cameraTargetPosition.x = 0.0f;
-        cameraTargetPosition.y += mPlayerInstance.Velocity.y * mCameraControllerInstance.CameraLookAhead;
+        cameraTargetPosition.y += mPlayerInstance.FakePhysics.Velocity.y * mCameraControllerInstance.CameraLookAhead;
 		mCameraControllerInstance.SetTargetPosition(cameraTargetPosition);
 	}
 

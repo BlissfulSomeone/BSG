@@ -10,10 +10,16 @@ GameObject:
   m_Component:
   - component: {fileID: 8377611175049075329}
   - component: {fileID: 8377611175049075331}
+  - component: {fileID: 3954150766204406438}
   - component: {fileID: 8377611175049075332}
   - component: {fileID: 1585925628362575676}
   - component: {fileID: 515902734300222581}
   - component: {fileID: 8377611175049075330}
+  - component: {fileID: 6770294009570111082}
+  - component: {fileID: -389287869627159614}
+  - component: {fileID: 4280477425298068603}
+  - component: {fileID: 4104521596314767734}
+  - component: {fileID: 1053228692490852501}
   - component: {fileID: 3667301290344907094}
   - component: {fileID: -57922643487940570}
   - component: {fileID: 8105750265646594365}
@@ -87,6 +93,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &3954150766204406438
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8377611175049075334}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!65 &8377611175049075332
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -153,24 +178,85 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a80dac290eb146469ad31db0f63542b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6770294009570111082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8377611175049075334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00222c082915e264f9f8c74ca2992201, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   mHorizontalMovementInputName: Horizontal
   mJumpInputName: Jump
   mMovement:
     acceleration: 100
     maxMoveSpeed: 5
     maxFallSpeed: 20
+    jumpSquat: 0.05
     jumpForce: 9
     jumpTime: 0.15
     maxJumps: 2
   mStunnedCharacterState:
+    Interrupt: 0
     CanRecieveInput: 2
     ReceiveKnockbackFromExplosions: 0
     ClampMaxSpeed: 0
     CanBeHurt: 0
+    AffectedByGravity: 0
     AirControl:
       State: 1
       Value: 0
+  mJumpSquatCharacterState:
+    Interrupt: 0
+    CanRecieveInput: 2
+    ReceiveKnockbackFromExplosions: 2
+    ClampMaxSpeed: 0
+    CanBeHurt: 0
+    AffectedByGravity: 2
+    AirControl:
+      State: 0
+      Value: 0
+--- !u!114 &-389287869627159614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8377611175049075334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cd5f1391a5ab0642b4697fac4179187, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   mMaxHealth: 3
+--- !u!114 &4280477425298068603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8377611175049075334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f841a90a56845e44fa56f85aad7d95db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4104521596314767734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8377611175049075334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06acb4e1cd8f94040bec438a37aa0318, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   mAbilities:
   - InputName: Fire1
     Ability: {fileID: 3667301290344907094}
@@ -178,6 +264,19 @@ MonoBehaviour:
     Ability: {fileID: -57922643487940570}
   - InputName: Fire4
     Ability: {fileID: 8105750265646594365}
+--- !u!114 &1053228692490852501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8377611175049075334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31695fddb68fea646837e8096b424f79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mIdleThreshold: 0.0001
 --- !u!114 &3667301290344907094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,10 +299,12 @@ MonoBehaviour:
   mLookAheadDistance: 0
   mThrowArrowTexture: {fileID: 2800000, guid: 5469c6089864dfa40928f7d0193b1dbe, type: 3}
   mCharacterPostThrowState:
+    Interrupt: 0
     CanRecieveInput: 2
     ReceiveKnockbackFromExplosions: 0
     ClampMaxSpeed: 0
     CanBeHurt: 0
+    AffectedByGravity: 0
     AirControl:
       State: 1
       Value: 0
@@ -222,10 +323,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mMaxBlockTime: 10
   mCharacterBlockState:
+    Interrupt: 1
     CanRecieveInput: 2
     ReceiveKnockbackFromExplosions: 2
     ClampMaxSpeed: 0
-    CanBeHurt: 0
+    CanBeHurt: 2
+    AffectedByGravity: 0
     AirControl:
       State: 1
       Value: 0

@@ -61,6 +61,14 @@ public class UILayer : MonoBehaviour
 		}
 	}
 
+	public void PopAllMenus()
+	{
+		while (mMenus.Count > 0)
+		{
+			PopMenu();
+		}
+	}
+
 	private void UpdateMenuVisibilities()
 	{ 
 		for (int i = 0; i < mMenus.Count; ++i)

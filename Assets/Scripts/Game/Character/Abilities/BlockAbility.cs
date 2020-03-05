@@ -11,14 +11,14 @@ public class BlockAbility : Ability
 
 	protected override void StartAbility_Internal()
 	{
-		Owner.ApplyCharacterOverrides(mCharacterBlockState);
+		Owner.OverrideController.ApplyCharacterOverrides(mCharacterBlockState);
 
 		mCurrentBlockTime = mMaxBlockTime;
 	}
 
 	protected override void StopAbility_Internal()
 	{
-		Owner.RemoveCharacterOverrides(mCharacterBlockState);
+		Owner.OverrideController.RemoveCharacterOverrides(mCharacterBlockState);
 
 		mCurrentBlockTime = 0.0f;
 	}

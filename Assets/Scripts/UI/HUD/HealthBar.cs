@@ -11,8 +11,11 @@ public class HealthBar : MonoBehaviour
 	private void Update()
 	{
 		Character player = GameController.Instance.PlayerCharacterInstance;
-		mHealthText.text = Mathf.CeilToInt(player.Health).ToString() + "/" + Mathf.CeilToInt(player.MaxHealth).ToString();
-		float fraction = player.Health / player.MaxHealth;
+		if (player == null)
+			return;
+
+		mHealthText.text = Mathf.CeilToInt(player.HealthController.Health).ToString() + "/" + Mathf.CeilToInt(player.HealthController.MaxHealth).ToString();
+		float fraction = player.HealthController.Health / player.HealthController.MaxHealth;
 		mHealthBar.rectTransform.anchorMax = new Vector2(fraction, 1.0f);
 		mHealthBar.rectTransform.offsetMax = Vector2.zero;
 		mHealthBar.color = mHealthBarColor.Evaluate(fraction);

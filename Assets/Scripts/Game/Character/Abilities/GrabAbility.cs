@@ -20,7 +20,7 @@ public class GrabAbility : Ability
 	private Vector2 mThrowDirection;
 	private float mDefaultAirControl;
 	private System.Guid mCameraOffsetGuid;
-
+	
 	public override void Initialize(Character owner)
 	{
 		base.Initialize(owner);
@@ -56,7 +56,7 @@ public class GrabAbility : Ability
 			float verticalAxis = Input.GetAxisRaw("Vertical");
 			if (horizontalAxis == 0.0f && verticalAxis == 0.0f)
 			{
-				horizontalAxis = Owner.IsFlipped ? -1.0f : 1.0f;
+				horizontalAxis = Owner.MovementController.IsFacingRight ? -1.0f : 1.0f;
 			}
 			mThrowDirection = new Vector2(horizontalAxis, verticalAxis).normalized;
 			Vector3 cameraOffset = mThrowDirection * mLookAheadDistance;
@@ -81,7 +81,7 @@ public class GrabAbility : Ability
 	private Vector3 GetCurrentGrabSocketPosition(Space space)
 	{
 		Vector3 offset = mGrabSocket;
-		offset.x *= (Owner && Owner.IsFlipped ? -1.0f : 1.0f);
+		offset.x *= (Owner && Owner.MovementController.IsFacingRight ? -1.0f : 1.0f);
 		if (space == Space.World)
 		{
 			offset += transform.position;
@@ -154,7 +154,7 @@ public class GrabAbility : Ability
 		}
 		if (!Owner.FakePhysics.IsGrounded || mHasStunOnGround)
 		{
-			Owner.ApplyCharacterOverridesOverTime(mCharacterPostThrowState, mCharacterPostThrowStateDuration);
+			Owner.OverrideController.ApplyCharacterOverrides(mCharacterPostThrowState, mCharacterPostThrowStateDuration);
 		}
 
 		return true;
