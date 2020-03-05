@@ -15,6 +15,7 @@ public class GrabAbility : Ability
 	[SerializeField] [DisplayAs("Throw Arrow Texture")] private Texture2D mThrowArrowTexture;
 	[SerializeField] [DisplayAs("Character Post Throw State")] private CharacterOverrides mCharacterPostThrowState;
 	[SerializeField] [DisplayAs("Character Post Throw State Duration")] private float mCharacterPostThrowStateDuration;
+
 	private BSGFakePhysics mGrabbedObject;
 	private bool mIsThrowing;
 	private Vector2 mThrowDirection;

@@ -192,16 +192,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mHorizontalMovementInputName: Horizontal
   mJumpInputName: Jump
-  mMovement:
-    acceleration: 100
-    maxMoveSpeed: 5
-    maxFallSpeed: 20
-    jumpSquat: 0.05
-    jumpForce: 9
-    jumpTime: 0.15
-    maxJumps: 2
+  mAcceleration: 100
+  mMaxMoveSpeed: 5
+  mJumpSquatDuration: 0.05
+  mJumpForce: 9
+  mMaxJumpTime: 0.15
+  mMaxJumps: 2
+  mMaxFallSpeed: 20
   mStunnedCharacterState:
-    Interrupt: 0
+    Interrupt: 1
     CanRecieveInput: 2
     ReceiveKnockbackFromExplosions: 0
     ClampMaxSpeed: 0

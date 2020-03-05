@@ -5,24 +5,22 @@ using UnityEngine;
 [RequireComponent(typeof(Character))]
 public class CharacterMovementController : MonoBehaviour
 {
-	[System.Serializable]
-	private struct Movement
-	{
-		public float acceleration;
-		public float maxMoveSpeed;
-		public float maxFallSpeed;
-		public float jumpSquat;
-		public float jumpForce;
-		public float jumpTime;
-		public int maxJumps;
-	}
-
 	[Header("Input Names")]
 	[SerializeField] [DisplayAs("Horizontal Movement Input Name")] private string mHorizontalMovementInputName;
 	[SerializeField] [DisplayAs("Jump Input Name")] private string mJumpInputName;
 
 	[Header("Movement")]
-	[SerializeField] [DisplayAs("Movement Settings")] private Movement mMovement;
+	[SerializeField] [DisplayAs("Acceleration")] private float mAcceleration;
+	[SerializeField] [DisplayAs("Max Run Speed")] private float mMaxMoveSpeed;
+
+	[Header("Jumping")]
+	[SerializeField] [DisplayAs("Jump Squat Time")] private float mJumpSquatDuration;
+	[SerializeField] [DisplayAs("Jump Force")] private float mJumpForce;
+	[SerializeField] [DisplayAs("Max Jump Hold Time")] private float mMaxJumpTime;
+	[SerializeField] [DisplayAs("Max Jumps")] private int mMaxJumps;
+	[SerializeField] [DisplayAs("Max Fall Speed")] private float mMaxFallSpeed;
+
+	[Header("Overrides")]
 	[SerializeField] [DisplayAs("Stunned Character State")] private CharacterOverrides mStunnedCharacterState;
 	[SerializeField] [DisplayAs("Jump Squat Character State")] private CharacterOverrides mJumpSquatCharacterState;
 
@@ -84,14 +82,14 @@ public class CharacterMovementController : MonoBehaviour
 	{
 		if (FakePhysics.IsGrounded && !FakePhysics.WasGrounded)
 		{
-			mJumpsRemaining = mMovement.maxJumps;
+			mJumpsRemaining = mMaxJumps;
 		}
 		if (Input.GetButtonDown(mJumpInputName) &&
 			!Owner.OverrideController.IsCharacterOverrideApplied(mJumpSquatCharacterState) &&
 			(FakePhysics.IsGrounded || mJumpsRemaining > 0))
 		{
-			Owner.OverrideController.ApplyCharacterOverrides(mJumpSquatCharacterState, mMovement.jumpSquat, OnPerformJump);
-			FakePhysics.Velocity = Vector2.zero;
+			Owner.OverrideController.ApplyCharacterOverrides(mJumpSquatCharacterState, mJumpSquatDuration, OnPerformJump);
+			//FakePhysics.Velocity = Vector2.zero;
 		}
 
 		if (mJumpTime >= 0.0f)
@@ -106,7 +104,7 @@ public class CharacterMovementController : MonoBehaviour
 
 	private void OnPerformJump()
 	{
-		mJumpTime = mMovement.jumpTime;
+		mJumpTime = mMaxJumpTime;
 		--mJumpsRemaining;
 	}
 
@@ -124,9 +122,9 @@ public class CharacterMovementController : MonoBehaviour
 		{
 			if (mJumpTime >= 0.0f)
 			{
-				velocity.y = mMovement.jumpForce;
+				velocity.y = mJumpForce;
 			}
-			velocity.x += mMovementInput.x * mMovement.acceleration * Time.fixedDeltaTime;
+			velocity.x += mMovementInput.x * mAcceleration * Time.fixedDeltaTime;
 		}
 		FakePhysics.Velocity = velocity;
 	}
@@ -134,8 +132,8 @@ public class CharacterMovementController : MonoBehaviour
 	private void FixedUpdateClampSpeed()
 	{
 		Vector3 velocity = FakePhysics.Velocity;
-		velocity.x = Owner.OverrideController.IsOverrideEnabled(Owner.OverrideController.CurrentOverrides.ClampMaxSpeed) ? Mathf.Clamp(velocity.x, -mMovement.maxMoveSpeed, mMovement.maxMoveSpeed) : velocity.x;
-		velocity.y = Owner.OverrideController.IsOverrideEnabled(Owner.OverrideController.CurrentOverrides.ClampMaxSpeed) ? Mathf.Clamp(velocity.y, -mMovement.maxFallSpeed, mMovement.maxFallSpeed) : velocity.y;
+		velocity.x = Owner.OverrideController.IsOverrideEnabled(Owner.OverrideController.CurrentOverrides.ClampMaxSpeed) ? Mathf.Clamp(velocity.x, -mMaxMoveSpeed, mMaxMoveSpeed) : velocity.x;
+		velocity.y = Owner.OverrideController.IsOverrideEnabled(Owner.OverrideController.CurrentOverrides.ClampMaxSpeed) ? Mathf.Clamp(velocity.y, -mMaxFallSpeed, mMaxFallSpeed) : velocity.y;
 		FakePhysics.Velocity = velocity;
 	}
 
