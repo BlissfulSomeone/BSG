@@ -39,7 +39,7 @@ public class CharacterAbilityController : MonoBehaviour
 			{
 				mAbilities[i].Ability.StartAbility();
 			}
-			if (Input.GetButtonUp(mAbilities[i].InputName) || (!canReceiveInput && mCouldReceiveInput))
+			if (Input.GetButtonUp(mAbilities[i].InputName)/* || (!canReceiveInput && mCouldReceiveInput)*/)
 			{
 				mAbilities[i].Ability.StopAbility();
 			}

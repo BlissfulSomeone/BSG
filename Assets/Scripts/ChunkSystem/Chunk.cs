@@ -195,6 +195,7 @@ public class Chunk : MonoBehaviour
 					Vector3 tilePosition = GetTileLocalPosition(x, y, z);
 					Color layerColor = Color.Lerp(Color.white, mChunkSettings.BackLayerTint, z / (float)(mChunkSettings.NumberOfLayers - 1));
 
+					// Front
 					mMeshGenerationData.AddQuad(
 						tileId,
 						tilePosition - Vector3.one / 2 + new Vector3(0, 1, 0) * mChunkSettings.TileSize,
@@ -202,12 +203,13 @@ public class Chunk : MonoBehaviour
 						tilePosition - Vector3.one / 2 + new Vector3(1, 0, 0) * mChunkSettings.TileSize,
 						tilePosition - Vector3.one / 2 + new Vector3(0, 0, 0) * mChunkSettings.TileSize,
 						Vector3.back,
-						new Vector2(0, 0),
-						new Vector2(1, 0),
-						new Vector2(1, 1),
-						new Vector2(0, 1),
+						new Vector2(1, 2) * (1.0f / 3.0f),
+						new Vector2(2, 2) * (1.0f / 3.0f),
+						new Vector2(2, 1) * (1.0f / 3.0f),
+						new Vector2(1, 1) * (1.0f / 3.0f),
 						layerColor);
 
+					// Right
 					if (tileId != GetTile(x + 1, y, z))
 						mMeshGenerationData.AddQuad(
 							tileId,
@@ -216,12 +218,13 @@ public class Chunk : MonoBehaviour
 							tilePosition - Vector3.one / 2 + new Vector3(1, 0, 1) * mChunkSettings.TileSize,
 							tilePosition - Vector3.one / 2 + new Vector3(1, 0, 0) * mChunkSettings.TileSize,
 							Vector3.right,
-							new Vector2(0, 0),
-							new Vector2(1, 0),
-							new Vector2(1, 1),
-							new Vector2(0, 1),
+							new Vector2(2, 2) * (1.0f / 3.0f),
+							new Vector2(3, 2) * (1.0f / 3.0f),
+							new Vector2(3, 1) * (1.0f / 3.0f),
+							new Vector2(2, 1) * (1.0f / 3.0f),
 							layerColor);
 
+					// Left
 					if (tileId != GetTile(x - 1, y, z))
 						mMeshGenerationData.AddQuad(
 							tileId,
@@ -230,12 +233,13 @@ public class Chunk : MonoBehaviour
 							tilePosition - Vector3.one / 2 + new Vector3(0, 0, 0) * mChunkSettings.TileSize,
 							tilePosition - Vector3.one / 2 + new Vector3(0, 0, 1) * mChunkSettings.TileSize,
 							Vector3.left,
-							new Vector2(0, 0),
-							new Vector2(1, 0),
-							new Vector2(1, 1),
-							new Vector2(0, 1),
+							new Vector2(0, 2) * (1.0f / 3.0f),
+							new Vector2(1, 2) * (1.0f / 3.0f),
+							new Vector2(1, 1) * (1.0f / 3.0f),
+							new Vector2(0, 1) * (1.0f / 3.0f),
 							layerColor);
 
+					// Bottom
 					if (tileId != GetTile(x, y + 1, z))
 						mMeshGenerationData.AddQuad(
 							tileId,
@@ -244,12 +248,13 @@ public class Chunk : MonoBehaviour
 							tilePosition - Vector3.one / 2 + new Vector3(0, 0, 0) * mChunkSettings.TileSize,
 							tilePosition - Vector3.one / 2 + new Vector3(1, 0, 0) * mChunkSettings.TileSize,
 							Vector3.down,
-							new Vector2(0, 0),
-							new Vector2(1, 0),
-							new Vector2(1, 1),
-							new Vector2(0, 1),
+							new Vector2(2, 0) * (1.0f / 3.0f),
+							new Vector2(1, 0) * (1.0f / 3.0f),
+							new Vector2(1, 1) * (1.0f / 3.0f),
+							new Vector2(2, 1) * (1.0f / 3.0f),
 							layerColor);
 
+					// Top
 					if (tileId != GetTile(x, y - 1, z))
 						mMeshGenerationData.AddQuad(
 							tileId,
@@ -258,10 +263,10 @@ public class Chunk : MonoBehaviour
 							tilePosition - Vector3.one / 2 + new Vector3(0, 1, 1) * mChunkSettings.TileSize,
 							tilePosition - Vector3.one / 2 + new Vector3(1, 1, 1) * mChunkSettings.TileSize,
 							Vector3.up,
-							new Vector2(0, 0),
-							new Vector2(1, 0),
-							new Vector2(1, 1),
-							new Vector2(0, 1),
+							new Vector2(2, 2) * (1.0f / 3.0f),
+							new Vector2(1, 2) * (1.0f / 3.0f),
+							new Vector2(1, 3) * (1.0f / 3.0f),
+							new Vector2(2, 3) * (1.0f / 3.0f),
 							layerColor);
 				}
 			}
