@@ -9,11 +9,12 @@ public class GrabAbility : Ability
 	[SerializeField] [DisplayAs("Throw Force")] private float mThrowForce;
 	[SerializeField] [DisplayAs("Knockback Force")] private float mKnockbackForce;
 	[SerializeField] [DisplayAs("Has Knockback On Ground")] private bool mHasKnockbackOnGround;
-	[SerializeField] [DisplayAs("Has Knockback On Ground")] private bool mHasStunOnGround;
+	[SerializeField] [DisplayAs("Has Stun On Ground")] private bool mHasStunOnGround;
 	[SerializeField] [DisplayAs("Throw Trigger Explosion")] private bool mThrowTriggerExplosion;
 	[SerializeField] [DisplayAs("Look-Ahead Distance")] private float mLookAheadDistance;
 	[SerializeField] [DisplayAs("Throw Arrow Texture")] private Texture2D mThrowArrowTexture;
 	[SerializeField] [DisplayAs("Pre Grab Time")] private float mPreGrabTime;
+	[SerializeField] [DisplayAs("Has Direction Lock")] [Tooltip("Will lock the aiming into 8 directions.")] private bool mHasDirectionLock;
 	[SerializeField] [DisplayAs("Character Post Throw State")] private CharacterOverrides mCharacterPostThrowState;
 	[SerializeField] [DisplayAs("Character Post Throw State Duration")] private float mCharacterPostThrowStateDuration;
 
@@ -76,11 +77,17 @@ public class GrabAbility : Ability
 	{
 		float horizontalAxis = Input.GetAxisRaw("Horizontal");
 		float verticalAxis = Input.GetAxisRaw("Vertical");
-		if (horizontalAxis == 0.0f && verticalAxis == 0.0f)
+		if (horizontalAxis != 0.0f || verticalAxis != 0.0f)
 		{
-			horizontalAxis = Owner.MovementController.IsFacingRight ? -1.0f : 1.0f;
+			mThrowDirection = new Vector2(horizontalAxis, verticalAxis).normalized;
+			if (mHasDirectionLock)
+			{
+				const float STEP = Mathf.PI / 4.0f;
+				float angle = Mathf.Atan2(verticalAxis, horizontalAxis);
+				angle = Mathf.Round(angle / STEP) * STEP;
+				mThrowDirection = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+			}
 		}
-		mThrowDirection = new Vector2(horizontalAxis, verticalAxis).normalized;
 	}
 
 	protected override void FixedUpdateAbility_Internal()
@@ -117,6 +124,8 @@ public class GrabAbility : Ability
 			mGrabbedObject = fakePhysics;
 			fakePhysics.enabled = false;
 			fakePhysics.transform.localScale = Vector3.one * 0.5f;
+
+			mThrowDirection = Owner.MovementController.IsFacingRight ? Vector3.right : Vector3.left;
 
 			// Do type-specific actions here.
 			Bomb bomb = fakePhysics.gameObject.GetComponent<Bomb>();
