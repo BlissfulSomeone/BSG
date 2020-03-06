@@ -13,6 +13,7 @@ public class GrabAbility : Ability
 	[SerializeField] [DisplayAs("Throw Trigger Explosion")] private bool mThrowTriggerExplosion;
 	[SerializeField] [DisplayAs("Look-Ahead Distance")] private float mLookAheadDistance;
 	[SerializeField] [DisplayAs("Throw Arrow Texture")] private Texture2D mThrowArrowTexture;
+	[SerializeField] [DisplayAs("Pre Grab Time")] private float mPreGrabTime;
 	[SerializeField] [DisplayAs("Character Post Throw State")] private CharacterOverrides mCharacterPostThrowState;
 	[SerializeField] [DisplayAs("Character Post Throw State Duration")] private float mCharacterPostThrowStateDuration;
 
@@ -21,10 +22,11 @@ public class GrabAbility : Ability
 	private Vector2 mThrowDirection;
 	private float mDefaultAirControl;
 	private System.Guid mCameraOffsetGuid;
+	private Coroutine mGrabCoroutine;
 	
-	public override void Initialize(Character owner)
+	public override void Initialize(Character owner, string inputName)
 	{
-		base.Initialize(owner);
+		base.Initialize(owner, inputName);
 
 		mIsPassiveUpdate = true;
 
@@ -34,36 +36,51 @@ public class GrabAbility : Ability
 
 	protected override void StartAbility_Internal()
 	{
-		if (TryPickupObject())
+		if (mGrabCoroutine == null)
 		{
-			mIsThrowing = true;
+			mGrabCoroutine = StartCoroutine(Coroutine_Grab());
 		}
+		mIsThrowing = true;
+	}
+
+	private IEnumerator Coroutine_Grab()
+	{
+		yield return new WaitForSeconds(mPreGrabTime);
+		TryPickupObject();
+		mGrabCoroutine = null;
 	}
 
 	protected override void StopAbility_Internal()
 	{
-		if (TryThrowObject())
-		{
-			mIsThrowing = false;
-			GameController.Instance.CameraControllerInstance.RemoveAdditiveViewInfo(mCameraOffsetGuid);
-		}
+		mIsThrowing = false;
 	}
 
 	protected override void UpdateAbility_Internal()
 	{
-		if (mIsThrowing)
+		if (mGrabbedObject != null)
 		{
-			float horizontalAxis = Input.GetAxisRaw("Horizontal");
-			float verticalAxis = Input.GetAxisRaw("Vertical");
-			if (horizontalAxis == 0.0f && verticalAxis == 0.0f)
+			if (mIsThrowing)
 			{
-				horizontalAxis = Owner.MovementController.IsFacingRight ? -1.0f : 1.0f;
+				UpdateThrowDirection();
+				GameController.Instance.CameraControllerInstance.PushAdditiveViewInfo(new CameraController.ViewInfo { position = mThrowDirection * mLookAheadDistance * Vector3.up }, mCameraOffsetGuid);
 			}
-			mThrowDirection = new Vector2(horizontalAxis, verticalAxis).normalized;
-			Vector3 cameraOffset = mThrowDirection * mLookAheadDistance;
-			cameraOffset.x = 0.0f;
-			GameController.Instance.CameraControllerInstance.PushAdditiveViewInfo(new CameraController.ViewInfo { position = cameraOffset }, mCameraOffsetGuid);
+			else
+			{
+				TryThrowObject();
+				GameController.Instance.CameraControllerInstance.RemoveAdditiveViewInfo(mCameraOffsetGuid);
+			}
 		}
+	}
+
+	private void UpdateThrowDirection()
+	{
+		float horizontalAxis = Input.GetAxisRaw("Horizontal");
+		float verticalAxis = Input.GetAxisRaw("Vertical");
+		if (horizontalAxis == 0.0f && verticalAxis == 0.0f)
+		{
+			horizontalAxis = Owner.MovementController.IsFacingRight ? -1.0f : 1.0f;
+		}
+		mThrowDirection = new Vector2(horizontalAxis, verticalAxis).normalized;
 	}
 
 	protected override void FixedUpdateAbility_Internal()
@@ -71,11 +88,6 @@ public class GrabAbility : Ability
 		if (mGrabbedObject != null)
 		{
 			mGrabbedObject.transform.position = GetCurrentGrabSocketPosition(Space.World);
-		}
-		else
-		{
-			mIsThrowing = false;
-			GameController.Instance.CameraControllerInstance.RemoveAdditiveViewInfo(mCameraOffsetGuid);
 		}
 	}
 
@@ -163,7 +175,7 @@ public class GrabAbility : Ability
 
 	private void OnGUI()
 	{
-		if (mIsThrowing)
+		if (mGrabbedObject != null && mIsThrowing)
 		{
 			Vector3 screenPosition = Camera.main.WorldToScreenPoint(GetCurrentGrabSocketPosition(Space.World));
 			screenPosition.y = Screen.height - screenPosition.y;

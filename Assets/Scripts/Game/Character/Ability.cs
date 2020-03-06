@@ -7,15 +7,19 @@ public class Ability : MonoBehaviour
 	private Character mOwner;
 	public Character Owner { get { return mOwner; } }
 
+	private string mInputName;
+	protected string InputName { get { return mInputName; } }
+
 	private bool mIsRunning;
 	public bool IsRunning { get { return mIsRunning; } }
 
 	protected bool mIsPassiveUpdate;
 	public bool IsPassiveUpdate { get { return mIsPassiveUpdate; } }
 
-	public virtual void Initialize(Character owner)
+	public virtual void Initialize(Character owner, string inputName)
 	{
 		mOwner = owner;
+		mInputName = inputName;
 	}
 
 	public void StartAbility()
