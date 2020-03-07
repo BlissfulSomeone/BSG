@@ -15,11 +15,11 @@ public class Character : MonoBehaviour
 	public CharacterOverrideController OverrideController { get { if (mOverrideController == null) mOverrideController = GetComponent<CharacterOverrideController>(); return mOverrideController; } }
 	public CharacterAbilityController AbilityController { get { if (mAbilityController == null) mAbilityController = GetComponent<CharacterAbilityController>(); return mAbilityController; } }
 
-	private Renderer mRenderer;
+	private BoxCollider mBoxCollider;
 	private BSGFakePhysics mFakePhysics;
 	private Triggerable mTriggerable;
 	
-	public Renderer Renderer { get { if (mRenderer == null) mRenderer = GetComponent<Renderer>(); return mRenderer; } }
+	public BoxCollider Collider { get { if (mBoxCollider == null) mBoxCollider = GetComponent<BoxCollider>(); return mBoxCollider; } }
 	public BSGFakePhysics FakePhysics { get { if (mFakePhysics == null) mFakePhysics = GetComponent<BSGFakePhysics>(); return mFakePhysics; } }
 	public Triggerable Triggerable { get { if (mTriggerable == null) mTriggerable = GetComponent<Triggerable>(); return mTriggerable; } }
 	

@@ -95,7 +95,7 @@ public class GameController : MonoBehaviour
 	{
 		if (mPlayerInstance != null)
 		{
-			mFurthestDepth = Mathf.Max(mFurthestDepth, -mPlayerInstance.Renderer.bounds.min.y);
+			mFurthestDepth = Mathf.Max(mFurthestDepth, -mPlayerInstance.Collider.bounds.min.y);
 			UpdateCamera();
 		}
 

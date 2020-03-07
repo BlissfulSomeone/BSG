@@ -8,12 +8,13 @@ public class CharacterAnimatorController : MonoBehaviour
 	private Character mOwner;
 	public Character Owner { get { return mOwner; } }
 
-	private Vector3 mCachedFlipScale;
-
 	private Animator mAnimator;
 
 	[SerializeField] [DisplayAs("Idle Threshold")] private float mIdleThreshold;
 	[SerializeField] [DisplayAs("Transform to Flip")] private Transform mFlipTransform;
+
+	private Vector3 mCachedFlipScale;
+	private BlockAbility mCachedBlockAbility;
 
 	private void Awake()
 	{
@@ -24,6 +25,7 @@ public class CharacterAnimatorController : MonoBehaviour
 		{
 			mCachedFlipScale = mFlipTransform.localScale;
 		}
+		mCachedBlockAbility = Owner.AbilityController.GetAbility<BlockAbility>();
 	}
 
 	private void FixedUpdate()
@@ -41,7 +43,7 @@ public class CharacterAnimatorController : MonoBehaviour
 			mAnimator.SetBool("Grounded", Owner.FakePhysics.IsGrounded);
 			mAnimator.SetBool("Throw", false);
 			mAnimator.SetBool("Hurt", false);
-			mAnimator.SetBool("Block", false);
+			mAnimator.SetBool("Block", mCachedBlockAbility != null ? mCachedBlockAbility.IsRunning : false);
 			mAnimator.SetBool("Parry", false);
 			mAnimator.SetBool("PickUp", false);
 			mAnimator.SetBool("Bomb", false);
