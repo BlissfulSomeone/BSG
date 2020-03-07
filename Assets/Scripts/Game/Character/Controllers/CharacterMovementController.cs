@@ -34,12 +34,12 @@ public class CharacterMovementController : MonoBehaviour
 	public Triggerable Triggerable { get { if (mTriggerable == null) mTriggerable = GetComponent<Triggerable>(); return mTriggerable; } }
 	
 	private Vector3 mMovementInput = Vector3.zero;
-	private float mJumpSquatTime = -1.0f;
 	private float mJumpTime = -1.0f;
 	private int mJumpsRemaining = 0;
 	private bool mIsFacingRight = false;
 
 	public bool IsFacingRight { get { return mIsFacingRight; } }
+	public bool IsJumpSquatting { get { return Owner.OverrideController.IsCharacterOverrideApplied(mJumpSquatCharacterState); } }
 
 	private void Awake()
 	{

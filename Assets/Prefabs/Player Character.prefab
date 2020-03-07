@@ -308,6 +308,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mIdleThreshold: 0.0001
+  mFlipTransform: {fileID: 4742699976625143049}
 --- !u!114 &3667301290344907094
 MonoBehaviour:
   m_ObjectHideFlags: 0
