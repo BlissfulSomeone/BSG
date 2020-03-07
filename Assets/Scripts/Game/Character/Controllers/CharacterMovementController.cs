@@ -34,12 +34,12 @@ public class CharacterMovementController : MonoBehaviour
 	public Triggerable Triggerable { get { if (mTriggerable == null) mTriggerable = GetComponent<Triggerable>(); return mTriggerable; } }
 	
 	private Vector3 mMovementInput = Vector3.zero;
-	private float mJumpSquatTime = -1.0f;
 	private float mJumpTime = -1.0f;
 	private int mJumpsRemaining = 0;
 	private bool mIsFacingRight = false;
 
 	public bool IsFacingRight { get { return mIsFacingRight; } }
+	public bool IsJumpSquatting { get { return Owner.OverrideController.IsCharacterOverrideApplied(mJumpSquatCharacterState); } }
 
 	private void Awake()
 	{
@@ -89,7 +89,6 @@ public class CharacterMovementController : MonoBehaviour
 			(FakePhysics.IsGrounded || mJumpsRemaining > 0))
 		{
 			Owner.OverrideController.ApplyCharacterOverrides(mJumpSquatCharacterState, mJumpSquatDuration, OnPerformJump);
-			//FakePhysics.Velocity = Vector2.zero;
 		}
 
 		if (mJumpTime >= 0.0f)
@@ -140,9 +139,8 @@ public class CharacterMovementController : MonoBehaviour
 	private void FixedUpdateFlipping()
 	{
 		if (FakePhysics.Velocity.x > 0.0f)
-			mIsFacingRight = false;
-		if (FakePhysics.Velocity.x < 0.0f)
 			mIsFacingRight = true;
-		GetComponent<SpriteRenderer>().flipX = mIsFacingRight;
+		if (FakePhysics.Velocity.x < 0.0f)
+			mIsFacingRight = false;
 	}
 }
