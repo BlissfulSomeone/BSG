@@ -74,7 +74,6 @@ public class ChunkController : MonoBehaviour
 					Vector3 spawnPosition = new Vector3(positionX, positionY, positionZ);
 
 					GameObject debrisObject = Instantiate(mDebrisPrefab);
-					debrisObject.transform.Reset();
 					debrisObject.transform.position = spawnPosition;
 					debrisObject.transform.localScale = Vector3.one * mChunkSettings.TileSize / SPLITS;
 
