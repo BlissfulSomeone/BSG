@@ -18,11 +18,12 @@ public class GameEventController : MonoBehaviour
 			gameEvent.TriggerAtDepth += DepthOffset;
 			mGameEventRoot.UpdateGameEvent(gameEvent, i);
 		}
+		Update();	// calling update in start might be dangerous buuuut i'll give it a go...
 	}
 
 	private void Update()
 	{
-		if (mGameEventRoot == null || transform.parent == null)
+		if (mGameEventRoot == null)
 			return;
 
 		float depth = GameController.Instance.FurthestDepth;
@@ -35,13 +36,13 @@ public class GameEventController : MonoBehaviour
 				{
 					bool dirty = false;
 
-					if (gameEvent.TriggerAtTime == 0.0f)
+					if (gameEvent.TriggerAtTime == 0.0f && gameEvent.TriggerDelayTime > 0.0f)
 					{
 						gameEvent.TriggerAtTime = Time.timeSinceLevelLoad + gameEvent.TriggerDelayTime;
 						dirty = true;
 					}
 
-					if (Time.timeSinceLevelLoad >= gameEvent.TriggerAtTime)
+					if (gameEvent.TriggerDelayTime == 0.0f || Time.timeSinceLevelLoad >= gameEvent.TriggerAtTime)
 					{
 						GameEventCore.GameEventActions[(int)gameEvent.EventType].OnAction(gameEvent);
 						gameEvent.HasBeenTriggered = true;
