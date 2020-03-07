@@ -89,7 +89,6 @@ public class CharacterMovementController : MonoBehaviour
 			(FakePhysics.IsGrounded || mJumpsRemaining > 0))
 		{
 			Owner.OverrideController.ApplyCharacterOverrides(mJumpSquatCharacterState, mJumpSquatDuration, OnPerformJump);
-			//FakePhysics.Velocity = Vector2.zero;
 		}
 
 		if (mJumpTime >= 0.0f)
@@ -140,9 +139,8 @@ public class CharacterMovementController : MonoBehaviour
 	private void FixedUpdateFlipping()
 	{
 		if (FakePhysics.Velocity.x > 0.0f)
-			mIsFacingRight = false;
-		if (FakePhysics.Velocity.x < 0.0f)
 			mIsFacingRight = true;
-		GetComponent<SpriteRenderer>().flipX = mIsFacingRight;
+		if (FakePhysics.Velocity.x < 0.0f)
+			mIsFacingRight = false;
 	}
 }

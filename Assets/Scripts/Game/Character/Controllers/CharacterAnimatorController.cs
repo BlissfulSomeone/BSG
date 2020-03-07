@@ -8,6 +8,8 @@ public class CharacterAnimatorController : MonoBehaviour
 	private Character mOwner;
 	public Character Owner { get { return mOwner; } }
 
+	private Vector3 mCachedFlipScale;
+
 	private Animator mAnimator;
 
 	[SerializeField] [DisplayAs("Idle Threshold")] private float mIdleThreshold;
@@ -17,6 +19,11 @@ public class CharacterAnimatorController : MonoBehaviour
 	{
 		mOwner = GetComponent<Character>();
 		mAnimator = GetComponent<Animator>();
+
+		if (mFlipTransform != null)
+		{
+			mCachedFlipScale = mFlipTransform.localScale;
+		}
 	}
 
 	private void FixedUpdate()
@@ -39,8 +46,8 @@ public class CharacterAnimatorController : MonoBehaviour
 			mAnimator.SetBool("PickUp", false);
 			mAnimator.SetBool("Bomb", false);
 			mAnimator.SetBool("Idle", Mathf.Abs(Owner.FakePhysics.Velocity.x) <= mIdleThreshold);
-			mAnimator.SetBool("Landed", false);
 			mAnimator.SetBool("JumpSquat", Owner.MovementController.IsJumpSquatting);
+			mAnimator.SetBool("DoubleJump", false);
 		}
 	}
 
@@ -48,7 +55,7 @@ public class CharacterAnimatorController : MonoBehaviour
 	{
 		if (mFlipTransform != null)
 		{
-			mFlipTransform.localScale = new Vector3(Owner.MovementController.IsFacingRight ? 1.0f : -1.0f, 1.0f, 1.0f);
+			mFlipTransform.localScale = Vector3.Scale(mCachedFlipScale, new Vector3(Owner.MovementController.IsFacingRight ? 1.0f : -1.0f, 1.0f, 1.0f));
 		}
 	}
 }
