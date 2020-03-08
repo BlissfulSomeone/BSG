@@ -340,7 +340,7 @@ public class Chunk : MonoBehaviour
 					Vector3 tilePosition = GetTileLocalPosition(x, y, z);
 					Color layerColor = Color.Lerp(Color.white, mChunkSettings.BackLayerTint, z / (float)(mChunkSettings.NumberOfLayers - 1));
 					layerColor *= mChunkSettings.TileData[tileId].TileColor;
-					//layerColor *= Color.Lerp(Color.white, Color.black, (mTileDepth[index] - 1.0f) / 3);
+					layerColor *= Color.Lerp(mChunkSettings.LightColorTint, mChunkSettings.ShadowColorTint, (mTileDepth[index] - 1.0f) / 2);
 
 					// Front
 					mMeshGenerationData.AddQuad(

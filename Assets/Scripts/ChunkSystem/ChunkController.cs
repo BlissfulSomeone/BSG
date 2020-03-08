@@ -15,6 +15,8 @@ public class ChunkController : MonoBehaviour
 		[Tooltip("Lower value will create bigger, smoother veins of rocks. Higher value will create a more chaotic, noisy distribution of rocks.")] [SerializeField] public float GenerationPerlinSize;
 		[Tooltip("The higher the value, the sooner the rocks will spawn.")] [SerializeField] public float GenerationAmount;
 		[SerializeField] public Color BackLayerTint;
+		[SerializeField] public Color LightColorTint;
+		[SerializeField] public Color ShadowColorTint;
 		[SerializeField] [Tooltip("Which layer the gameplay will take place on, 0 being the layer closest to the camera. This will be internally clamped between [0] and [NumberOfLayers].")] public int PlayableLayer;
 
 		public float TileSize { get { return ChunkWidth / NumberOfColumns; } }

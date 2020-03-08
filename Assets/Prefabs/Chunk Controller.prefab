@@ -56,6 +56,8 @@ MonoBehaviour:
     GenerationPerlinSize: 20
     GenerationAmount: 0
     BackLayerTint: {r: 0.3137255, g: 0.3137255, b: 0.3764706, a: 1}
+    LightColorTint: {r: 1, g: 1, b: 1, a: 1}
+    ShadowColorTint: {r: 0.64595944, g: 0.6572182, b: 0.7169812, a: 1}
     PlayableLayer: 0
   mGenerateChunksAhead: 3
   mDebrisPrefab: {fileID: 8398154527657335140, guid: e167eb3289464cc458abec852a19852f,
