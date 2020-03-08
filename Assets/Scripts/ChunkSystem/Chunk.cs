@@ -91,6 +91,10 @@ public class Chunk : MonoBehaviour
 			Colors.Add(color);
 			Colors.Add(color);
 
+			if (submeshIndex >= Triangles.Length)
+			{
+				Debug.LogError("Index: " + submeshIndex + ", Length: " + Triangles.Length);
+			}
 			Triangles[submeshIndex].Add(TriangleIndex + 0);
 			Triangles[submeshIndex].Add(TriangleIndex + 1);
 			Triangles[submeshIndex].Add(TriangleIndex + 2);
@@ -102,13 +106,16 @@ public class Chunk : MonoBehaviour
 		}
 	}
 
-	public delegate void OnTileDestroyedHandler(Vector3 tilePosition, int tileId, ExplosionInstance explosionInstance);
+	public delegate void OnTileDestroyedHandler(Vector3 tilePosition, int tileId, int depth, int variant, ExplosionInstance explosionInstance);
 	public OnTileDestroyedHandler OnTileDestroyed;
-	
+
+	private int mChunkIndex;
+
 	private MeshFilter mMeshFilter;
 	private MeshRenderer mMeshRenderer;
 	private MeshCollider mMeshCollider;
 
+	private ChunkController mController;
 	private ChunkController.ChunkSettings mChunkSettings;
 
 	private MeshGenerationData mMeshGenerationData;
@@ -116,14 +123,19 @@ public class Chunk : MonoBehaviour
 
 	private int[] mTiles;
 	private float[] mTileHealths;
+	private int[] mTileDepth;
+	private int[] mTileVariant;
 
-	public void Generate(ChunkController.ChunkSettings chunkSettings, bool empty)
+	public void Generate(ChunkController controller,int chunkIndex, ChunkController.ChunkSettings chunkSettings, bool empty)
 	{
+		mController = controller;
+		mChunkIndex = chunkIndex;
 		mChunkSettings = chunkSettings;
 
 		Sanitize();
 		GenerateTiles(empty);
 		ResetData();
+		CalculateTileDepth();
 		GenerateMeshData();
 		GenerateColliderData();
 		Build();
@@ -143,14 +155,18 @@ public class Chunk : MonoBehaviour
 		if (mColliderGenerationData == null)
 			mColliderGenerationData = new MeshGenerationData();
 
-		mMeshGenerationData.Sanitize(mChunkSettings.TileData.Length);
-		mColliderGenerationData.Sanitize(mChunkSettings.TileData.Length);
+		int numberOfSubmeshes = TotalMaterials();
+
+		mMeshGenerationData.Sanitize(numberOfSubmeshes);
+		mColliderGenerationData.Sanitize(1);
 	}
 
 	private void GenerateTiles(bool empty)
 	{
 		mTiles = new int[mChunkSettings.NumberOfTiles];
 		mTileHealths = new float[mChunkSettings.NumberOfTiles];
+		mTileDepth = new int[mChunkSettings.NumberOfTiles];
+		mTileVariant = new int[mChunkSettings.NumberOfTiles];
 		for (int y = 0; y < mChunkSettings.NumberOfRows; ++y)
 		{
 			for (int x = 0; x < mChunkSettings.NumberOfColumns; ++x)
@@ -180,6 +196,132 @@ public class Chunk : MonoBehaviour
 		mColliderGenerationData.Reset();
 	}
 
+	private void CalculateTileDepth()
+	{
+		for (int y = 0; y < mChunkSettings.NumberOfRows; ++y)
+		{
+			for (int x = 0; x < mChunkSettings.NumberOfColumns; ++x)
+			{
+				for (int z = 0; z < mChunkSettings.NumberOfLayers; ++z)
+				{
+					CalculateDepthForTile(x, y, z);
+				}
+			}
+		}
+	}
+	
+	private Vector2Int[] Depth1Lookup = new Vector2Int[]
+	{
+		new Vector2Int(1, 0),
+		new Vector2Int(1, 1),
+		new Vector2Int(0, 1),
+		new Vector2Int(-1, 1),
+		new Vector2Int(-1, 0),
+		new Vector2Int(-1, -1),
+		new Vector2Int(0, -1),
+		new Vector2Int(1, -1),
+	};
+	private Vector2Int[] Depth2Lookup = new Vector2Int[]
+	{
+		new Vector2Int(2, 0),
+		new Vector2Int(2, 1),
+		new Vector2Int(2, 2),
+		new Vector2Int(1, 2),
+		new Vector2Int(0, 2),
+		new Vector2Int(-1, 2),
+		new Vector2Int(-2, 2),
+		new Vector2Int(-2, 1),
+		new Vector2Int(-2, 0),
+		new Vector2Int(-2, -1),
+		new Vector2Int(-2, -2),
+		new Vector2Int(-1, -2),
+		new Vector2Int(0, -2),
+		new Vector2Int(1, -2),
+		new Vector2Int(2, -2),
+		new Vector2Int(2, -1),
+	};
+
+	private void CalculateDepthForTile(int x, int y, int z)
+	{
+		int index = GetTileIndex(x, y, z);
+		int previousDepth = mTileDepth[index];
+
+		int tileId = mTiles[index];
+		if (!mChunkSettings.TileData[tileId].IsCollision)
+		{
+			mTileDepth[index] = 0;
+		}
+		else
+		{
+			mTileDepth[index] = 3;
+
+			if (!TestDepth(ref Depth1Lookup, index, 1))
+			{
+				TestDepth(ref Depth2Lookup, index, 2);
+			}
+		}
+		
+		if (previousDepth != mTileDepth[index])
+		{
+			if (mTileDepth[index] == 1)
+				mTileVariant[index] = Random.Range(0, mChunkSettings.TileData[mTiles[index]].Depth1Materials.Length);
+			else if (mTileDepth[index] == 2)
+				mTileVariant[index] = Random.Range(0, mChunkSettings.TileData[mTiles[index]].Depth2Materials.Length);
+			else if (mTileDepth[index] == 3)
+				mTileVariant[index] = Random.Range(0, mChunkSettings.TileData[mTiles[index]].Depth3Materials.Length);
+		}
+	}
+
+	private bool TestDepth(ref Vector2Int[] lookupReference, int currentIndex, int depth)
+	{
+		int currentX = currentIndex % mChunkSettings.NumberOfColumns;
+		int currentY = (currentIndex / mChunkSettings.NumberOfColumns) % mChunkSettings.NumberOfRows;
+		int currentZ = (currentIndex / mChunkSettings.NumberOfColumns) / mChunkSettings.NumberOfRows;
+
+		for (int i = 0; i < lookupReference.Length; ++i)
+		{
+			int nextX = currentX + lookupReference[i].x;
+			int nextY = currentY + lookupReference[i].y;
+			if (nextX < 0 || nextX >= mChunkSettings.NumberOfColumns)
+				continue;
+
+			if (nextY >= 0 && nextY < mChunkSettings.NumberOfRows)
+			{
+				int nextId = GetTileId(nextX, nextY, currentZ);
+				if (!mChunkSettings.TileData[nextId].IsCollision)
+				{
+					mTileDepth[currentIndex] = depth;
+					return true;
+				}
+			}
+			else
+			{
+				Chunk otherChunk = null;
+				if (nextY < 0)
+				{
+					otherChunk = mController.GetChunk(mChunkIndex - 1);
+					nextY = mChunkSettings.NumberOfRows + nextY;
+				}
+				else
+				{
+					otherChunk = mController.GetChunk(mChunkIndex + 1);
+					nextY = nextY - mChunkSettings.NumberOfRows;
+				}
+				if (otherChunk != null)
+				{
+					int nextId = otherChunk.GetTileId(nextX, nextY, currentZ);
+					if (!mChunkSettings.TileData[nextId].IsCollision)
+					{
+						mTileDepth[currentIndex] = depth;
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+	
 	private void GenerateMeshData()
 	{
 		for (int y = 0; y < mChunkSettings.NumberOfRows; ++y)
@@ -188,16 +330,21 @@ public class Chunk : MonoBehaviour
 			{
 				for (int z = 0; z < mChunkSettings.NumberOfLayers; ++z)
 				{
-					int tileId = GetTile(x, y, z);
+					int tileId = GetTileId(x, y, z);
 					if (tileId == 0)
 						continue;
+
+					int index = GetTileIndex(x, y, z);
+					int submeshIndex = mChunkSettings.GetSubmeshIndex(tileId, mTileDepth[index], mTileVariant[index]);
 					
 					Vector3 tilePosition = GetTileLocalPosition(x, y, z);
 					Color layerColor = Color.Lerp(Color.white, mChunkSettings.BackLayerTint, z / (float)(mChunkSettings.NumberOfLayers - 1));
+					layerColor *= mChunkSettings.TileData[tileId].TileColor;
+					//layerColor *= Color.Lerp(Color.white, Color.black, (mTileDepth[index] - 1.0f) / 3);
 
 					// Front
 					mMeshGenerationData.AddQuad(
-						tileId,
+						submeshIndex,
 						tilePosition - Vector3.one / 2 + new Vector3(0, 1, 0) * mChunkSettings.TileSize,
 						tilePosition - Vector3.one / 2 + new Vector3(1, 1, 0) * mChunkSettings.TileSize,
 						tilePosition - Vector3.one / 2 + new Vector3(1, 0, 0) * mChunkSettings.TileSize,
@@ -210,9 +357,9 @@ public class Chunk : MonoBehaviour
 						layerColor);
 
 					// Right
-					if (tileId != GetTile(x + 1, y, z))
+					if (tileId != GetTileId(x + 1, y, z))
 						mMeshGenerationData.AddQuad(
-							tileId,
+							submeshIndex,
 							tilePosition - Vector3.one / 2 + new Vector3(1, 1, 0) * mChunkSettings.TileSize,
 							tilePosition - Vector3.one / 2 + new Vector3(1, 1, 1) * mChunkSettings.TileSize,
 							tilePosition - Vector3.one / 2 + new Vector3(1, 0, 1) * mChunkSettings.TileSize,
@@ -225,9 +372,9 @@ public class Chunk : MonoBehaviour
 							layerColor);
 
 					// Left
-					if (tileId != GetTile(x - 1, y, z))
+					if (tileId != GetTileId(x - 1, y, z))
 						mMeshGenerationData.AddQuad(
-							tileId,
+							submeshIndex,
 							tilePosition - Vector3.one / 2 + new Vector3(0, 1, 1) * mChunkSettings.TileSize,
 							tilePosition - Vector3.one / 2 + new Vector3(0, 1, 0) * mChunkSettings.TileSize,
 							tilePosition - Vector3.one / 2 + new Vector3(0, 0, 0) * mChunkSettings.TileSize,
@@ -240,9 +387,9 @@ public class Chunk : MonoBehaviour
 							layerColor);
 
 					// Bottom
-					if (tileId != GetTile(x, y + 1, z))
+					if (tileId != GetTileId(x, y + 1, z))
 						mMeshGenerationData.AddQuad(
-							tileId,
+							submeshIndex,
 							tilePosition - Vector3.one / 2 + new Vector3(1, 0, 1) * mChunkSettings.TileSize,
 							tilePosition - Vector3.one / 2 + new Vector3(0, 0, 1) * mChunkSettings.TileSize,
 							tilePosition - Vector3.one / 2 + new Vector3(0, 0, 0) * mChunkSettings.TileSize,
@@ -255,9 +402,9 @@ public class Chunk : MonoBehaviour
 							layerColor);
 
 					// Top
-					if (tileId != GetTile(x, y - 1, z))
+					if (tileId != GetTileId(x, y - 1, z))
 						mMeshGenerationData.AddQuad(
-							tileId,
+							submeshIndex,
 							tilePosition - Vector3.one / 2 + new Vector3(1, 1, 0) * mChunkSettings.TileSize,
 							tilePosition - Vector3.one / 2 + new Vector3(0, 1, 0) * mChunkSettings.TileSize,
 							tilePosition - Vector3.one / 2 + new Vector3(0, 1, 1) * mChunkSettings.TileSize,
@@ -279,13 +426,13 @@ public class Chunk : MonoBehaviour
 		{
 			for (int x = 0; x < mChunkSettings.NumberOfColumns; ++x)
 			{
-				bool hasCollision = mChunkSettings.TileData[GetTile(x, y, mChunkSettings.ClampedPlayableLayer)].IsCollision;
+				bool hasCollision = mChunkSettings.TileData[GetTileId(x, y, mChunkSettings.ClampedPlayableLayer)].IsCollision;
 				if (!hasCollision)
 					continue;
 				
 				Vector3 tilePosition = GetTileLocalPosition(x, y, mChunkSettings.ClampedPlayableLayer);
 
-				if (hasCollision != mChunkSettings.TileData[GetTile(x + 1, y, mChunkSettings.ClampedPlayableLayer)].IsCollision)
+				if (hasCollision != mChunkSettings.TileData[GetTileId(x + 1, y, mChunkSettings.ClampedPlayableLayer)].IsCollision)
 					mColliderGenerationData.AddQuad(
 						0,
 						tilePosition - Vector3.one / 2 + new Vector3(1, 1, 0) * mChunkSettings.TileSize,
@@ -299,7 +446,7 @@ public class Chunk : MonoBehaviour
 						new Vector2(0, 1),
 						Color.white);
 
-				if (hasCollision != mChunkSettings.TileData[GetTile(x - 1, y, mChunkSettings.ClampedPlayableLayer)].IsCollision)
+				if (hasCollision != mChunkSettings.TileData[GetTileId(x - 1, y, mChunkSettings.ClampedPlayableLayer)].IsCollision)
 					mColliderGenerationData.AddQuad(
 						0,
 						tilePosition - Vector3.one / 2 + new Vector3(0, 1, 1) * mChunkSettings.TileSize,
@@ -313,7 +460,7 @@ public class Chunk : MonoBehaviour
 						new Vector2(0, 1),
 						Color.white);
 
-				if (hasCollision != mChunkSettings.TileData[GetTile(x, y + 1, mChunkSettings.ClampedPlayableLayer)].IsCollision)
+				if (hasCollision != mChunkSettings.TileData[GetTileId(x, y + 1, mChunkSettings.ClampedPlayableLayer)].IsCollision)
 					mColliderGenerationData.AddQuad(
 						0,
 						tilePosition - Vector3.one / 2 + new Vector3(1, 0, 1) * mChunkSettings.TileSize,
@@ -327,7 +474,7 @@ public class Chunk : MonoBehaviour
 						new Vector2(0, 1),
 						Color.white);
 
-				if (hasCollision != mChunkSettings.TileData[GetTile(x, y - 1, mChunkSettings.ClampedPlayableLayer)].IsCollision)
+				if (hasCollision != mChunkSettings.TileData[GetTileId(x, y - 1, mChunkSettings.ClampedPlayableLayer)].IsCollision)
 					mColliderGenerationData.AddQuad(
 						0,
 						tilePosition - Vector3.one / 2 + new Vector3(1, 1, 0) * mChunkSettings.TileSize,
@@ -343,24 +490,7 @@ public class Chunk : MonoBehaviour
 			}
 		}
 	}
-
-	private int GetTile(int x, int y, int z)
-	{
-		if (x < 0 || x >= mChunkSettings.NumberOfColumns || y < 0 || y >= mChunkSettings.NumberOfRows || z < 0 || z >= mChunkSettings.NumberOfLayers)
-			return 0;
-		int index = x + y * mChunkSettings.NumberOfColumns + z * mChunkSettings.NumberOfColumns * mChunkSettings.NumberOfRows;
-		return mTiles[index];
-	}
-
-	private void SetTile(int x, int y, int z, int tileId)
-	{
-		if (x < 0 || x >= mChunkSettings.NumberOfColumns || y < 0 || y >= mChunkSettings.NumberOfRows || z < 0 || z >= mChunkSettings.NumberOfLayers)
-			return;
-		int index = x + y * mChunkSettings.NumberOfColumns + z * mChunkSettings.NumberOfColumns * mChunkSettings.NumberOfRows;
-		mTiles[index] = tileId;
-		mTileHealths[index] = mChunkSettings.TileData[tileId].Health;
-	}
-
+	
 	private void Build()
 	{
 		mMeshGenerationData.Build();
@@ -368,10 +498,25 @@ public class Chunk : MonoBehaviour
 
 		mMeshFilter.mesh = mMeshGenerationData.Mesh;
 		
-		Material[] materials = new Material[mChunkSettings.TileData.Length];
-		for (int i = 0; i < materials.Length; ++i)
+		Material[] materials = new Material[TotalMaterials()];
+		int index = 0;
+		foreach (TileData tileData in mChunkSettings.TileData)
 		{
-			materials[i] = mChunkSettings.TileData[i].Material;
+			foreach (Material material in tileData.Depth1Materials)
+			{
+				materials[index] = material;
+				++index;
+			}
+			foreach (Material material in tileData.Depth2Materials)
+			{
+				materials[index] = material;
+				++index;
+			}
+			foreach (Material material in tileData.Depth3Materials)
+			{
+				materials[index] = material;
+				++index;
+			}
 		}
 		mMeshRenderer.materials = materials;
 
@@ -388,7 +533,7 @@ public class Chunk : MonoBehaviour
 			{
 				for (int z = 0; z < mChunkSettings.NumberOfLayers; ++z)
 				{
-					int tileId = GetTile(x, y, z);
+					int tileId = GetTileId(x, y, z);
 					bool isIndistructible = mChunkSettings.TileData[tileId].IsIndestructible;
 					if (isIndistructible)
 						continue;
@@ -402,8 +547,8 @@ public class Chunk : MonoBehaviour
 						mTileHealths[index] -= explosionInstance.ExplosionData.Damage;
 						if (mTileHealths[index] <= 0)
 						{
+							OnTileDestroyed(tilePosition, tileId, mTileDepth[index], mTileVariant[index], explosionInstance);
 							SetTile(x, y, z, 0);
-							OnTileDestroyed(tilePosition, tileId, explosionInstance);
 							dirty = true;
 						}
 					}
@@ -415,12 +560,55 @@ public class Chunk : MonoBehaviour
 		{
 			Sanitize();
 			ResetData();
+			CalculateTileDepth();
 			GenerateMeshData();
 			GenerateColliderData();
 			Build();
 		}
 	}
+
+	private int GetTileIndex(int x, int y, int z)
+	{
+		return x + y * mChunkSettings.NumberOfColumns + z * mChunkSettings.NumberOfColumns * mChunkSettings.NumberOfRows;
+	}
+
+	private int TotalMaterials()
+	{
+		int result = 0;
+		for (int i = 0; i < mChunkSettings.TileData.Length; ++i)
+		{
+			result += TotalMaterialsInTile(i);
+		}
+		return result;
+	}
 	
+	private int TotalMaterialsInTile(int tileId)
+	{
+		int result = 0;
+		result += mChunkSettings.TileData[tileId].Depth1Materials.Length;
+		result += mChunkSettings.TileData[tileId].Depth2Materials.Length;
+		result += mChunkSettings.TileData[tileId].Depth3Materials.Length;
+		return result;
+	}
+
+	private int GetTileId(int x, int y, int z)
+	{
+		if (x < 0 || x >= mChunkSettings.NumberOfColumns || y < 0 || y >= mChunkSettings.NumberOfRows || z < 0 || z >= mChunkSettings.NumberOfLayers)
+			return 0;
+		int index = x + y * mChunkSettings.NumberOfColumns + z * mChunkSettings.NumberOfColumns * mChunkSettings.NumberOfRows;
+		return mTiles[index];
+	}
+
+	private void SetTile(int x, int y, int z, int tileId)
+	{
+		if (x < 0 || x >= mChunkSettings.NumberOfColumns || y < 0 || y >= mChunkSettings.NumberOfRows || z < 0 || z >= mChunkSettings.NumberOfLayers)
+			return;
+		int index = x + y * mChunkSettings.NumberOfColumns + z * mChunkSettings.NumberOfColumns * mChunkSettings.NumberOfRows;
+		mTiles[index] = tileId;
+		mTileHealths[index] = mChunkSettings.TileData[tileId].Health;
+		mTileDepth[index] = -1;
+	}
+
 	private Vector3 GetTileLocalPosition(int x, int y, int z)
 	{
 		Vector3 localCenterPosition = new Vector3(
@@ -434,4 +622,27 @@ public class Chunk : MonoBehaviour
 	{
 		return transform.position + GetTileLocalPosition(x, y, z);
 	}
+
+	//private void OnGUI()
+	//{
+	//	Camera cam = GameController.Instance.CameraControllerInstance.CameraComponent;
+	//	for (int y = 0; y < mChunkSettings.NumberOfRows; ++y)
+	//	{
+	//		for (int x = 0; x < mChunkSettings.NumberOfColumns; ++x)
+	//		{
+	//			int z = 0;
+	//			Vector3 tilePosition = GetTileWorldPosition(x, y, z);
+	//			Vector3 screenPosition = cam.WorldToScreenPoint(tilePosition);
+	//			const float SIZE = 64.0f;
+	//			const float HALF_SIZE = SIZE / 2.0f;
+	//			Rect rect = new Rect();
+	//			rect.x = screenPosition.x - HALF_SIZE;
+	//			rect.y = Screen.height - screenPosition.y - HALF_SIZE;
+	//			rect.width = SIZE;
+	//			rect.height = SIZE;
+	//			int index = GetTileIndex(x, y, z);
+	//			GUI.Label(rect, mTileDepth[index].ToString() + "\n" + mTileVariant[index].ToString() + "\n" + GetSubmeshIndex(mTiles[index], mTileDepth[index], mTileVariant[index]).ToString());
+	//		}
+	//	}
+	//}
 }

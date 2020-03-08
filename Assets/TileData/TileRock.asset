@@ -13,6 +13,19 @@ MonoBehaviour:
   m_Name: TileRock
   m_EditorClassIdentifier: 
   Material: {fileID: 2100000, guid: 93e4d95d73762434c8de0bbf2a5c2da1, type: 2}
+  Depth1Materials:
+  - {fileID: 2100000, guid: 35b3057ea82c1b74dac50a7d725af5d8, type: 2}
+  - {fileID: 2100000, guid: 6011ccaf7a49ffd4a8d901ed1e8c1337, type: 2}
+  - {fileID: 2100000, guid: 93187969feb3cb242a4c430fe68c3cfa, type: 2}
+  - {fileID: 2100000, guid: ed92334e9f3ea7a4c9838265079fd3d7, type: 2}
+  - {fileID: 2100000, guid: ff9901a0b28a3c546a517887de3d00f9, type: 2}
+  Depth2Materials:
+  - {fileID: 2100000, guid: ec64cb1103177c040ac8208283fed412, type: 2}
+  - {fileID: 2100000, guid: e918365e424e5604eb6c6a1ca76a7f71, type: 2}
+  - {fileID: 2100000, guid: 61d951a97f82c9646a490e50e0015c4b, type: 2}
+  Depth3Materials:
+  - {fileID: 2100000, guid: acb1e4ecefaa83240b6be8ab902040eb, type: 2}
+  TileColor: {r: 0.3018868, g: 0.29547882, b: 0.28907084, a: 1}
   IsIndestructible: 0
   IsCollision: 1
   Health: 3

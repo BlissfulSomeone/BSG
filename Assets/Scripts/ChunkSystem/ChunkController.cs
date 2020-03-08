@@ -21,6 +21,42 @@ public class ChunkController : MonoBehaviour
 		public float ChunkHeight { get { return TileSize * NumberOfRows; } }
 		public int NumberOfTiles { get { return NumberOfColumns * NumberOfRows * NumberOfLayers; } }
 		public int ClampedPlayableLayer { get { return Mathf.Clamp(PlayableLayer, 0, NumberOfLayers); } }
+
+		public int GetSubmeshIndex(int tileId, int depth, int variant)
+		{
+			int submeshIndex = 0;
+			for (int i = 0; i < TileData.Length; ++i)
+			{
+				if (i < tileId)
+				{
+					submeshIndex += TileData[i].Depth1Materials.Length;
+					submeshIndex += TileData[i].Depth2Materials.Length;
+					submeshIndex += TileData[i].Depth3Materials.Length;
+				}
+				else
+				{
+					if (depth == 1)
+						submeshIndex += variant;
+					else if (depth == 2)
+						submeshIndex += TileData[i].Depth1Materials.Length + variant;
+					else if (depth == 3)
+						submeshIndex += TileData[i].Depth1Materials.Length + TileData[i].Depth2Materials.Length + variant;
+					break;
+				}
+			}
+			return submeshIndex;
+		}
+
+		public Material GetMaterial(int tileId, int depth, int variant)
+		{
+			if (depth == 1)
+				return TileData[tileId].Depth1Materials[variant];
+			else if (depth == 2)
+				return TileData[tileId].Depth2Materials[variant];
+			else if (depth == 3)
+				return TileData[tileId].Depth3Materials[variant];
+			return null;
+		}
 	}
 
 	[SerializeField] private ChunkSettings mChunkSettings;
@@ -32,6 +68,11 @@ public class ChunkController : MonoBehaviour
 	private int mChunksSpawned;
 	private List<Chunk> mChunks;
 	private List<Chunk> Chunks { get { if (mChunks == null) mChunks = new List<Chunk>(); return mChunks; } }
+
+	private void Awake()
+	{
+		mChunks = new List<Chunk>();
+	}
 
 	private void LateUpdate()
 	{
@@ -51,14 +92,14 @@ public class ChunkController : MonoBehaviour
 		chunkObject.transform.position = new Vector3(0.0f, (mChunksSpawned * mChunkSettings.ChunkHeight) * -1, (mChunkSettings.ClampedPlayableLayer * mChunkSettings.TileSize) * -1);
 
 		Chunk chunk = chunkObject.AddComponent<Chunk>();
-		chunk.Generate(mChunkSettings, empty);
+		chunk.Generate(this, mChunksSpawned, mChunkSettings, empty);
 		chunk.OnTileDestroyed += OnTileDestroyed;
 		Chunks.Add(chunk);
 
 		++mChunksSpawned;
 	}
 
-	private void OnTileDestroyed(Vector3 tilePosition, int tileId, ExplosionInstance explosionInstance)
+	private void OnTileDestroyed(Vector3 tilePosition, int tileId, int depth, int variant, ExplosionInstance explosionInstance)
 	{
 		const int SPLITS = 2;
 		for (int x = 0; x < SPLITS; ++x)
@@ -78,7 +119,8 @@ public class ChunkController : MonoBehaviour
 					debrisObject.transform.localScale = Vector3.one * mChunkSettings.TileSize / SPLITS;
 
 					MeshRenderer debrisMeshRenderer = debrisObject.GetComponent<MeshRenderer>();
-					debrisMeshRenderer.material = mChunkSettings.TileData[tileId].Material;
+					debrisMeshRenderer.material = mChunkSettings.GetMaterial(tileId, depth, variant);
+					debrisMeshRenderer.material.color = mChunkSettings.TileData[tileId].TileColor;
 
 					Rigidbody debrisRigidbody = debrisObject.GetComponent<Rigidbody>();
 					Vector3 alignedExplosionSource = new Vector3(explosionInstance.Position.x, explosionInstance.Position.y, spawnPosition.z);
@@ -94,6 +136,13 @@ public class ChunkController : MonoBehaviour
 				}
 			}
 		}
+	}
+
+	public Chunk GetChunk(int index)
+	{
+		if (index < 0 || index >= mChunks.Count)
+			return null;
+		return mChunks[index];
 	}
 
 	public void Explode(ExplosionInstance explosionInstance)

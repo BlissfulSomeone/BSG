@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MatTileDirt
+  m_Name: MatTileDirt_1B
   m_Shader: {fileID: 4800000, guid: 722ab5c28dc15d94abc5b710f47846b3, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -40,7 +40,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: a5431df7fc5de434d918f206b4ff1d29, type: 3}
+        m_Texture: {fileID: 2800000, guid: d70d648898358eb48924b853104b68b8, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
