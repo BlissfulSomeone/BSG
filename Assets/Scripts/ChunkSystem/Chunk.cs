@@ -95,6 +95,7 @@ public class Chunk : MonoBehaviour
 			{
 				Debug.LogError("Index: " + submeshIndex + ", Length: " + Triangles.Length);
 			}
+
 			Triangles[submeshIndex].Add(TriangleIndex + 0);
 			Triangles[submeshIndex].Add(TriangleIndex + 1);
 			Triangles[submeshIndex].Add(TriangleIndex + 2);
@@ -260,6 +261,8 @@ public class Chunk : MonoBehaviour
 				TestDepth(ref Depth2Lookup, index, 2);
 			}
 		}
+
+		mTileDepth[index] = Mathf.Max(z == 0 ? 0 : 2, mTileDepth[index]);
 		
 		if (previousDepth != mTileDepth[index])
 		{
