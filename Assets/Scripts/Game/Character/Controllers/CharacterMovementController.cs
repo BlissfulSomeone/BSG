@@ -40,6 +40,7 @@ public class CharacterMovementController : MonoBehaviour
 
 	public bool IsFacingRight { get { return mIsFacingRight; } }
 	public bool IsJumpSquatting { get { return Owner.OverrideController.IsCharacterOverrideApplied(mJumpSquatCharacterState); } }
+	public bool IsStunned { get { return Owner.OverrideController.IsCharacterOverrideApplied(mStunnedCharacterState); } }
 
 	private void Awake()
 	{

@@ -24,6 +24,10 @@ public class GrabAbility : Ability
 	private float mDefaultAirControl;
 	private System.Guid mCameraOffsetGuid;
 	private Coroutine mGrabCoroutine;
+
+	public BSGFakePhysics GrabbedObject { get { return mGrabbedObject; } }
+	public bool IsGrabbing { get { return mGrabCoroutine != null; } }
+	public bool HasPostThrowEffect { get { return Owner.OverrideController.IsCharacterOverrideApplied(mCharacterPostThrowState); } }
 	
 	public override void Initialize(Character owner, string inputName)
 	{
@@ -181,7 +185,7 @@ public class GrabAbility : Ability
 
 		return true;
 	}
-
+	
 	private void OnGUI()
 	{
 		if (mGrabbedObject != null && mIsThrowing)

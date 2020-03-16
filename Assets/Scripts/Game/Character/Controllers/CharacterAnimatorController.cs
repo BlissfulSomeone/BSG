@@ -15,6 +15,7 @@ public class CharacterAnimatorController : MonoBehaviour
 
 	private Vector3 mCachedFlipScale;
 	private BlockAbility mCachedBlockAbility;
+	private GrabAbility mCachedGrabAbility;
 
 	private void Awake()
 	{
@@ -26,6 +27,7 @@ public class CharacterAnimatorController : MonoBehaviour
 			mCachedFlipScale = mFlipTransform.localScale;
 		}
 		mCachedBlockAbility = Owner.AbilityController.GetAbility<BlockAbility>();
+		mCachedGrabAbility = Owner.AbilityController.GetAbility<GrabAbility>();
 	}
 
 	private void FixedUpdate()
@@ -41,12 +43,12 @@ public class CharacterAnimatorController : MonoBehaviour
 			mAnimator.SetFloat("Player_XVel", Owner.FakePhysics.Velocity.x);
 			mAnimator.SetFloat("Player_YVel", Owner.FakePhysics.Velocity.y);
 			mAnimator.SetBool("Grounded", Owner.FakePhysics.IsGrounded);
-			mAnimator.SetBool("Throw", false);
-			mAnimator.SetBool("Hurt", false);
+			mAnimator.SetBool("Throw", mCachedGrabAbility != null ? mCachedGrabAbility.HasPostThrowEffect : false);
+			mAnimator.SetBool("Hurt", Owner.MovementController.IsStunned);
 			mAnimator.SetBool("Block", mCachedBlockAbility != null ? mCachedBlockAbility.IsRunning : false);
 			mAnimator.SetBool("Parry", false);
-			mAnimator.SetBool("PickUp", false);
-			mAnimator.SetBool("Bomb", false);
+			mAnimator.SetBool("PickUp", mCachedGrabAbility != null ? mCachedGrabAbility.IsGrabbing : false);
+			mAnimator.SetBool("Bomb", mCachedGrabAbility != null ? mCachedGrabAbility.GrabbedObject != null : false);
 			mAnimator.SetBool("Idle", Mathf.Abs(Owner.FakePhysics.Velocity.x) <= mIdleThreshold);
 			mAnimator.SetBool("JumpSquat", Owner.MovementController.IsJumpSquatting);
 			mAnimator.SetBool("DoubleJump", false);
